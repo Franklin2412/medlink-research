@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Free web-based therapeutic tools for children recovering from autoimmune NMDA encephalitis. Interactive games for memory, speech, cognitive skills, and motor function.">
+    <meta name="keywords"
+        content="NMDA encephalitis, pediatric rehabilitation, cognitive therapy, speech therapy, memory games, brain injury recovery">
+    <meta name="author" content="NMDA Therapy Tools">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="NMDA Therapy Tools - Free Rehabilitation Games for Children">
+    <meta property="og:description"
+        content="Interactive, evidence-based therapeutic games to support children recovering from NMDA encephalitis.">
+    <meta property="og:type" content="website">
+
+    <title>NMDA Therapy Tools - Free Rehabilitation Games for Children</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="shared/css/common.css">
+    <style>
+        /* Landing Page Specific Styles */
+        .hero {
+            background: linear-gradient(135deg, #4ECDC4 0%, #A29BFE 100%);
+            color: white;
+            padding: var(--space-2xl) 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="rgba(255,255,255,0.1)"></path></svg>') repeat-x;
+            background-size: 100% 100px;
+            opacity: 0.3;
+            animation: wave 10s linear infinite;
+        }
+
+        @keyframes wave {
+            0% {
+                background-position-x: 0;
+            }
+
+            100% {
+                background-position-x: 1200px;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: var(--space-md);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            max-width: 800px;
+            margin: 0 auto var(--space-lg);
+            opacity: 0.95;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-normal);
+            border: 3px solid transparent;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-color);
+        }
+
+        .app-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-md);
+            display: block;
+        }
+
+        .app-card h3 {
+            color: var(--primary-color);
+            margin-bottom: var(--space-sm);
+        }
+
+        .app-card p {
+            color: var(--text-light);
+            flex-grow: 1;
+            margin-bottom: var(--space-md);
+        }
+
+        .app-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            margin-top: auto;
+        }
+
+        .status-live {
+            background: var(--success-color);
+            color: var(--text-color);
+        }
+
+        .status-soon {
+            background: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .about-section {
+            background: white;
+            padding: var(--space-2xl) 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-xl);
+        }
+
+        .feature {
+            text-align: center;
+            padding: var(--space-md);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: var(--space-sm);
+            display: block;
+        }
+
+        footer {
+            background: var(--text-color);
+            color: white;
+            padding: var(--space-xl) 0;
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--primary-color);
+        }
+
+        .accessibility-toolbar {
+            background: var(--card-background);
+            padding: var(--space-sm);
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: var(--z-sticky);
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .accessibility-toolbar button {
+            padding: var(--space-xs) var(--space-sm);
+            font-size: var(--font-size-sm);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Skip to content link for screen readers -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Accessibility Toolbar -->
+    <div class="accessibility-toolbar" role="toolbar" aria-label="Accessibility options">
+        <button class="btn btn-small btn-secondary" id="toggle-contrast" aria-label="Toggle high contrast mode">
+            High Contrast
+        </button>
+        <button class="btn btn-small btn-secondary" id="toggle-text-size" aria-label="Toggle large text mode">
+            Large Text
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content container">
+            <h1>🌟 NMDA Therapy Tools</h1>
+            <p>
+                Free, evidence-based therapeutic games designed to support children
+                recovering from NMDA encephalitis. Built with love by families,
+                guided by medical professionals.
+            </p>
+            <a href="#apps" class="btn btn-large btn-secondary">
+                Start Playing
+            </a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Applications Grid -->
+        <section id="apps" class="section">
+            <div class="container">
+                <h2 class="text-center mb-lg">Therapeutic Applications</h2>
+
+                <div class="grid grid-3">
+                    <!-- Memory Garden -->
+                    <div class="app-card">
+                        <span class="app-icon" role="img" aria-label="Flower">🌱</span>
+                        <h3>Memory Garden</h3>
+                        <p>
+                            Fun memory games to rebuild working memory, visual memory,
+                            and sequential processing through colorful garden activities.
+                        </p>
+                        <a href="memory-garden/index.html" class="btn btn-primary">Play Now</a>
+                        <span class="app-status status-live">✓ Available</span>
+                    </div>
+
+                    <!-- HandyHelper -->
+                    <div class="app-card">
+                        <span class="app-icon" role="img" aria-label="Hand">👋</span>
+                        <h3>HandyHelper</h3>
+                        <p>
+                            Gesture tracking and hand motor skill activities. Practice hand
+                            dominance, bilateral coordination, and fine motor control.
+                        </p>
+                        <a href="handy-helper/index.html" class="btn btn-primary">Try It</a>
+                        <span class="app-status status-live">✓ Available</span>
+                    </div>
+
+                    <!-- SpeakEasy Studio -->
+                    <div class="app-card">
+                        <span class="app-icon" role="img" aria-label="Microphone">🎤</span>
+                        <h3>SpeakEasy Studio</h3>
+                        <p>
+                            Speech and language rehabilitation through interactive phonics,
+                            sentence building, and storytelling activities.
+                        </p>
+                        <span class="btn btn-secondary" disabled>Coming Soon</span>
+                        <span class="app-status status-soon">In Development</span>
+                    </div>
+
+                    <!-- Think Tank Challenge -->
+                    <div class="app-card">
+                        <span class="app-icon" role="img" aria-label="Brain">🧠</span>
+                        <h3>Think Tank Challenge</h3>
+                        <p>
+                            Cognitive skill building with puzzles, patterns, and problem-solving
+                            games that improve attention and executive function.
+                        </p>
+                        <span class="btn btn-secondary" disabled>Coming Soon</span>
+                        <span class="app-status status-soon">In Development</span>
+                    </div>
+
+                    <!-- Emotion Explorer -->
+                    <div class="app-card">
+                        <span class="app-icon" role="img" aria-label="Smile">😊</span>
+                        <h3>Emotion Explorer</h3>
+                        <p>
+                            Learn to recognize, understand, and manage emotions through
+                            gentle activities and calming exercises.
+                        </p>
+                        <span class="btn btn-secondary" disabled>Coming Soon</span>
+                        <span class="app-status status-soon">In Development</span>
+                    </div>
+
+                    <!-- Daily Skills Companion -->
+                    <div class="app-card">
+                        <span class="app-icon" role="img" aria-label="Calendar">📅</span>
+                        <h3>Daily Skills Companion</h3>
+                        <p>
+                            Visual schedules and task breakdowns to rebuild organizational
+                            skills and independence in daily activities.
+                        </p>
+                        <span class="btn btn-secondary" disabled>Coming Soon</span>
+                        <span class="app-status status-soon">In Development</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about-section">
+            <div class="container">
+                <h2 class="text-center mb-lg">Why These Tools?</h2>
+
+                <div class="feature-grid">
+                    <div class="feature">
+                        <span class="feature-icon" role="img" aria-label="Free">🆓</span>
+                        <h3>Forever Free</h3>
+                        <p>No subscriptions, no ads. Just helpful tools for families in need.</p>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon" role="img" aria-label="Science">🔬</span>
+                        <h3>Evidence-Based</h3>
+                        <p>Grounded in clinical research on NMDA encephalitis rehabilitation.</p>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon" role="img" aria-label="Lock">🔒</span>
+                        <h3>Privacy First</h3>
+                        <p>All progress data stays on your device. No tracking, no servers.</p>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon" role="img" aria-label="Accessibility">♿</span>
+                        <h3>Accessible</h3>
+                        <p>Keyboard navigable, screen reader friendly, with high contrast modes.</p>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon" role="img" aria-label="Heart">❤️</span>
+                        <h3>Made with Love</h3>
+                        <p>Built by a parent who understands the journey of recovery.</p>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon" role="img" aria-label="Doctor">👨‍⚕️</span>
+                        <h3>Clinically Guided</h3>
+                        <p>Developed with input from medical professionals and therapists.</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-lg">
+                    <h3>About NMDA Encephalitis</h3>
+                    <p style="max-width: 800px; margin: var(--space-md) auto;">
+                        Autoimmune NMDA receptor encephalitis is a serious neurological condition
+                        that can cause cognitive, speech, behavioral, and motor challenges in children.
+                        Recovery often requires intensive, prolonged rehabilitation. These tools are
+                        designed to complement professional therapy and support practice at home.
+                    </p>
+                    <a href="plans/README.md" class="btn btn-primary">Learn More</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>
+                <strong>NMDA Therapy Tools</strong> - Supporting children in recovery
+            </p>
+            <p>
+                Open source project. <a href="https://github.com" target="_blank" rel="noopener">View on GitHub</a> |
+                <a href="plans/README.md">Documentation</a> |
+                <a href="#" id="export-data">Export My Progress</a>
+            </p>
+            <p style="margin-top: var(--space-md); font-size: var(--font-size-sm); opacity: 0.8;">
+                These tools are not a substitute for professional medical care.
+                Always consult with healthcare providers about your child's treatment plan.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="shared/js/storage.js"></script>
+    <script>
+        // Accessibility toggles
+        const toggleContrast = document.getElementById('toggle-contrast');
+        const toggleTextSize = document.getElementById('toggle-text-size');
+
+        toggleContrast.addEventListener('click', () => {
+            document.body.classList.toggle('high-contrast');
+            const isActive = document.body.classList.contains('high-contrast');
+            toggleContrast.setAttribute('aria-pressed', isActive);
+            localStorage.setItem('high-contrast', isActive);
+        });
+
+        toggleTextSize.addEventListener('click', () => {
+            document.body.classList.toggle('large-text');
+            const isActive = document.body.classList.contains('large-text');
+            toggleTextSize.setAttribute('aria-pressed', isActive);
+            localStorage.setItem('large-text', isActive);
+        });
+
+        // Restore accessibility preferences
+        if (localStorage.getItem('high-contrast') === 'true') {
+            document.body.classList.add('high-contrast');
+            toggleContrast.setAttribute('aria-pressed', 'true');
+        }
+        if (localStorage.getItem('large-text') === 'true') {
+            document.body.classList.add('large-text');
+            toggleTextSize.setAttribute('aria-pressed', 'true');
+        }
+
+        // Export data functionality
+        document.getElementById('export-data').addEventListener('click', (e) => {
+            e.preventDefault();
+            StorageManager.downloadData();
+            alert('Your progress data has been downloaded!');
+        });
+    </script>
+</body>
+
+</html>

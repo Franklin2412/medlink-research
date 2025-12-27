@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Memory Garden - Fun memory training games for children recovering from NMDA encephalitis">
+    <title>Memory Garden 🌱 - NMDA Therapy Tools</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../shared/css/common.css">
+    <link rel="stylesheet" href="css/memory-garden.css">
+</head>
+
+<body>
+    <!-- Skip link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="container flex-between">
+            <h1>🌱 Memory Garden</h1>
+            <nav>
+                <a href="../index.html" class="btn btn-small btn-secondary">← Home</a>
+                <button class="btn btn-small btn-accent" id="view-progress-btn">📊 Progress</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Welcome Screen -->
+        <section id="welcome-screen" class="screen active">
+            <div class="container">
+                <div class="welcome-card">
+                    <div class="welcome-icon">🌸</div>
+                    <h2>Welcome to Memory Garden!</h2>
+                    <p>
+                        Let's grow your memory skills with fun flower games.
+                        Choose an activity to start playing!
+                    </p>
+
+                    <div class="activity-grid">
+                        <!-- Activity 1: Flower Memory Match -->
+                        <div class="activity-card" data-activity="memory-match">
+                            <div class="activity-icon">🌷</div>
+                            <h3>Flower Memory Match</h3>
+                            <p>Find matching pairs of beautiful flowers</p>
+                            <div class="difficulty-badges">
+                                <span class="badge" data-difficulty="easy">Easy (8 cards)</span>
+                                <span class="badge" data-difficulty="medium">Medium (12 cards)</span>
+                                <span class="badge" data-difficulty="hard">Hard (16 cards)</span>
+                            </div>
+                        </div>
+
+                        <!-- Activity 2: Garden Sequence -->
+                        <div class="activity-card" data-activity="garden-sequence">
+                            <div class="activity-icon">🌻</div>
+                            <h3>Garden Sequence</h3>
+                            <p>Remember the order flowers bloom</p>
+                            <span class="badge badge-success">Coming Soon!</span>
+                        </div>
+
+                        <!-- Activity 3: Treasure Hunt -->
+                        <div class="activity-card" data-activity="treasure-hunt">
+                            <div class="activity-icon">💎</div>
+                            <h3>Treasure Hunt</h3>
+                            <p>Find hidden treasures in the garden</p>
+                            <span class="badge badge-success">Coming Soon!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Memory Match Game Screen -->
+        <section id="game-screen" class="screen">
+            <div class="container">
+                <!-- Game Header -->
+                <div class="game-header flex-between">
+                    <div class="game-info">
+                        <h2 id="game-title">🌷 Flower Memory Match</h2>
+                        <p id="game-difficulty">Difficulty: <span id="difficulty-label">Easy</span></p>
+                    </div>
+                    <div class="game-stats">
+                        <div class="stat">
+                            <span class="stat-label">Matches</span>
+                            <span class="stat-value" id="matches-count">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Moves</span>
+                            <span class="stat-value" id="moves-count">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Board -->
+                <div id="game-board" class="game-board">
+                    <!-- Cards will be dynamically inserted here -->
+                </div>
+
+                <!-- Game Controls -->
+                <div class="game-controls">
+                    <button class="btn btn-secondary" id="new-game-btn">🔄 New Game</button>
+                    <button class="btn btn-accent" id="change-difficulty-btn">⚙️ Change Difficulty</button>
+                    <button class="btn btn-primary" id="back-to-menu-btn">← Back to Menu</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Victory Screen -->
+        <section id="victory-screen" class="screen">
+            <div class="container">
+                <div class="victory-card">
+                    <div class="victory-animation">
+                        <div class="celebration">🎉</div>
+                        <div class="celebration">⭐</div>
+                        <div class="celebration">🌟</div>
+                    </div>
+                    <h2>Amazing Job!</h2>
+                    <p class="victory-message">You found all the flower pairs!</p>
+                    <div class="victory-stats">
+                        <div class="victory-stat">
+                            <span class="stat-icon">✅</span>
+                            <span class="stat-text"><strong id="victory-moves">0</strong> moves</span>
+                        </div>
+                        <div class="victory-stat">
+                            <span class="stat-icon">⏱️</span>
+                            <span class="stat-text"><strong id="victory-time">0:00</strong></span>
+                        </div>
+                    </div>
+                    <div class="victory-actions">
+                        <button class="btn btn-large btn-primary" id="play-again-btn">Play Again</button>
+                        <button class="btn btn-large btn-secondary" id="victory-menu-btn">Back to Menu</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Modal -->
+        <div id="progress-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📊 Your Progress</h2>
+                    <button class="modal-close" id="close-progress-modal">&times;</button>
+                </div>
+                <div class="modal-body" id="progressContent">
+                    <!-- Progress data will be inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="export-progress-btn">💾 Export Data</button>
+                    <button class="btn btn-primary" id="close-progress-btn">Close</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../shared/js/storage.js"></script>
+    <script src="js/memory-match.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
