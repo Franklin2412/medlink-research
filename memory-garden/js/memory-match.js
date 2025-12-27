@@ -87,18 +87,18 @@ class MemoryMatchGame {
         cardDiv.className = 'memory-card';
         cardDiv.dataset.index = index;
 
-        // Back of card (hidden)
-        const cardBack = document.createElement('div');
-        cardBack.className = 'card-face card-back';
-
-        // Front of card (flower)
+        // Front of card (flower) - add first
         const cardFront = document.createElement('div');
         cardFront.className = 'card-face card-front';
         cardFront.textContent = card.flower;
         cardFront.setAttribute('aria-label', `Flower card`);
 
-        cardDiv.appendChild(cardBack);
+        // Back of card (question mark) - add second
+        const cardBack = document.createElement('div');
+        cardBack.className = 'card-face card-back';
+
         cardDiv.appendChild(cardFront);
+        cardDiv.appendChild(cardBack);
 
         // Add click handler
         cardDiv.addEventListener('click', () => this.handleCardClick(index));
