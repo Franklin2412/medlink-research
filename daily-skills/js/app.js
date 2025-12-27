@@ -18,4 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
         gameScreen.classList.remove('active');
         welcomeScreen.classList.add('active');
     });
+
+    document.getElementById('play-again').addEventListener('click', () => {
+        routineGame.hideVictoryOverlay();
+        routineGame.start();
+    });
+
+    document.getElementById('victory-back-to-menu').addEventListener('click', () => {
+        routineGame.hideVictoryOverlay();
+        gameScreen.classList.remove('active');
+        welcomeScreen.classList.add('active');
+    });
 });

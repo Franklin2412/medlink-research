@@ -82,10 +82,20 @@ class RoutineGame {
         if (correctCount === this.tasks.length) {
             const msg = new SpeechSynthesisUtterance("Perfect! You've mastered your morning routine!");
             window.speechSynthesis.speak(msg);
-            alert("Perfect! You've mastered your morning routine!");
+            this.showVictoryOverlay();
         } else {
             const msg = new SpeechSynthesisUtterance("Almost there! Check the order of your tasks.");
             window.speechSynthesis.speak(msg);
         }
+    }
+
+    showVictoryOverlay() {
+        const overlay = document.getElementById('victory-overlay');
+        overlay.classList.remove('hidden');
+    }
+
+    hideVictoryOverlay() {
+        const overlay = document.getElementById('victory-overlay');
+        overlay.classList.add('hidden');
     }
 }
