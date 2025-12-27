@@ -24,6 +24,7 @@ class GardenSequenceGame {
     }
 
     start() {
+        this.hideGameOver();
         this.sequence = [];
         this.playerSequence = [];
         this.level = 1;

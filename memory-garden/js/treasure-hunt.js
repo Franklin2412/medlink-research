@@ -21,6 +21,7 @@ class TreasureHuntGame {
     }
 
     start(difficulty = 'easy') {
+        this.hideGameOver();
         // Adjust difficulty
         switch (difficulty) {
             case 'easy':
