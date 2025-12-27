@@ -11,7 +11,9 @@ let currentDifficulty = 'easy';
 const screens = {
     welcome: document.getElementById('welcome-screen'),
     game: document.getElementById('game-screen'),
-    victory: document.getElementById('victory-screen')
+    victory: document.getElementById('victory-screen'),
+    sequence: document.getElementById('sequence-screen'),
+    treasure: document.getElementById('treasure-screen')
 };
 
 // Initialize app
@@ -94,6 +96,53 @@ function setupEventListeners() {
             }
         }
     });
+
+    // Garden Sequence event listeners
+    document.querySelector('.start-sequence-btn')?.addEventListener('click', () => {
+        startGardenSequence();
+    });
+
+    document.getElementById('sequence-back-btn')?.addEventListener('click', () => {
+        showWelcomeScreen();
+    });
+
+    document.getElementById('gs-play-again')?.addEventListener('click', () => {
+        startGardenSequence();
+    });
+
+    document.getElementById('gs-back-menu')?.addEventListener('click', () => {
+        showWelcomeScreen();
+    });
+
+    // Treasure Hunt event listeners
+    const treasureCard = document.querySelector('[data-activity="treasure-hunt"]');
+    if (treasureCard) {
+        const badges = treasureCard.querySelectorAll('.badge[data-difficulty]');
+        badges.forEach(badge => {
+            badge.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const difficulty = badge.dataset.difficulty;
+                startTreasureHunt(difficulty);
+            });
+        });
+    }
+
+    document.getElementById('treasure-back-btn')?.addEventListener('click', () => {
+        showWelcomeScreen();
+    });
+
+    document.getElementById('th-play-again')?.addEventListener('click', () => {
+        // Store last difficulty
+        if (currentGame && currentGame instanceof TreasureHuntGame) {
+            startTreasureHunt(currentDifficulty);
+        } else {
+            startTreasureHunt('easy');
+        }
+    });
+
+    document.getElementById('th-back-menu')?.addEventListener('click', () => {
+        showWelcomeScreen();
+    });
 }
 
 function showScreen(screenName) {
@@ -114,16 +163,49 @@ function showWelcomeScreen() {
 
 function startMemoryMatch(difficulty) {
     currentDifficulty = difficulty;
-
-    // Update difficulty label
-    document.getElementById('difficulty-label').textContent =
-        difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
-
-    // Create new game
+    document.getElementById('difficulty-label').textContent = capitalizeFirst(difficulty);
     currentGame = new MemoryMatchGame(difficulty);
-
-    // Show game screen
     showScreen('game');
+}
+
+function startGardenSequence() {
+    // Reset sequence UI if needed
+    const container = document.getElementById('sequence-flowers');
+    container.innerHTML = '';
+
+    // Create flower elements
+    const flowers = [
+        { emoji: '🌷', name: 'Tulip' },
+        { emoji: '🌻', name: 'Sunflower' },
+        { emoji: '🌸', name: 'Cherry Blossom' },
+        { emoji: '🌺', name: 'Hibiscus' },
+        { emoji: '🌼', name: 'Daisy' },
+        { emoji: '🏵️', name: 'Rosette' }
+    ];
+
+    flowers.forEach(flower => {
+        const btn = document.createElement('div');
+        btn.className = 'sequence-flower';
+        btn.dataset.flower = flower.name;
+        btn.textContent = flower.emoji;
+        btn.addEventListener('click', () => {
+            if (currentGame instanceof GardenSequenceGame) {
+                currentGame.handleFlowerClick(flower);
+            }
+        });
+        container.appendChild(btn);
+    });
+
+    currentGame = new GardenSequenceGame();
+    showScreen('sequence');
+    currentGame.start();
+}
+
+function startTreasureHunt(difficulty) {
+    currentDifficulty = difficulty;
+    currentGame = new TreasureHuntGame();
+    showScreen('treasure');
+    currentGame.start(difficulty);
 }
 
 function showProgressModal() {
@@ -132,7 +214,7 @@ function showProgressModal() {
 
     const progressData = StorageManager.loadProgress('memory-garden');
 
-    if (!progressData || progressData.totalGames === 0) {
+    if (!progressData) {
         progressContent.innerHTML = `
       <div class="no-progress">
         <div class="no-progress-icon">🌱</div>

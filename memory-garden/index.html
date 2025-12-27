@@ -17,6 +17,7 @@
     <!-- Styles -->
     <link rel="stylesheet" href="../shared/css/common.css">
     <link rel="stylesheet" href="css/memory-garden.css">
+    <link rel="stylesheet" href="css/memory-garden-extra.css">
 </head>
 
 <body>
@@ -65,7 +66,7 @@
                             <div class="activity-icon">🌻</div>
                             <h3>Garden Sequence</h3>
                             <p>Remember the order flowers bloom</p>
-                            <span class="badge badge-success">Coming Soon!</span>
+                            <button class="btn btn-primary start-sequence-btn">Start Game</button>
                         </div>
 
                         <!-- Activity 3: Treasure Hunt -->
@@ -73,7 +74,11 @@
                             <div class="activity-icon">💎</div>
                             <h3>Treasure Hunt</h3>
                             <p>Find hidden treasures in the garden</p>
-                            <span class="badge badge-success">Coming Soon!</span>
+                            <div class="difficulty-badges">
+                                <span class="badge" data-difficulty="easy">Easy (4x4 grid)</span>
+                                <span class="badge" data-difficulty="medium">Medium (5x5 grid)</span>
+                                <span class="badge" data-difficulty="hard">Hard (6x6 grid)</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -144,6 +149,102 @@
             </div>
         </section>
 
+        <!-- Garden Sequence Game Screen -->
+        <section id="sequence-screen" class="screen">
+            <div class="container">
+                <div class="game-header flex-between">
+                    <div class="game-info">
+                        <h2>🌻 Garden Sequence</h2>
+                        <p id="gs-status">Watch the sequence...</p>
+                    </div>
+                    <div class="game-stats">
+                        <div class="stat">
+                            <span class="stat-label">Level</span>
+                            <span class="stat-value" id="gs-level">1</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Score</span>
+                            <span class="stat-value" id="gs-score">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sequence-container">
+                    <div class="sequence-flowers" id="sequence-flowers">
+                        <!-- Flowers will be generated here -->
+                    </div>
+                </div>
+
+                <!-- Game Over overlay for sequence -->
+                <div id="gs-game-over" class="game-over-overlay hidden">
+                    <div class="game-over-card">
+                        <h2>Game Over!</h2>
+                        <p>Final Score: <strong id="gs-final-score">0</strong></p>
+                        <p>Level Reached: <strong id="gs-final-level">0</strong></p>
+                        <div class="game-over-actions">
+                            <button class="btn btn-large btn-primary" id="gs-play-again">Play Again</button>
+                            <button class="btn btn-large btn-secondary" id="gs-back-menu">Back to Menu</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-controls">
+                    <button class="btn btn-secondary" id="sequence-back-btn">← Back to Menu</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Treasure Hunt Game Screen -->
+        <section id="treasure-screen" class="screen">
+            <div class="container">
+                <div class="game-header flex-between">
+                    <div class="game-info">
+                        <h2>💎 Treasure Hunt</h2>
+                        <p id="th-status">Memorize the treasure locations!</p>
+                    </div>
+                    <div class="game-stats">
+                        <div class="stat">
+                            <span class="stat-label">Found</span>
+                            <span class="stat-value"><span id="th-found">0</span>/<span id="th-total">4</span></span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Attempts</span>
+                            <span class="stat-value"><span id="th-attempts">0</span>/<span
+                                    id="th-max-attempts">10</span></span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Score</span>
+                            <span class="stat-value" id="th-score">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="treasure-container">
+                    <div id="th-grid" class="treasure-grid">
+                        <!-- Grid will be generated here -->
+                    </div>
+                </div>
+
+                <!-- Game Over overlay for treasure hunt -->
+                <div id="th-game-over" class="game-over-overlay hidden">
+                    <div class="game-over-card">
+                        <h2 id="th-result-title">🎉 Victory!</h2>
+                        <p>Score: <strong id="th-final-score">0</strong></p>
+                        <p>Treasures Found: <strong id="th-treasures-found">0/4</strong></p>
+                        <p>Attempts Used: <strong id="th-attempts-used">0/10</strong></p>
+                        <div class="game-over-actions">
+                            <button class="btn btn-large btn-primary" id="th-play-again">Play Again</button>
+                            <button class="btn btn-large btn-secondary" id="th-back-menu">Back to Menu</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-controls">
+                    <button class="btn btn-secondary" id="treasure-back-btn">← Back to Menu</button>
+                </div>
+            </div>
+        </section>
+
         <!-- Progress Modal -->
         <div id="progress-modal" class="modal">
             <div class="modal-content">
@@ -165,6 +266,8 @@
     <!-- Scripts -->
     <script src="../shared/js/storage.js"></script>
     <script src="js/memory-match.js"></script>
+    <script src="js/garden-sequence.js"></script>
+    <script src="js/treasure-hunt.js"></script>
     <script src="js/app.js"></script>
 </body>
 
