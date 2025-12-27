@@ -1,0 +1,81 @@
+.app-header {
+    background: linear-gradient(135deg, #2ed573, #7bed9f);
+    color: white;
+}
+
+.welcome-icon {
+    font-size: 5rem;
+}
+
+.task-pool {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
+    min-height: 120px;
+    padding: var(--space-md);
+    background: #f1f2f6;
+    border-radius: var(--radius-lg);
+    border: 2px dashed var(--border-color);
+}
+
+.timeline {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    margin-top: var(--space-xl);
+}
+
+.timeline-slot {
+    width: 150px;
+    height: 180px;
+    background: white;
+    border: 3px solid var(--border-color);
+    border-radius: var(--radius-md);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--border-color);
+}
+
+.routine-task {
+    width: 130px;
+    height: 160px;
+    background: white;
+    border: 2px solid var(--primary-color);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm);
+    text-align: center;
+    cursor: grab;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+    z-index: 10;
+}
+
+.routine-task .task-emoji {
+    font-size: 4rem;
+}
+
+.routine-task .task-label {
+    font-size: var(--font-size-sm);
+    font-weight: bold;
+    margin-top: var(--space-xs);
+    color: var(--text-dark);
+}
+
+.routine-task.sortable-ghost {
+    opacity: 0.4;
+}
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}

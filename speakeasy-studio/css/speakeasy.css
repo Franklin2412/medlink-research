@@ -1,0 +1,79 @@
+.app-header {
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-purple));
+    color: white;
+    padding: var(--space-md) 0;
+}
+
+.welcome-icon {
+    font-size: 5rem;
+    margin-bottom: var(--space-md);
+}
+
+.activity-card {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.activity-card:hover {
+    transform: translateY(-5px);
+}
+
+#play-sound-btn {
+    font-size: var(--font-size-xl);
+    padding: var(--space-lg) var(--space-2xl);
+    border-radius: var(--radius-full);
+}
+
+.option-btn {
+    font-size: 4rem;
+    padding: var(--space-xl);
+    background: white;
+    border: 4px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.option-btn:hover {
+    border-color: var(--primary-color);
+    background: var(--background-color);
+}
+
+.option-btn.correct {
+    background: var(--success-color);
+    border-color: #27ae60;
+    color: white;
+}
+
+.option-btn.wrong {
+    background: #ff7675;
+    border-color: #d63031;
+    color: white;
+}
+
+.icon-pulse {
+    display: inline-block;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}

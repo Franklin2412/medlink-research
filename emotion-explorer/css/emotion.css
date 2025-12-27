@@ -1,0 +1,59 @@
+.app-header {
+    background: linear-gradient(135deg, #ff9ff3, #feca57);
+    color: white;
+}
+
+.welcome-icon {
+    font-size: 5rem;
+}
+
+#target-emotion {
+    text-transform: lowercase;
+    background: #f1f2f6;
+    padding: 0 10px;
+    border-radius: var(--radius-sm);
+}
+
+.emotion-btn {
+    font-size: 6rem;
+    padding: var(--space-xl);
+    background: white;
+    border: 4px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.emotion-btn:hover {
+    transform: scale(1.05);
+    border-color: var(--primary-color);
+}
+
+.emotion-btn span {
+    font-size: var(--font-size-md);
+    margin-top: var(--space-sm);
+    color: var(--text-light);
+    display: none;
+    /* Hide label initially */
+}
+
+.emotion-btn.correct {
+    background: #55efc4;
+    border-color: #00b894;
+}
+
+.emotion-btn.wrong {
+    background: #fab1a0;
+    border-color: #e17055;
+}
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}

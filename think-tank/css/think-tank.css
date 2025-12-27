@@ -1,0 +1,62 @@
+.app-header {
+    background: linear-gradient(135deg, #1e3799, #0c2461);
+    color: white;
+}
+
+.welcome-icon {
+    font-size: 5rem;
+}
+
+.pattern-sequence {
+    display: flex;
+    gap: var(--space-md);
+    margin-right: var(--space-md);
+}
+
+.pattern-item {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border: 3px solid var(--border-color);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+.pattern-placeholder {
+    width: 80px;
+    height: 80px;
+    border: 4px dashed var(--primary-color);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    background: rgba(74, 144, 226, 0.1);
+}
+
+.option-btn {
+    font-size: 3rem;
+    padding: var(--space-lg);
+    background: white;
+    border: 3px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.option-btn:hover {
+    border-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}

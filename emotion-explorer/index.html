@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Explorer 😊 - NMDA Therapy Tools</title>
+    <link rel="stylesheet" href="../shared/css/common.css">
+    <link rel="stylesheet" href="css/emotion.css">
+</head>
+
+<body>
+    <header class="app-header">
+        <div class="container flex-between">
+            <h1>😊 Emotion Explorer</h1>
+            <nav>
+                <a href="../index.html" class="btn btn-small btn-secondary">← Home</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section id="welcome-screen" class="screen active">
+            <div class="container">
+                <div class="card welcome-card text-center">
+                    <div class="welcome-icon">🌈</div>
+                    <h2>How are you feeling?</h2>
+                    <p>Explore different emotions and learn how to recognize them!</p>
+                    <div class="activity-grid">
+                        <div class="card activity-card" id="start-faces">
+                            <div class="activity-icon">🎭</div>
+                            <h3>Face Matcher</h3>
+                            <p>Identify the emotion on the face.</p>
+                            <button class="btn btn-primary mt-md">Start Exploring</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="game-screen" class="screen">
+            <div class="container">
+                <div class="card game-card">
+                    <div id="instruction" class="text-center text-2xl font-bold mb-xl">
+                        Which face looks <span id="target-emotion" class="text-primary">Happy</span>?
+                    </div>
+
+                    <div id="emotion-options" class="grid grid-2">
+                        <!-- Emotion faces will be here -->
+                    </div>
+
+                    <div class="game-footer mt-xl text-center">
+                        <button id="back-to-menu" class="btn btn-secondary">Back to Menu</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../shared/js/storage.js"></script>
+    <script src="js/emotions.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
