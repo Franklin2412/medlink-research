@@ -1,17 +1,12 @@
 # GitHub Deployment Script for NMDA Therapy Tools
-# Run this in PowerShell after creating your GitHub repository
+# Run this in PowerShell to deploy to GitHub Pages
 
 Write-Host "🚀 Deploying NMDA Therapy Tools to GitHub" -ForegroundColor Cyan
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host ""
 
-# Step 1: Get GitHub username
-$GITHUB_USERNAME = Read-Host "📝 Please enter your GitHub username"
-
-if ([string]::IsNullOrWhiteSpace($GITHUB_USERNAME)) {
-    Write-Host "❌ Error: GitHub username is required" -ForegroundColor Red
-    exit 1
-}
+# Your GitHub username
+$GITHUB_USERNAME = "Franklin2412"
 
 Write-Host ""
 Write-Host "✅ GitHub username set to: $GITHUB_USERNAME" -ForegroundColor Green
