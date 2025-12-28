@@ -40,7 +40,7 @@ class HandDetector {
             // Initialize camera
             this.camera = new Camera(this.videoElement, {
                 onFrame: async () => {
-                    if (this.hands && this.isRunning) {
+                    if (this.hands && this.isRunning && this.videoElement.videoWidth > 0 && this.videoElement.videoHeight > 0) {
                         await this.hands.send({ image: this.videoElement });
                     }
                 },
