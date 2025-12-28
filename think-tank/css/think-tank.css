@@ -60,3 +60,13 @@
 .screen.active {
     display: block;
 }
+
+.option-btn.correct {
+    background: #55efc4;
+    border-color: #00b894;
+}
+
+.option-btn.wrong {
+    background: #fab1a0;
+    border-color: #e17055;
+}

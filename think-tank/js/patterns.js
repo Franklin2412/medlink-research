@@ -62,13 +62,14 @@ class PatternGame {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
             btn.textContent = opt;
-            btn.onclick = () => this.checkAnswer(opt);
+            btn.onclick = () => this.checkAnswer(opt, btn);
             optionsContainer.appendChild(btn);
         });
     }
 
-    checkAnswer(choice) {
+    checkAnswer(choice, btn) {
         if (choice === this.correctAnswer) {
+            btn.classList.add('correct');
             this.level++;
             // Show feedback
             const placeholder = document.getElementById('placeholder');
@@ -83,7 +84,10 @@ class PatternGame {
                 this.nextLevel();
             }, 1000);
         } else {
-            alert('Not quite! Try to see the pattern again.');
+            btn.classList.add('wrong');
+            const msg = new SpeechSynthesisUtterance('Try to see the pattern again.');
+            window.speechSynthesis.speak(msg);
+            setTimeout(() => btn.classList.remove('wrong'), 800);
         }
     }
 }
