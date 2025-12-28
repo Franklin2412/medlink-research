@@ -57,3 +57,52 @@
 .screen.active {
     display: block;
 }
+
+/* Breathing Activity */
+.breath-container {
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: var(--space-xl) 0;
+}
+
+.breathing-circle {
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, #54a0ff, #00d2ff);
+    border-radius: 50%;
+    box-shadow: 0 0 50px rgba(0, 210, 255, 0.5);
+    transition: all 4.1s ease-in-out;
+}
+
+/* Bubble Activity */
+.bubble-container {
+    height: 500px;
+    background: #f1f2f6;
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+    cursor: crosshair;
+}
+
+.bubble {
+    position: absolute;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    backdrop-filter: blur(2px);
+    cursor: pointer;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.5);
+    animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+    from {
+        transform: translateY(100vh);
+    }
+
+    to {
+        transform: translateY(-100px);
+    }
+}

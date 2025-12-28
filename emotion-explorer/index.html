@@ -33,11 +33,24 @@
                             <p>Identify the emotion on the face.</p>
                             <button class="btn btn-primary mt-md">Start Exploring</button>
                         </div>
+                        <div class="card activity-card" id="start-breath">
+                            <div class="activity-icon">🌬️</div>
+                            <h3>Deep Breath</h3>
+                            <p>Take a slow breath with the magic circle.</p>
+                            <button class="btn btn-secondary mt-md">Breathe</button>
+                        </div>
+                        <div class="card activity-card" id="start-bubbles">
+                            <div class="activity-icon">🫧</div>
+                            <h3>Calm Bubbles</h3>
+                            <p>Pop gentle bubbles to feel better.</p>
+                            <button class="btn btn-secondary mt-md">Play</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Face Matcher Screen -->
         <section id="game-screen" class="screen">
             <div class="container">
                 <div class="card game-card">
@@ -50,7 +63,36 @@
                     </div>
 
                     <div class="game-footer mt-xl text-center">
-                        <button id="back-to-menu" class="btn btn-secondary">Back to Menu</button>
+                        <button class="btn btn-secondary back-to-menu-btn">Back to Menu</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deep Breath Screen -->
+        <section id="breath-screen" class="screen">
+            <div class="container">
+                <div class="card breathing-card text-center">
+                    <h2 id="breath-instruction">Get ready...</h2>
+                    <div class="breath-container">
+                        <div id="breathing-circle" class="breathing-circle"></div>
+                    </div>
+                    <div class="game-footer mt-xl">
+                        <button class="btn btn-secondary back-to-menu-btn">Stop & Back</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bubble Screen -->
+        <section id="bubble-screen" class="screen">
+            <div class="container">
+                <div class="card bubble-card">
+                    <div id="bubble-container" class="bubble-container">
+                        <!-- Bubbles will be created here -->
+                    </div>
+                    <div class="game-footer mt-xl text-center">
+                        <button class="btn btn-secondary back-to-menu-btn">Back to Menu</button>
                     </div>
                 </div>
             </div>
@@ -59,6 +101,7 @@
 
     <script src="../shared/js/storage.js"></script>
     <script src="js/emotions.js"></script>
+    <script src="js/calm.js"></script>
     <script src="js/app.js"></script>
 </body>
 
