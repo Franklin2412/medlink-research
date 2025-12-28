@@ -301,6 +301,8 @@
     align-items: center;
     justify-content: center;
     min-height: 400px;
+    transform: scaleX(-1);
+    /* Mirror effect */
 }
 
 .video-section.full-width {
@@ -317,8 +319,12 @@
     object-fit: contain;
 }
 
-.video-section canvas {
+[id*="hand-canvas"] {
     z-index: 2;
+}
+
+[id*="game-canvas"] {
+    z-index: 3;
 }
 
 .camera-indicator {

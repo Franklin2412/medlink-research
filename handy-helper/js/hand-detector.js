@@ -144,13 +144,21 @@ class HandDetector {
         // Draw label
         if (landmarks.length > 0) {
             const wrist = landmarks[0];
+            const x = wrist.x * this.canvasElement.width;
+            const y = wrist.y * this.canvasElement.height;
+
+            this.canvasCtx.save();
+            // Move to landmark position
+            this.canvasCtx.translate(x, y);
+            // Flip back horizontally because container is flipped
+            this.canvasCtx.scale(-1, 1);
+
             this.canvasCtx.fillStyle = color;
             this.canvasCtx.font = 'bold 24px Arial';
-            this.canvasCtx.fillText(
-                handedness,
-                wrist.x * this.canvasElement.width - 20,
-                wrist.y * this.canvasElement.height - 20
-            );
+            // Draw relative to zero (landmark)
+            this.canvasCtx.fillText(handedness, -20, -20);
+
+            this.canvasCtx.restore();
         }
     }
 

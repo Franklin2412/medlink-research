@@ -102,10 +102,15 @@ async function showCameraSetup() {
 
         // Initialize hand detector
         const video = document.getElementById('camera-video');
-        const canvas = document.getElementById('camera-canvas');
+        const handCanvas = document.getElementById('camera-hand-canvas');
+        const gameCanvas = document.getElementById('camera-game-canvas');
 
         currentDetector = new HandDetector();
-        await currentDetector.initialize(video, canvas);
+        await currentDetector.initialize(video, handCanvas);
+
+        // Set game canvas size
+        gameCanvas.width = 640;
+        gameCanvas.height = 480;
 
         // Camera ready
         statusElement.querySelector('.status-icon').textContent = '✅';
@@ -155,12 +160,13 @@ function startWhichHandActivity() {
 
     // Transfer camera to activity screen
     const video = document.getElementById('wh-video');
-    const canvas = document.getElementById('wh-canvas');
+    const handCanvas = document.getElementById('wh-hand-canvas');
+    const gameCanvas = document.getElementById('wh-game-canvas');
 
-    transferCamera(video, canvas);
+    transferCamera(video, handCanvas, gameCanvas);
 
     // Create and start activity
-    currentActivity = new WhichHandActivity(currentDetector);
+    currentActivity = new WhichHandActivity(currentDetector, gameCanvas);
     currentActivity.start();
 }
 
@@ -169,12 +175,13 @@ function startHandTrackerActivity() {
 
     // Transfer camera to activity screen
     const video = document.getElementById('ht-video');
-    const canvas = document.getElementById('ht-canvas');
+    const handCanvas = document.getElementById('ht-hand-canvas');
+    const gameCanvas = document.getElementById('ht-game-canvas');
 
-    transferCamera(video, canvas);
+    transferCamera(video, handCanvas, gameCanvas);
 
     // Create and start activity
-    currentActivity = new HandTrackerActivity(currentDetector);
+    currentActivity = new HandTrackerActivity(currentDetector, gameCanvas);
     currentActivity.start();
 }
 
@@ -183,16 +190,17 @@ function startCatchStarsActivity() {
 
     // Transfer camera to activity screen
     const video = document.getElementById('cs-video');
-    const canvas = document.getElementById('cs-canvas');
+    const handCanvas = document.getElementById('cs-hand-canvas');
+    const gameCanvas = document.getElementById('cs-game-canvas');
 
-    transferCamera(video, canvas);
+    transferCamera(video, handCanvas, gameCanvas);
 
     // Create and start activity
-    currentActivity = new CatchStarsActivity(currentDetector, canvas);
+    currentActivity = new CatchStarsActivity(currentDetector, gameCanvas);
     currentActivity.start();
 }
 
-function transferCamera(newVideo, newCanvas) {
+function transferCamera(newVideo, newHandCanvas, newGameCanvas) {
     // Get current video stream
     const oldVideo = currentDetector.videoElement;
     const stream = oldVideo.srcObject;
@@ -203,12 +211,14 @@ function transferCamera(newVideo, newCanvas) {
 
     // Update detector references
     currentDetector.videoElement = newVideo;
-    currentDetector.canvasElement = newCanvas;
-    currentDetector.canvasCtx = newCanvas.getContext('2d');
+    currentDetector.canvasElement = newHandCanvas;
+    currentDetector.canvasCtx = newHandCanvas.getContext('2d');
 
-    // Set canvas size
-    newCanvas.width = 640;
-    newCanvas.height = 480;
+    // Set canvas sizes
+    newHandCanvas.width = 640;
+    newHandCanvas.height = 480;
+    newGameCanvas.width = 640;
+    newGameCanvas.height = 480;
 }
 
 function stopActivity() {
