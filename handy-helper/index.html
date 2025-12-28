@@ -87,6 +87,14 @@
                                 <button class="btn btn-primary start-activity-btn">Start</button>
                             </div>
 
+                            <!-- Activity 4: Balloon Pop -->
+                            <div class="activity-card" data-activity="balloon-pop">
+                                <div class="activity-icon">🎈</div>
+                                <h4>Balloon Pop</h4>
+                                <p>Pinch your fingers to pop colorful balloons!</p>
+                                <button class="btn btn-primary start-activity-btn">Start</button>
+                            </div>
+
                         </div>
                     </div>
 
@@ -251,6 +259,37 @@
                         <video id="cs-video" autoplay playsinline></video>
                         <canvas id="cs-hand-canvas"></canvas>
                         <canvas id="cs-game-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Activity Screen: Balloon Pop -->
+        <section id="balloon-pop-screen" class="screen activity-screen">
+            <div class="container-fluid">
+                <div class="activity-header">
+                    <div class="activity-info">
+                        <h2>🎈 Balloon Pop</h2>
+                        <p>Pinch your fingers to pop the balloons!</p>
+                    </div>
+                    <div class="activity-stats">
+                        <div class="stat">
+                            <span class="stat-label">Popped</span>
+                            <span class="stat-value" id="bp-score">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Time</span>
+                            <span class="stat-value" id="bp-time">0:00</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-accent" id="bp-stop-btn">Stop Activity</button>
+                </div>
+
+                <div class="game-area">
+                    <div class="video-section full-width">
+                        <video id="bp-video" autoplay playsinline></video>
+                        <canvas id="bp-hand-canvas"></canvas>
+                        <canvas id="bp-game-canvas"></canvas>
                     </div>
                 </div>
             </div>

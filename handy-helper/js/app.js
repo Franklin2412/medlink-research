@@ -14,7 +14,8 @@ const screens = {
     cameraSetup: document.getElementById('camera-setup-screen'),
     whichHand: document.getElementById('which-hand-screen'),
     handTracker: document.getElementById('hand-tracker-screen'),
-    catchStars: document.getElementById('catch-stars-screen')
+    catchStars: document.getElementById('catch-stars-screen'),
+    balloonPop: document.getElementById('balloon-pop-screen')
 };
 
 // Initialize app
@@ -47,6 +48,7 @@ function setupEventListeners() {
     document.getElementById('wh-stop-btn').addEventListener('click', () => stopActivity());
     document.getElementById('ht-stop-btn').addEventListener('click', () => stopActivity());
     document.getElementById('cs-stop-btn').addEventListener('click', () => stopActivity());
+    document.getElementById('bp-stop-btn').addEventListener('click', () => stopActivity());
 
     // Statistics modal
     document.getElementById('view-stats-btn').addEventListener('click', () => showStatsModal());
@@ -150,6 +152,9 @@ function startSelectedActivity() {
         case 'catch-stars':
             startCatchStarsActivity();
             break;
+        case 'balloon-pop':
+            startBalloonPopActivity();
+            break;
         default:
             alert('Unknown activity!');
     }
@@ -197,6 +202,21 @@ function startCatchStarsActivity() {
 
     // Create and start activity
     currentActivity = new CatchStarsActivity(currentDetector, gameCanvas);
+    currentActivity.start();
+}
+
+function startBalloonPopActivity() {
+    showScreen('balloonPop');
+
+    // Transfer camera to activity screen
+    const video = document.getElementById('bp-video');
+    const handCanvas = document.getElementById('bp-hand-canvas');
+    const gameCanvas = document.getElementById('bp-game-canvas');
+
+    transferCamera(video, handCanvas, gameCanvas);
+
+    // Create and start activity
+    currentActivity = new BalloonPopActivity(currentDetector, gameCanvas);
     currentActivity.start();
 }
 
