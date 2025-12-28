@@ -655,7 +655,7 @@ class DuckCatchActivity {
         this.time = 0;
         this.basketPos = { x: gameCanvas.width / 2, y: gameCanvas.height - 60 };
         this.targetBasketX = gameCanvas.width / 2;
-        this.basketWidth = 100;
+        this.basketWidth = 80; // Smaller basket
         this.basketHeight = 40;
     }
 
@@ -745,12 +745,14 @@ class DuckCatchActivity {
 
         // Spawn items from ducks
         const now = Date.now();
-        this.ducks.forEach(duck => {
-            if (now - duck.lastDropTime > 2000 + Math.random() * 3000) {
-                this.spawnItem(duck);
-                duck.lastDropTime = now;
-            }
-        });
+        if (this.items.length < 3) { // Limit to 3 items on screen
+            this.ducks.forEach(duck => {
+                if (now - duck.lastDropTime > 3000 + Math.random() * 4000) { // Reduced frequency
+                    this.spawnItem(duck);
+                    duck.lastDropTime = now;
+                }
+            });
+        }
 
         this.draw();
     }
@@ -842,12 +844,13 @@ class DuckCatchActivity {
             this.ctx.rotate(item.rotation);
 
             if (item.type === 'egg') {
-                // Egg
+                // Bigger Egg
                 this.ctx.beginPath();
                 this.ctx.fillStyle = '#FFFFFF';
-                this.ctx.ellipse(0, 0, 8, 12, 0, 0, Math.PI * 2);
+                this.ctx.ellipse(0, 0, 12, 18, 0, 0, Math.PI * 2);
                 this.ctx.fill();
                 this.ctx.strokeStyle = '#E0E0E0';
+                this.ctx.lineWidth = 2;
                 this.ctx.stroke();
             } else {
                 // Waste (brown swirl/blob)
