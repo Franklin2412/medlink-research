@@ -641,7 +641,297 @@ class BalloonPopActivity {
     }
 }
 
+// ===== ACTIVITY 5: Duck Catch =====
+class DuckCatchActivity {
+    constructor(detector, gameCanvas) {
+        this.detector = detector;
+        this.gameCanvas = gameCanvas;
+        this.ctx = gameCanvas.getContext('2d');
+        this.score = 0;
+        this.ducks = [];
+        this.items = [];
+        this.gameLoop = null;
+        this.startTime = null;
+        this.time = 0;
+        this.basketPos = { x: gameCanvas.width / 2, y: gameCanvas.height - 60 };
+        this.targetBasketX = gameCanvas.width / 2;
+        this.basketWidth = 100;
+        this.basketHeight = 40;
+    }
+
+    start() {
+        this.score = 0;
+        this.items = [];
+        this.startTime = Date.now();
+        this.time = 0;
+        this.setupDucks();
+        this.updateUI();
+
+        // Start game loop
+        this.gameLoop = setInterval(() => this.update(), 1000 / 30);
+    }
+
+    setupDucks() {
+        this.ducks = [];
+        const padding = 60;
+        const availableWidth = this.gameCanvas.width - padding * 2;
+        const spacing = availableWidth / 5;
+
+        for (let i = 0; i < 6; i++) {
+            this.ducks.push({
+                x: padding + i * spacing,
+                y: 80,
+                color: ['#FFD700', '#FFA500', '#FF8C00'][i % 3],
+                wobble: Math.random() * Math.PI * 2,
+                lastDropTime: Date.now() + Math.random() * 2000
+            });
+        }
+    }
+
+    stop() {
+        if (this.gameLoop) {
+            clearInterval(this.gameLoop);
+            this.gameLoop = null;
+        }
+
+        this.saveStats();
+    }
+
+    update() {
+        this.time = Math.floor((Date.now() - this.startTime) / 1000);
+        this.updateUI();
+
+        // Update basket position based on hand tracking
+        const hands = this.detector.getDetectedHands();
+        if (hands.length > 0) {
+            const hand = hands[0];
+            const indexTip = hand.landmarks[8];
+            this.targetBasketX = indexTip.x * this.gameCanvas.width;
+        }
+
+        // Smoothly interpolate basket position
+        this.basketPos.x += (this.targetBasketX - this.basketPos.x) * 0.3;
+
+        // Keep basket within bounds
+        const halfWidth = this.basketWidth / 2;
+        if (this.basketPos.x < halfWidth) this.basketPos.x = halfWidth;
+        if (this.basketPos.x > this.gameCanvas.width - halfWidth) this.basketPos.x = this.gameCanvas.width - halfWidth;
+
+        // Update items
+        this.items.forEach(item => {
+            item.y += item.speed;
+            item.rotation += item.rotationSpeed;
+        });
+
+        // Check for catches
+        for (let i = this.items.length - 1; i >= 0; i--) {
+            const item = this.items[i];
+
+            // Check collision with basket
+            const inXRange = Math.abs(item.x - this.basketPos.x) < this.basketWidth / 2 + 10;
+            const inYRange = item.y > this.basketPos.y - 10 && item.y < this.basketPos.y + 20;
+
+            if (inXRange && inYRange) {
+                this.handleCatch(item);
+                this.items.splice(i, 1);
+                continue;
+            }
+
+            // Remove items that fell off
+            if (item.y > this.gameCanvas.height + 20) {
+                this.items.splice(i, 1);
+            }
+        }
+
+        // Spawn items from ducks
+        const now = Date.now();
+        this.ducks.forEach(duck => {
+            if (now - duck.lastDropTime > 2000 + Math.random() * 3000) {
+                this.spawnItem(duck);
+                duck.lastDropTime = now;
+            }
+        });
+
+        this.draw();
+    }
+
+    spawnItem(duck) {
+        const isEgg = Math.random() > 0.3; // 70% chance for egg
+        this.items.push({
+            x: duck.x,
+            y: duck.y + 20,
+            type: isEgg ? 'egg' : 'waste',
+            speed: 3 + Math.random() * 3,
+            rotation: 0,
+            rotationSpeed: (Math.random() - 0.5) * 0.2
+        });
+    }
+
+    handleCatch(item) {
+        if (item.type === 'egg') {
+            this.score += 5;
+            this.playCatchEffect(true);
+        } else {
+            this.score = Math.max(0, this.score - 1);
+            this.playCatchEffect(false);
+        }
+    }
+
+    playCatchEffect(isGood) {
+        if (window.speechSynthesis) {
+            const voice = isGood ? 'yay' : 'oh no';
+            const utterance = new SpeechSynthesisUtterance(voice);
+            utterance.rate = 3;
+            utterance.pitch = isGood ? 2 : 1;
+            utterance.volume = 0.4;
+            // window.speechSynthesis.speak(utterance); // Lag precaution
+        }
+    }
+
+    draw() {
+        this.ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+
+        // Draw Branch
+        this.ctx.save();
+        this.ctx.strokeStyle = '#5D4037';
+        this.ctx.lineWidth = 15;
+        this.ctx.lineCap = 'round';
+        this.ctx.beginPath();
+        this.ctx.moveTo(20, 85);
+        this.ctx.lineTo(this.gameCanvas.width - 20, 85);
+        this.ctx.stroke();
+        this.ctx.restore();
+
+        // Draw Ducks
+        this.ducks.forEach(duck => {
+            this.ctx.save();
+            duck.wobble += 0.05;
+            const wobbleY = Math.sin(duck.wobble) * 3;
+
+            // Duck Body
+            this.ctx.beginPath();
+            this.ctx.fillStyle = duck.color;
+            this.ctx.arc(duck.x, duck.y + wobbleY, 20, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Duck Head
+            this.ctx.arc(duck.x + 15, duck.y - 10 + wobbleY, 12, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Duck Eye
+            this.ctx.beginPath();
+            this.ctx.fillStyle = '#000';
+            this.ctx.arc(duck.x + 18, duck.y - 12 + wobbleY, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Duck Beak
+            this.ctx.beginPath();
+            this.ctx.fillStyle = '#FF9800';
+            this.ctx.moveTo(duck.x + 25, duck.y - 10 + wobbleY);
+            this.ctx.lineTo(duck.x + 35, duck.y - 8 + wobbleY);
+            this.ctx.lineTo(duck.x + 25, duck.y - 6 + wobbleY);
+            this.ctx.fill();
+
+            this.ctx.restore();
+        });
+
+        // Draw Items
+        this.items.forEach(item => {
+            this.ctx.save();
+            this.ctx.translate(item.x, item.y);
+            this.ctx.rotate(item.rotation);
+
+            if (item.type === 'egg') {
+                // Egg
+                this.ctx.beginPath();
+                this.ctx.fillStyle = '#FFFFFF';
+                this.ctx.ellipse(0, 0, 8, 12, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.strokeStyle = '#E0E0E0';
+                this.ctx.stroke();
+            } else {
+                // Waste (brown swirl/blob)
+                this.ctx.beginPath();
+                this.ctx.fillStyle = '#795548';
+                this.ctx.arc(0, 0, 8, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.arc(0, -5, 5, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+
+            this.ctx.restore();
+        });
+
+        // Draw Basket
+        this.ctx.save();
+        this.ctx.translate(this.basketPos.x, this.basketPos.y);
+
+        // Basket body
+        this.ctx.fillStyle = '#8D6E63';
+        this.ctx.beginPath();
+        this.ctx.roundRect(-this.basketWidth / 2, 0, this.basketWidth, this.basketHeight, [0, 0, 20, 20]);
+        this.ctx.fill();
+
+        // Basket weave pattern
+        this.ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+        this.ctx.lineWidth = 2;
+        for (let i = -this.basketWidth / 2 + 10; i < this.basketWidth / 2; i += 15) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(i, 0);
+            this.ctx.lineTo(i, this.basketHeight);
+            this.ctx.stroke();
+        }
+
+        // Basket rim
+        this.ctx.fillStyle = '#6D4C41';
+        this.ctx.beginPath();
+        this.ctx.roundRect(-this.basketWidth / 2 - 5, -5, this.basketWidth + 10, 10, 5);
+        this.ctx.fill();
+
+        this.ctx.restore();
+    }
+
+    updateUI() {
+        document.getElementById('dc-score').textContent = this.score;
+        document.getElementById('dc-time').textContent = this.formatTime(this.time);
+    }
+
+    formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    saveStats() {
+        const session = {
+            date: new Date().toISOString(),
+            score: this.score,
+            time: this.time
+        };
+
+        const existing = StorageManager.loadProgress('handy-helper') || {};
+        if (!existing.duckCatch) {
+            existing.duckCatch = {
+                sessionsCompleted: 0,
+                totalScore: 0,
+                bestScore: 0,
+                history: []
+            };
+        }
+
+        existing.duckCatch.sessionsCompleted++;
+        existing.duckCatch.totalScore += this.score;
+        if (this.score > existing.duckCatch.bestScore) {
+            existing.duckCatch.bestScore = this.score;
+        }
+        existing.duckCatch.history.push(session);
+
+        StorageManager.saveProgress('handy-helper', existing);
+    }
+}
+
 // Export for use in app.js
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { WhichHandActivity, HandTrackerActivity, CatchStarsActivity, BalloonPopActivity };
+    module.exports = { WhichHandActivity, HandTrackerActivity, CatchStarsActivity, BalloonPopActivity, DuckCatchActivity };
 }

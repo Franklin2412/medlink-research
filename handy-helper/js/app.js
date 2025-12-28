@@ -15,7 +15,8 @@ const screens = {
     whichHand: document.getElementById('which-hand-screen'),
     handTracker: document.getElementById('hand-tracker-screen'),
     catchStars: document.getElementById('catch-stars-screen'),
-    balloonPop: document.getElementById('balloon-pop-screen')
+    balloonPop: document.getElementById('balloon-pop-screen'),
+    duckCatch: document.getElementById('duck-catch-screen')
 };
 
 // Initialize app
@@ -49,6 +50,7 @@ function setupEventListeners() {
     document.getElementById('ht-stop-btn').addEventListener('click', () => stopActivity());
     document.getElementById('cs-stop-btn').addEventListener('click', () => stopActivity());
     document.getElementById('bp-stop-btn').addEventListener('click', () => stopActivity());
+    document.getElementById('dc-stop-btn').addEventListener('click', () => stopActivity());
 
     // Statistics modal
     document.getElementById('view-stats-btn').addEventListener('click', () => showStatsModal());
@@ -155,6 +157,9 @@ function startSelectedActivity() {
         case 'balloon-pop':
             startBalloonPopActivity();
             break;
+        case 'duck-catch':
+            startDuckCatchActivity();
+            break;
         default:
             alert('Unknown activity!');
     }
@@ -217,6 +222,21 @@ function startBalloonPopActivity() {
 
     // Create and start activity
     currentActivity = new BalloonPopActivity(currentDetector, gameCanvas);
+    currentActivity.start();
+}
+
+function startDuckCatchActivity() {
+    showScreen('duckCatch');
+
+    // Transfer camera to activity screen
+    const video = document.getElementById('dc-video');
+    const handCanvas = document.getElementById('dc-hand-canvas');
+    const gameCanvas = document.getElementById('dc-game-canvas');
+
+    transferCamera(video, handCanvas, gameCanvas);
+
+    // Create and start activity
+    currentActivity = new DuckCatchActivity(currentDetector, gameCanvas);
     currentActivity.start();
 }
 
