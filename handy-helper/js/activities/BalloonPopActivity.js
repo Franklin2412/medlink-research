@@ -6,9 +6,32 @@ class BalloonPopActivity extends BaseActivity {
     constructor(detector, gameCanvas) {
         super(detector, gameCanvas);
         this.balloons = [];
+        this.particles = []; // Particle burst effect
         this.isPinching = false;
         this.pointerPos = { x: 0, y: 0 };
         this.colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#FF9F43', '#A29BFE'];
+        this.sceneryMode = true; // Use scenery instead of camera
+        this.shakeTime = 0; // Screen shake effect
+    }
+
+    start() {
+        this.balloons = [];
+        this.particles = [];
+        this.shakeTime = 0;
+        super.start();
+
+        if (this.sceneryMode) {
+            const videoElement = document.getElementById('bp-video');
+            if (videoElement) videoElement.style.opacity = '0';
+        }
+    }
+
+    stop() {
+        if (this.sceneryMode) {
+            const videoElement = document.getElementById('bp-video');
+            if (videoElement) videoElement.style.opacity = '1';
+        }
+        super.stop();
     }
 
     update() {
@@ -50,13 +73,24 @@ class BalloonPopActivity extends BaseActivity {
             // Small threshold for pinch
             if (distance < 0.06) {
                 this.isPinching = true;
-
-                // If this is a new pinch, try to pop
                 if (!wasPinching) {
                     this.checkPop();
                 }
             }
         }
+
+        // Update particles
+        this.particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.2; // Gravity
+            p.life -= 0.02;
+        });
+        this.particles = this.particles.filter(p => p.life > 0);
+
+        if (this.shakeTime > 0) this.shakeTime--;
+
+        this.draw();
     }
 
     spawnBalloon() {
@@ -88,28 +122,57 @@ class BalloonPopActivity extends BaseActivity {
     }
 
     popBalloon(index) {
+        const balloon = this.balloons[index];
+        this.createParticles(balloon.x, balloon.y, balloon.color);
         this.balloons.splice(index, 1);
         this.score++;
+        this.shakeTime = 5;
         this.playPopEffect();
+    }
+
+    createParticles(x, y, color) {
+        for (let i = 0; i < 15; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 2 + Math.random() * 5;
+            this.particles.push({
+                x: x,
+                y: y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                color: color,
+                life: 1.0,
+                size: 3 + Math.random() * 4
+            });
+        }
     }
 
     playPopEffect() {
         if (window.speechSynthesis) {
-            const utterance = new SpeechSynthesisUtterance('pop');
-            utterance.rate = 4;
+            const utterance = new SpeechSynthesisUtterance('pop!');
+            utterance.rate = 5;
             utterance.pitch = 2;
-            utterance.volume = 0.3;
+            utterance.volume = 0.5;
             window.speechSynthesis.speak(utterance);
         }
     }
 
     draw() {
+        this.ctx.save();
+        if (this.shakeTime > 0) {
+            const dx = (Math.random() - 0.5) * 10;
+            const dy = (Math.random() - 0.5) * 10;
+            this.ctx.translate(dx, dy);
+        }
+
         this.ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+
+        if (this.sceneryMode) {
+            this.drawScenery();
+        }
 
         // Draw balloons
         this.balloons.forEach(balloon => {
             this.ctx.save();
-
             balloon.wobble += balloon.wobbleSpeed;
             const wobbleX = Math.sin(balloon.wobble) * 8;
 
@@ -135,42 +198,97 @@ class BalloonPopActivity extends BaseActivity {
                 balloon.x + wobbleX, balloon.y + balloon.radius * 1.2 + 60
             );
             this.ctx.stroke();
-
             this.ctx.restore();
         });
 
-        // Pointer
+        // Draw Particles
+        this.particles.forEach(p => {
+            this.ctx.save();
+            this.ctx.globalAlpha = p.life;
+            this.ctx.fillStyle = p.color;
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.restore();
+        });
+
+        // Pointer (Crosshair)
         const hands = this.detector.getDetectedHands();
         if (hands.length > 0) {
-            this.ctx.save();
-            this.ctx.setLineDash(this.isPinching ? [] : [5, 5]);
-            this.ctx.strokeStyle = this.isPinching ? '#FFFC00' : '#FFFFFF';
-            this.ctx.lineWidth = 3;
-            this.ctx.beginPath();
-            this.ctx.arc(this.pointerPos.x, this.pointerPos.y, 25, 0, Math.PI * 2);
-            this.ctx.stroke();
-
-            this.ctx.beginPath();
-            this.ctx.fillStyle = this.isPinching ? '#FFFC00' : 'rgba(255, 255, 255, 0.3)';
-            this.ctx.arc(this.pointerPos.x, this.pointerPos.y, 6, 0, Math.PI * 2);
-            this.ctx.fill();
-
-            if (this.isPinching) {
-                for (let i = 0; i < 8; i++) {
-                    const angle = (i / 8) * Math.PI * 2;
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(this.pointerPos.x + Math.cos(angle) * 10, this.pointerPos.y + Math.sin(angle) * 10);
-                    this.ctx.lineTo(this.pointerPos.x + Math.cos(angle) * 20, this.pointerPos.y + Math.sin(angle) * 20);
-                    this.ctx.stroke();
-                }
-            }
-            this.ctx.restore();
+            this.drawCrosshair(this.pointerPos.x, this.pointerPos.y, this.isPinching);
         }
+
+        this.ctx.restore();
+    }
+
+    drawScenery() {
+        // Sky
+        const gradient = this.ctx.createLinearGradient(0, 0, 0, this.gameCanvas.height);
+        gradient.addColorStop(0, '#E1F5FE');
+        gradient.addColorStop(1, '#B3E5FC');
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+
+        // Ground/Meadow
+        this.ctx.fillStyle = '#C8E6C9';
+        this.ctx.beginPath();
+        this.ctx.ellipse(this.gameCanvas.width / 2, this.gameCanvas.height + 100, this.gameCanvas.width, 300, 0, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Clouds
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        this.drawCloud(100, 150, 30);
+        this.drawCloud(500, 100, 40);
+        this.drawCloud(300, 200, 25);
+    }
+
+    drawCloud(x, y, r) {
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, r, 0, Math.PI * 2);
+        this.ctx.arc(x + r, y - 10, r * 0.8, 0, Math.PI * 2);
+        this.ctx.arc(x + r, y + 10, r * 0.8, 0, Math.PI * 2);
+        this.ctx.arc(x + r * 2, y, r, 0, Math.PI * 2);
+        this.ctx.fill();
+    }
+
+    drawCrosshair(x, y, isPinching) {
+        this.ctx.save();
+        this.ctx.translate(x, y);
+
+        const size = isPinching ? 20 : 25;
+        const color = isPinching ? '#FF5252' : '#2196F3';
+        this.ctx.strokeStyle = color;
+        this.ctx.lineWidth = 3;
+
+        // Outer Circle
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, size, 0, Math.PI * 2);
+        this.ctx.stroke();
+
+        // Cross lines
+        this.ctx.beginPath();
+        this.ctx.moveTo(-size - 10, 0); this.ctx.lineTo(-5, 0);
+        this.ctx.moveTo(size + 10, 0); this.ctx.lineTo(5, 0);
+        this.ctx.moveTo(0, -size - 10); this.ctx.lineTo(0, -5);
+        this.ctx.moveTo(0, size + 10); this.ctx.lineTo(0, 5);
+        this.ctx.stroke();
+
+        // Center Dot
+        this.ctx.fillStyle = color;
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, 3, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        this.ctx.restore();
     }
 
     updateUI() {
-        document.getElementById('bp-score').textContent = this.score;
-        document.getElementById('bp-time').textContent = this.formatTime(this.time);
+        if (document.getElementById('bp-score')) {
+            document.getElementById('bp-score').textContent = this.score;
+        }
+        if (document.getElementById('bp-time')) {
+            document.getElementById('bp-time').textContent = this.formatTime(this.time);
+        }
     }
 
     saveStats() {

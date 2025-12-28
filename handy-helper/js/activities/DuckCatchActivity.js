@@ -12,6 +12,7 @@ class DuckCatchActivity extends BaseActivity {
         this.basketWidth = 80;
         this.basketHeight = 40;
         this.sceneryMode = true; // Use scenery instead of camera feed
+        this.brokenItems = []; // Track missed eggs
     }
 
     start() {
@@ -81,12 +82,23 @@ class DuckCatchActivity extends BaseActivity {
             }
 
             if (item.y > this.gameCanvas.height + 20) {
+                // If it's an egg, add a "broken" splat effect
+                if (item.type === 'egg') {
+                    this.brokenItems.push({
+                        x: item.x,
+                        y: this.gameCanvas.height - 10,
+                        timestamp: Date.now()
+                    });
+                }
                 this.items.splice(i, 1);
             }
         }
 
-        // Spawn items
+        // Cleanup old broken items (after 1.5s)
         const now = Date.now();
+        this.brokenItems = this.brokenItems.filter(splat => now - splat.timestamp < 1500);
+
+        // Spawn items
         if (this.items.length < 3) {
             this.ducks.forEach(duck => {
                 if (now - duck.lastDropTime > 3000 + Math.random() * 4000) {
@@ -200,6 +212,29 @@ class DuckCatchActivity extends BaseActivity {
                 this.ctx.arc(0, -5, 5, 0, Math.PI * 2);
                 this.ctx.fill();
             }
+
+            this.ctx.restore();
+        });
+
+        // Draw Broken Splats
+        this.brokenItems.forEach(splat => {
+            this.ctx.save();
+            this.ctx.translate(splat.x, splat.y);
+
+            // Yolk splat
+            this.ctx.fillStyle = '#FFEB3B';
+            this.ctx.beginPath();
+            this.ctx.ellipse(0, 0, 15, 8, 0, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Shell fragments
+            this.ctx.fillStyle = '#FFFFFF';
+            this.ctx.beginPath();
+            this.ctx.moveTo(-12, -2); this.ctx.lineTo(-18, -8); this.ctx.lineTo(-8, -6);
+            this.ctx.fill();
+            this.ctx.beginPath();
+            this.ctx.moveTo(12, -2); this.ctx.lineTo(18, -8); this.ctx.lineTo(8, -6);
+            this.ctx.fill();
 
             this.ctx.restore();
         });
