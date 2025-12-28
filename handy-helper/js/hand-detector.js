@@ -73,7 +73,8 @@ class HandDetector {
         if (results.multiHandLandmarks && results.multiHandedness) {
             for (let i = 0; i < results.multiHandLandmarks.length; i++) {
                 const landmarks = results.multiHandLandmarks[i];
-                const handedness = results.multiHandedness[i].label; // "Left" or "Right"
+                const rawHandedness = results.multiHandedness[i].label;
+                const handedness = rawHandedness === 'Left' ? 'Right' : 'Left'; // Swap for mirror display
 
                 this.detectedHands.push({
                     landmarks: landmarks,
