@@ -5,8 +5,9 @@
 
 // ===== ACTIVITY 1: Which Hand? =====
 class WhichHandActivity {
-    constructor(detector) {
+    constructor(detector, gameCanvas) {
         this.detector = detector;
+        this.gameCanvas = gameCanvas;
         this.score = 0;
         this.round = 1;
         this.maxRounds = 10;
@@ -191,8 +192,9 @@ class WhichHandActivity {
 
 // ===== ACTIVITY 2: Hand Tracker =====
 class HandTrackerActivity {
-    constructor(detector) {
+    constructor(detector, gameCanvas) {
         this.detector = detector;
+        this.gameCanvas = gameCanvas;
         this.updateInterval = null;
     }
 
