@@ -41,27 +41,23 @@ function setupEventListeners() {
         }
     });
 
-    // Game control buttons
-    document.getElementById('new-game-btn').addEventListener('click', () => {
-        startMemoryMatch(currentDifficulty);
-    });
-
-    document.getElementById('change-difficulty-btn').addEventListener('click', () => {
-        showWelcomeScreen();
-    });
-
+    // Navigation buttons
     document.getElementById('uni-back-to-menu-btn').addEventListener('click', () => {
         showWelcomeScreen();
     });
 
     // Victory screen buttons
     document.getElementById('play-again-btn').addEventListener('click', () => {
-        startMemoryMatch(currentDifficulty);
+        if (currentGame instanceof MemoryMatchGame) {
+            startMemoryMatch(currentDifficulty);
+        } else if (currentGame instanceof GardenSequenceGame) {
+            startGardenSequence();
+        } else if (currentGame instanceof TreasureHuntGame) {
+            startTreasureHunt(currentDifficulty);
+        }
     });
 
-    document.getElementById('victory-menu-btn').addEventListener('click', () => {
-        showWelcomeScreen();
-    });
+    // Back to menu is handled by the universal bottom bar button
 
     // Progress modal
     document.getElementById('view-progress-btn').addEventListener('click', () => {
