@@ -12,12 +12,12 @@ class GestureEngine {
         this.cursorElement = null;
         this.hands = null;
         this.camera = null;
-        
+
         this.isEnabled = false;
         this.isGrabbing = false;
         this.lastX = 0;
         this.lastY = 0;
-        
+
         this.waveDetector = {
             history: [],
             threshold: 0.15,
@@ -33,7 +33,7 @@ class GestureEngine {
 
         this.createElements();
         this.setupHands();
-        
+
         // Load preference
         const saved = localStorage.getItem('gesture-control-enabled');
         if (saved === 'true') {
@@ -72,18 +72,18 @@ class GestureEngine {
         const container = document.createElement('div');
         container.id = 'gesture-camera-container';
         container.classList.add('hidden');
-        
+
         this.videoElement = document.createElement('video');
         this.videoElement.id = 'gesture-video';
-        
+
         this.canvasElement = document.createElement('canvas');
         this.canvasElement.id = 'gesture-canvas';
         this.canvasCtx = this.canvasElement.getContext('2d');
-        
+
         container.appendChild(this.videoElement);
         container.appendChild(this.canvasElement);
         document.body.appendChild(container);
-        
+
         // Toggle Button (Add to menu or float)
         this.addToggleControl();
     }
@@ -120,7 +120,7 @@ class GestureEngine {
         localStorage.setItem('gesture-control-enabled', 'true');
         this.toggleBtn.innerHTML = '🚫 Disable Gestures';
         this.toggleBtn.classList.replace('btn-secondary', 'btn-accent');
-        
+
         document.getElementById('gesture-camera-container').classList.remove('hidden');
         this.cursorElement.classList.remove('hidden');
 
@@ -140,10 +140,10 @@ class GestureEngine {
         localStorage.setItem('gesture-control-enabled', 'false');
         this.toggleBtn.innerHTML = '✋ Enable Gestures';
         this.toggleBtn.classList.replace('btn-accent', 'btn-secondary');
-        
+
         document.getElementById('gesture-camera-container').classList.add('hidden');
         this.cursorElement.classList.add('hidden');
-        
+
         if (this.camera) {
             this.camera.stop();
         }
@@ -157,15 +157,15 @@ class GestureEngine {
     onResults(results) {
         this.canvasCtx.save();
         this.canvasCtx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
-        
+
         if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
             const landmarks = results.multiHandLandmarks[0];
-            
+
             // Draw landmarks for debugging/feedback
             // @ts-ignore
-            drawConnectors(this.canvasCtx, landmarks, HAND_CONNECTIONS, {color: '#4ECDC4', lineWidth: 5});
+            drawConnectors(this.canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#4ECDC4', lineWidth: 5 });
             // @ts-ignore
-            drawLandmarks(this.canvasCtx, landmarks, {color: '#FFD93D', lineWidth: 2});
+            drawLandmarks(this.canvasCtx, landmarks, { color: '#FFD93D', lineWidth: 2 });
 
             // Tracking index finger tip (8)
             const indexTip = landmarks[8];
@@ -220,14 +220,26 @@ class GestureEngine {
     detectWave(landmarks) {
         const wrist = landmarks[0];
         this.waveDetector.history.push(wrist.x);
-        if (this.waveDetector.history.length > 15) this.waveDetector.history.shift();
+        if (this.waveDetector.history.length > 20) this.waveDetector.history.shift();
 
-        if (this.waveDetector.history.length === 15) {
+        if (this.waveDetector.history.length === 20) {
             const min = Math.min(...this.waveDetector.history);
             const max = Math.max(...this.waveDetector.history);
             const range = max - min;
 
-            if (range > this.waveDetector.threshold) {
+            // Check for direction changes (back and forth motion)
+            let directionChanges = 0;
+            let lastDir = 0;
+            for (let i = 1; i < this.waveDetector.history.length; i++) {
+                let dir = Math.sign(this.waveDetector.history[i] - this.waveDetector.history[i - 1]);
+                if (dir !== 0 && dir !== lastDir) {
+                    if (lastDir !== 0) directionChanges++;
+                    lastDir = dir;
+                }
+            }
+
+            // A wave needs a significant range AND at least 2 direction changes
+            if (range > 0.25 && directionChanges >= 2) {
                 const now = Date.now();
                 if (now - this.waveDetector.lastWaveTime > 2000) {
                     this.onWaveDetected();
@@ -240,7 +252,7 @@ class GestureEngine {
     onWaveDetected() {
         document.body.classList.add('wave-active');
         setTimeout(() => document.body.classList.remove('wave-active'), 1000);
-        
+
         // Trigger back navigation
         const backBtn = document.querySelector('.btn-secondary[href*="index.html"], #back-to-menu, .back-to-menu-btn');
         if (backBtn) {
