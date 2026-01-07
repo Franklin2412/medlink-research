@@ -12,7 +12,8 @@
     width: var(--cursor-size);
     height: var(--cursor-size);
     pointer-events: none;
-    z-index: 9999;
+    z-index: 10000;
+    /* Extremely high to stay above everything */
     transform: translate(-50%, -50%);
     transition: transform 0.1s ease-out, width 0.2s, height 0.2s;
     display: flex;
@@ -51,7 +52,7 @@
     border-radius: var(--radius-md);
     overflow: hidden;
     z-index: 9998;
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
     transition: opacity 0.3s;
     cursor: move;
 }
@@ -101,9 +102,20 @@
     animation: wave-hint 0.5s infinite;
 }
 
+/* Body Padding when gestures are active */
+body.gesture-active {
+    padding-bottom: 170px;
+    /* Space for camera overlay */
+}
+
 /* Enable Button */
 .gesture-toggle-btn {
     z-index: 9997;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gesture-toggle-btn:hover {
+    transform: scale(1.05);
 }
 
 .gesture-toggle-btn.fixed {

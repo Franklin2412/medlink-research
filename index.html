@@ -377,7 +377,9 @@
     </footer>
 
     <!-- Scripts -->
+    <link rel="stylesheet" href="shared/css/gesture-style.css">
     <script src="shared/js/storage.js"></script>
+    <script src="shared/js/gesture-engine.js"></script>
     <script>
         // Accessibility toggles
         const toggleContrast = document.getElementById('toggle-contrast');
@@ -411,7 +413,6 @@
         document.getElementById('export-data').addEventListener('click', (e) => {
             e.preventDefault();
             StorageManager.downloadData();
-            alert('Your progress data has been downloaded!');
         });
     </script>
 </body>

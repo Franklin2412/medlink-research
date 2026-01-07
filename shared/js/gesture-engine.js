@@ -13,7 +13,10 @@ class GestureEngine {
         this.hands = null;
         this.camera = null;
 
-        this.isEnabled = false;
+        // Load preference immediately
+        const saved = localStorage.getItem('gesture-control-enabled');
+        this.isEnabled = saved === 'true';
+
         this.isGrabbing = false;
         this.lastX = 0;
         this.lastY = 0;
@@ -23,10 +26,12 @@ class GestureEngine {
             threshold: 0.15,
             lastWaveTime: 0
         };
+
+        this.isInitialized = false;
     }
 
     async init() {
-        if (this.hands) return;
+        if (this.isInitialized) return;
 
         // Load MediaPipe scripts dynamically if not already present
         await this.loadScripts();
@@ -34,9 +39,9 @@ class GestureEngine {
         this.createElements();
         this.setupHands();
 
-        // Load preference
-        const saved = localStorage.getItem('gesture-control-enabled');
-        if (saved === 'true') {
+        this.isInitialized = true;
+
+        if (this.isEnabled) {
             this.enable();
         }
     }
@@ -89,13 +94,15 @@ class GestureEngine {
     }
 
     addToggleControl() {
+        if (this.toggleBtn) return;
+
         const btn = document.createElement('button');
-        btn.className = 'btn btn-small btn-secondary gesture-toggle-btn';
-        btn.innerHTML = '✋ Enable Gestures';
+        btn.className = `btn btn-small ${this.isEnabled ? 'btn-accent' : 'btn-secondary'} gesture-toggle-btn`;
+        btn.innerHTML = this.isEnabled ? '🚫 Disable Gestures' : '✋ Enable Gestures';
         btn.onclick = () => this.toggle();
 
         // Try to find a navigation container for better alignment
-        const nav = document.querySelector('.nav-links, nav, .header-actions');
+        const nav = document.querySelector('.nav-links, nav, .header-actions, .accessibility-toolbar');
         if (nav) {
             nav.appendChild(btn);
         } else {
@@ -125,15 +132,47 @@ class GestureEngine {
         this.hands.onResults((results) => this.onResults(results));
     }
 
-    async enable() {
+    enable() {
         this.isEnabled = true;
         localStorage.setItem('gesture-control-enabled', 'true');
-        this.toggleBtn.innerHTML = '🚫 Disable Gestures';
-        this.toggleBtn.classList.replace('btn-secondary', 'btn-accent');
 
-        document.getElementById('gesture-camera-container').classList.remove('hidden');
-        this.cursorElement.classList.remove('hidden');
+        if (this.toggleBtn) {
+            this.toggleBtn.innerHTML = '🚫 Disable Gestures';
+            this.toggleBtn.classList.replace('btn-secondary', 'btn-accent');
+        }
 
+        document.getElementById('gesture-camera-container')?.classList.remove('hidden');
+        document.body.classList.add('gesture-active');
+
+        if (this.cursorElement) this.cursorElement.classList.remove('hidden');
+
+        if (!this.camera) {
+            this.startCamera();
+        } else {
+            this.camera.start();
+        }
+    }
+
+    disable() {
+        this.isEnabled = false;
+        localStorage.setItem('gesture-control-enabled', 'false');
+
+        if (this.toggleBtn) {
+            this.toggleBtn.innerHTML = '✋ Enable Gestures';
+            this.toggleBtn.classList.replace('btn-accent', 'btn-secondary');
+        }
+
+        document.getElementById('gesture-camera-container')?.classList.add('hidden');
+        document.body.classList.remove('gesture-active');
+
+        if (this.cursorElement) this.cursorElement.classList.add('hidden');
+
+        if (this.camera) {
+            this.camera.stop();
+        }
+    }
+
+    startCamera() {
         // @ts-ignore
         this.camera = new Camera(this.videoElement, {
             onFrame: async () => {
@@ -143,20 +182,6 @@ class GestureEngine {
             height: 480
         });
         this.camera.start();
-    }
-
-    disable() {
-        this.isEnabled = false;
-        localStorage.setItem('gesture-control-enabled', 'false');
-        this.toggleBtn.innerHTML = '✋ Enable Gestures';
-        this.toggleBtn.classList.replace('btn-accent', 'btn-secondary');
-
-        document.getElementById('gesture-camera-container').classList.add('hidden');
-        this.cursorElement.classList.add('hidden');
-
-        if (this.camera) {
-            this.camera.stop();
-        }
     }
 
     toggle() {
