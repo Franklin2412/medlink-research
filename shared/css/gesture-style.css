@@ -19,7 +19,7 @@
     align-items: center;
     justify-content: center;
     font-size: 40px;
-    filter: drop-shadow(0 0 10px rgba(0,0,0,0.3));
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
     user-select: none;
 }
 
@@ -29,12 +29,14 @@
 }
 
 #gesture-cursor::after {
-    content: '🪄'; /* Magic Wand */
+    content: '🪄';
+    /* Magic Wand */
     display: block;
 }
 
 #gesture-cursor.grabbing::after {
-    content: '✨'; /* Sparkle/Grab effect */
+    content: '✨';
+    /* Sparkle/Grab effect */
 }
 
 /* Camera Overlay */
@@ -63,7 +65,8 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: scaleX(-1); /* Mirror effect */
+    transform: scaleX(-1);
+    /* Mirror effect */
 }
 
 #gesture-canvas {
@@ -78,9 +81,19 @@
 
 /* Feedback Animations */
 @keyframes wave-hint {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-20deg); }
-    75% { transform: rotate(20deg); }
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-20deg);
+    }
+
+    75% {
+        transform: rotate(20deg);
+    }
 }
 
 .wave-active #gesture-cursor::after {
@@ -90,8 +103,11 @@
 
 /* Enable Button */
 .gesture-toggle-btn {
+    z-index: 9997;
+}
+
+.gesture-toggle-btn.fixed {
     position: fixed;
     top: 20px;
     right: 20px;
-    z-index: 9997;
 }

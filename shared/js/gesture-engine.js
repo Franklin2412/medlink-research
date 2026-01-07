@@ -93,7 +93,17 @@ class GestureEngine {
         btn.className = 'btn btn-small btn-secondary gesture-toggle-btn';
         btn.innerHTML = '✋ Enable Gestures';
         btn.onclick = () => this.toggle();
-        document.body.appendChild(btn);
+
+        // Try to find a navigation container for better alignment
+        const nav = document.querySelector('.nav-links, nav, .header-actions');
+        if (nav) {
+            nav.appendChild(btn);
+        } else {
+            // Fallback to fixed positioning if no header container is found
+            btn.classList.add('fixed');
+            document.body.appendChild(btn);
+        }
+
         this.toggleBtn = btn;
     }
 
