@@ -117,7 +117,7 @@ body.full-screen-game {
 .playing-area {
     flex-grow: 1;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
     background: var(--background-color);
 }
 
