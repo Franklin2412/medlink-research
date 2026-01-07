@@ -191,7 +191,9 @@ class GestureEngine {
             nx = Math.max(0, Math.min(1, nx));
             ny = Math.max(0, Math.min(1, ny));
 
-            const x = nx * window.innerWidth;
+            // nx is the normalized horizontal position (0-1)
+            // Flip it (1 - nx) to match mirrored camera behavior
+            const x = (1 - nx) * window.innerWidth;
             const y = ny * window.innerHeight;
 
             this.updateCursor(x, y);
