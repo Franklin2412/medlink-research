@@ -179,8 +179,20 @@ class GestureEngine {
 
             // Tracking index finger tip (8)
             const indexTip = landmarks[8];
-            const x = (1 - indexTip.x) * window.innerWidth;
-            const y = indexTip.y * window.innerHeight;
+
+            // Comfort Zone Scaling: Map central 70% of camera to 100% of screen.
+            // This makes it MUCH easier for kids to reach the edges and improves calibration.
+            const margin = 0.15; // 15% margin on each side
+
+            let nx = (indexTip.x - margin) / (1 - 2 * margin);
+            let ny = (indexTip.y - margin) / (1 - 2 * margin);
+
+            // Clamp to [0, 1]
+            nx = Math.max(0, Math.min(1, nx));
+            ny = Math.max(0, Math.min(1, ny));
+
+            const x = nx * window.innerWidth;
+            const y = ny * window.innerHeight;
 
             this.updateCursor(x, y);
             this.detectGestures(landmarks, x, y);
