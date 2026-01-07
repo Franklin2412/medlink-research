@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="css/handy-helper.css">
 </head>
 
-<body class="full-screen-game wand-restricted">
+<body class="full-screen-game">
     <!-- Skip link -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -73,6 +73,10 @@
                             <video id="camera-video" autoplay playsinline></video>
                             <canvas id="camera-hand-canvas"></canvas>
                             <canvas id="camera-game-canvas"></canvas>
+                        </div>
+                        <div id="camera-status" class="setup-status hidden">
+                            <span class="status-icon">⏳</span>
+                            <span class="status-text">Initializing camera...</span>
                         </div>
                         <div class="setup-controls mt-lg">
                             <button class="btn btn-large btn-primary" id="start-activity-btn" disabled>Ready!</button>

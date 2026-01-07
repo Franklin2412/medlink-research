@@ -86,10 +86,12 @@ function showScreen(screenName) {
 
 function showWelcomeScreen() {
     showScreen('welcome');
+    document.body.classList.remove('wand-restricted');
 }
 
 async function showCameraSetup() {
     showScreen('cameraSetup');
+    document.body.classList.remove('wand-restricted');
 
     const statusElement = document.getElementById('camera-status');
     const startBtn = document.getElementById('start-activity-btn');
@@ -142,6 +144,7 @@ function startSelectedActivity() {
 
     document.getElementById('universal-exit-btn').classList.remove('hidden');
     document.getElementById('game-info-display').innerHTML = 'Initializing...';
+    document.body.classList.add('wand-restricted');
 
     switch (selectedActivity) {
         case 'which-hand':
@@ -267,6 +270,7 @@ function stopActivity() {
 
     document.getElementById('universal-exit-btn').classList.add('hidden');
     document.getElementById('game-info-display').innerHTML = '';
+    document.body.classList.remove('wand-restricted');
 
     stopCamera();
     showWelcomeScreen();
