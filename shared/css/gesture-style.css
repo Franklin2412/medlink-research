@@ -1,0 +1,97 @@
+/* Gesture Control Styles */
+
+:root {
+    --cursor-size: 60px;
+    --cursor-color: var(--primary-color, #4ECDC4);
+    --cursor-accent: var(--accent-color, #FF6B9D);
+}
+
+/* Virtual Cursor */
+#gesture-cursor {
+    position: fixed;
+    width: var(--cursor-size);
+    height: var(--cursor-size);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease-out, width 0.2s, height 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    filter: drop-shadow(0 0 10px rgba(0,0,0,0.3));
+    user-select: none;
+}
+
+#gesture-cursor.grabbing {
+    transform: translate(-50%, -50%) scale(0.8);
+    filter: drop-shadow(0 0 15px var(--cursor-accent));
+}
+
+#gesture-cursor::after {
+    content: '🪄'; /* Magic Wand */
+    display: block;
+}
+
+#gesture-cursor.grabbing::after {
+    content: '✨'; /* Sparkle/Grab effect */
+}
+
+/* Camera Overlay */
+#gesture-camera-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 200px;
+    height: 150px;
+    background: #000;
+    border: 4px solid var(--card-background);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    z-index: 9998;
+    box-shadow: var(--shadow-lg);
+    transition: opacity 0.3s;
+    cursor: move;
+}
+
+#gesture-camera-container.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#gesture-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* Mirror effect */
+}
+
+#gesture-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scaleX(-1);
+    pointer-events: none;
+}
+
+/* Feedback Animations */
+@keyframes wave-hint {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-20deg); }
+    75% { transform: rotate(20deg); }
+}
+
+.wave-active #gesture-cursor::after {
+    content: '👋';
+    animation: wave-hint 0.5s infinite;
+}
+
+/* Enable Button */
+.gesture-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9997;
+}
