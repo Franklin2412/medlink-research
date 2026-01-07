@@ -16,7 +16,8 @@ const screens = {
     handTracker: document.getElementById('hand-tracker-screen'),
     catchStars: document.getElementById('catch-stars-screen'),
     balloonPop: document.getElementById('balloon-pop-screen'),
-    duckCatch: document.getElementById('duck-catch-screen')
+    duckCatch: document.getElementById('duck-catch-screen'),
+    featherFlyer: document.getElementById('feather-flyer-screen')
 };
 
 // Initialize app
@@ -161,6 +162,9 @@ function startSelectedActivity() {
         case 'duck-catch':
             startDuckCatchActivity();
             break;
+        case 'feather-flyer':
+            startFeatherFlierActivity();
+            break;
         default:
             alert('Unknown activity!');
     }
@@ -238,6 +242,21 @@ function startDuckCatchActivity() {
 
     // Create and start activity
     currentActivity = new DuckCatchActivity(currentDetector, gameCanvas);
+    currentActivity.start();
+}
+
+function startFeatherFlierActivity() {
+    showScreen('featherFlyer');
+
+    // Transfer camera to activity screen
+    const video = document.getElementById('ff-video');
+    const handCanvas = document.getElementById('ff-hand-canvas');
+    const gameCanvas = document.getElementById('ff-game-canvas');
+
+    transferCamera(video, handCanvas, gameCanvas);
+
+    // Create and start activity
+    currentActivity = new FeatherFlierActivity(currentDetector, gameCanvas);
     currentActivity.start();
 }
 

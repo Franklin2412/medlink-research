@@ -59,6 +59,11 @@
                                 <h4>Duck Catch</h4>
                                 <button class="btn btn-primary start-activity-btn">Start</button>
                             </div>
+                            <div class="activity-card" data-activity="feather-flyer">
+                                <div class="activity-icon">🐦</div>
+                                <h4>Feather Flyer</h4>
+                                <button class="btn btn-primary start-activity-btn">Start</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -157,6 +162,19 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Activity Screen: Feather Flyer -->
+            <section id="feather-flyer-screen" class="screen activity-screen">
+                <div class="container-fluid">
+                    <div class="game-area">
+                        <div class="video-section full-width">
+                            <video id="ff-video" autoplay playsinline></video>
+                            <canvas id="ff-hand-canvas"></canvas>
+                            <canvas id="ff-game-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
 
         <!-- Bottom Control Bar -->
@@ -208,6 +226,7 @@
     <script src="js/activities/CatchStarsActivity.js"></script>
     <script src="js/activities/BalloonPopActivity.js"></script>
     <script src="js/activities/DuckCatchActivity.js"></script>
+    <script src="js/activities/FeatherFlierActivity.js"></script>
     <script src="js/app.js"></script>
 </body>
 
