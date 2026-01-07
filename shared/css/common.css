@@ -98,7 +98,7 @@
     --z-tooltip: 1100;
 
     /* Bottom Bar Height */
-    --bottom-bar-height: 180px;
+    --bottom-bar-height: 144px;
 }
 
 /* Full Screen Layout Utilities */
@@ -139,7 +139,7 @@ body.full-screen-game {
 }
 
 .bottom-bar-video-placeholder {
-    width: 240px;
+    width: 192px;
     /* Space for camera overlay */
     height: 100%;
 }

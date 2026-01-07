@@ -201,7 +201,7 @@ class GestureEngine {
 
             // Check for restriction mode
             const isRestricted = document.body.classList.contains('wand-restricted');
-            const bottomBarHeight = 180; // Should match --bottom-bar-height
+            const bottomBarHeight = 144; // Should match --bottom-bar-height
             const screenHeight = window.innerHeight;
             const thresholdY = screenHeight - bottomBarHeight;
 
@@ -406,7 +406,7 @@ class GestureEngine {
     simulateMouseEvent(type, x, y) {
         // If restricted and above bottom bar, ignore events
         if (document.body.classList.contains('wand-restricted')) {
-            const bottomBarHeight = 180;
+            const bottomBarHeight = 144;
             if (y < window.innerHeight - bottomBarHeight) return;
         }
 

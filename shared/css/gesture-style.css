@@ -60,8 +60,8 @@ body.wand-restricted-active #gesture-cursor.restricted {
     position: fixed;
     bottom: 0;
     right: 0;
-    width: 240px;
-    height: var(--bottom-bar-height, 180px);
+    width: 192px;
+    height: var(--bottom-bar-height, 144px);
     background: #000;
     border-top: 4px solid var(--primary-color);
     border-left: 4px solid var(--primary-color);
