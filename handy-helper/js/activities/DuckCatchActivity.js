@@ -297,9 +297,17 @@ class DuckCatchActivity extends BaseActivity {
         this.ctx.fill();
     }
 
-    updateUI() {
-        document.getElementById('dc-score').textContent = this.score;
-        document.getElementById('dc-time').textContent = this.formatTime(this.time);
+    getInfoHTML() {
+        return `
+            <div class="stat">
+                <span class="stat-label">Score</span>
+                <span class="stat-value">${this.score}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Time</span>
+                <span class="stat-value">${this.formatTime(this.time)}</span>
+            </div>
+        `;
     }
 
     saveStats() {

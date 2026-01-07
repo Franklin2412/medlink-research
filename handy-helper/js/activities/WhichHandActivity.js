@@ -112,21 +112,17 @@ class WhichHandActivity extends BaseActivity {
         }, 2000);
     }
 
-    updateUI() {
-        document.getElementById('wh-score').textContent = this.score;
-        document.getElementById('wh-round').textContent = this.round;
-
-        // Update usage bars
-        const total = this.handUsage.left + this.handUsage.right;
-        if (total > 0) {
-            const leftPercent = Math.round((this.handUsage.left / total) * 100);
-            const rightPercent = Math.round((this.handUsage.right / total) * 100);
-
-            document.getElementById('left-hand-bar').style.width = leftPercent + '%';
-            document.getElementById('left-hand-bar').textContent = leftPercent + '%';
-            document.getElementById('right-hand-bar').style.width = rightPercent + '%';
-            document.getElementById('right-hand-bar').textContent = rightPercent + '%';
-        }
+    getInfoHTML() {
+        return `
+            <div class="stat">
+                <span class="stat-label">Score</span>
+                <span class="stat-value">${this.score}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Round</span>
+                <span class="stat-value">${this.round}/${this.maxRounds}</span>
+            </div>
+        `;
     }
 
     endActivity() {

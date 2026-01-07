@@ -132,8 +132,19 @@ class GardenSequenceGame {
     }
 
     updateUI() {
-        document.getElementById('gs-score').textContent = this.score;
-        document.getElementById('gs-level').textContent = this.level;
+        const infoDisplay = document.getElementById('game-info-display');
+        if (infoDisplay) {
+            infoDisplay.innerHTML = `
+                <div class="stat">
+                    <span class="stat-label">Level</span>
+                    <span class="stat-value">${this.level}</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Score</span>
+                    <span class="stat-value">${this.score}</span>
+                </div>
+            `;
+        }
     }
 
     updateStatus(message) {

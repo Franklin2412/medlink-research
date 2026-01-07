@@ -68,9 +68,17 @@ class CatchStarsActivity extends BaseActivity {
         });
     }
 
-    updateUI() {
-        document.getElementById('cs-time').textContent = this.formatTime(this.time);
-        document.getElementById('cs-score').textContent = this.score;
+    getInfoHTML() {
+        return `
+            <div class="stat">
+                <span class="stat-label">Stars Caught</span>
+                <span class="stat-value">${this.score}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Time</span>
+                <span class="stat-value">${this.formatTime(this.time)}</span>
+            </div>
+        `;
     }
 
 

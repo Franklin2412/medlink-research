@@ -96,6 +96,52 @@
     --z-modal-backdrop: 900;
     --z-modal: 1000;
     --z-tooltip: 1100;
+
+    /* Bottom Bar Height */
+    --bottom-bar-height: 180px;
+}
+
+/* Full Screen Layout Utilities */
+body.full-screen-game {
+    overflow: hidden;
+    height: 100vh;
+}
+
+.game-layout-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+}
+
+.playing-area {
+    flex-grow: 1;
+    position: relative;
+    overflow: hidden;
+    background: var(--background-color);
+}
+
+.bottom-control-bar {
+    height: var(--bottom-bar-height);
+    background: var(--card-background);
+    border-top: 4px solid var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-lg);
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+    z-index: 100;
+}
+
+.bottom-bar-controls {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.bottom-bar-video-placeholder {
+    width: 240px;
+    /* Space for camera overlay */
+    height: 100%;
 }
 
 /* ===== RESET & BASE STYLES ===== */

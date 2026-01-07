@@ -29,6 +29,15 @@
     filter: drop-shadow(0 0 15px var(--cursor-accent));
 }
 
+#gesture-cursor.restricted {
+    display: none !important;
+    /* Default to hidden in restricted mode until below threshold */
+}
+
+body.wand-restricted-active #gesture-cursor.restricted {
+    display: flex !important;
+}
+
 #gesture-cursor::after {
     content: '🪄';
     /* Magic Wand */
@@ -43,18 +52,18 @@
 /* Camera Overlay */
 #gesture-camera-container {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 200px;
-    height: 150px;
+    bottom: 0;
+    right: 0;
+    width: 240px;
+    height: var(--bottom-bar-height, 180px);
     background: #000;
-    border: 4px solid var(--card-background);
-    border-radius: var(--radius-md);
+    border-top: 4px solid var(--primary-color);
+    border-left: 4px solid var(--primary-color);
+    border-top-left-radius: var(--radius-md);
     overflow: hidden;
     z-index: 9998;
-    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: -4px -4px 15px rgba(0, 0, 0, 0.2);
     transition: opacity 0.3s;
-    cursor: move;
 }
 
 #gesture-camera-container.hidden {
@@ -102,10 +111,9 @@
     animation: wave-hint 0.5s infinite;
 }
 
-/* Body Padding when gestures are active */
-body.gesture-active {
-    padding-bottom: 170px;
-    /* Space for camera overlay */
+/* Body Padding when gestures are active - Modified for bottom bar */
+body.gesture-active:not(.full-screen-game) {
+    padding-bottom: 200px;
 }
 
 /* Enable Button */

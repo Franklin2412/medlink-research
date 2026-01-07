@@ -10,63 +10,69 @@
     <link rel="stylesheet" href="css/speakeasy.css">
 </head>
 
-<body>
-    <header class="app-header">
-        <div class="container flex-between">
-            <h1>🎤 SpeakEasy Studio</h1>
-            <nav>
-                <a href="../index.html" class="btn btn-small btn-secondary">← Home</a>
+<body class="full-screen-game wand-restricted">
+    <!-- Skip link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="game-layout-container">
+        <!-- Main Content -->
+        <main id="main-content" class="playing-area">
+            <section id="welcome-screen" class="screen active">
+                <div class="container">
+                    <div class="card welcome-card text-center">
+                        <div class="welcome-icon">🗣️</div>
+                        <h2>Welcome to SpeakEasy Studio</h2>
+                        <p>Practice your speech and language skills with fun sound adventures!</p>
+                        <div class="activity-grid">
+                            <div class="card activity-card" id="start-phonics">
+                                <div class="activity-icon">🔤</div>
+                                <h3>Phonics Fun</h3>
+                                <p>Match sounds to letters and images.</p>
+                                <button class="btn btn-primary mt-md">Start Matching</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="game-screen" class="screen">
+                <div class="container">
+                    <div class="card game-card">
+                        <div class="game-board-header text-center mb-lg">
+                            <div id="instruction" class="text-xl font-bold">Listen and pick the correct letter!</div>
+                        </div>
+
+                        <div id="sound-target" class="text-center mb-xl">
+                            <button id="play-sound-btn" class="btn btn-large btn-accent">
+                                <span class="icon-pulse">🔊</span> Play Sound
+                            </button>
+                        </div>
+
+                        <div id="options-grid" class="grid grid-3">
+                            <!-- Options will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Control Bar -->
+        <footer class="bottom-control-bar">
+            <div class="bottom-bar-controls">
+                <a href="../index.html" class="btn btn-secondary">🏠 Home</a>
+                <button class="btn btn-accent hidden" id="back-to-menu-btn">⬅️ Back to Menu</button>
                 <button class="btn btn-small btn-accent" id="progress-btn">📊 Progress</button>
-            </nav>
-        </div>
-    </header>
-
-    <main id="main-content">
-        <section id="welcome-screen" class="screen active">
-            <div class="container">
-                <div class="card welcome-card text-center">
-                    <div class="welcome-icon">🗣️</div>
-                    <h2>Welcome to SpeakEasy Studio</h2>
-                    <p>Practice your speech and language skills with fun sound adventures!</p>
-                    <div class="activity-grid">
-                        <div class="card activity-card" id="start-phonics">
-                            <div class="activity-icon">🔤</div>
-                            <h3>Phonics Fun</h3>
-                            <p>Match sounds to letters and images.</p>
-                            <button class="btn btn-primary mt-md">Start Matching</button>
-                        </div>
-                    </div>
-                </div>
             </div>
-        </section>
 
-        <section id="game-screen" class="screen">
-            <div class="container">
-                <div class="card game-card">
-                    <div class="game-header flex-between mb-lg">
-                        <div id="instruction" class="text-xl font-bold">Listen and pick the correct letter!</div>
-                        <div class="stats">
-                            <span class="badge badge-primary">Score: <span id="score">0</span></span>
-                        </div>
-                    </div>
-
-                    <div id="sound-target" class="text-center mb-xl">
-                        <button id="play-sound-btn" class="btn btn-large btn-accent">
-                            <span class="icon-pulse">🔊</span> Play Sound
-                        </button>
-                    </div>
-
-                    <div id="options-grid" class="grid grid-3">
-                        <!-- Options will be generated here -->
-                    </div>
-
-                    <div class="game-footer mt-xl text-center">
-                        <button id="back-to-menu" class="btn btn-secondary">Back to Menu</button>
-                    </div>
-                </div>
+            <div class="bottom-bar-info text-center" id="game-info-display">
+                <!-- Stats or info here -->
             </div>
-        </section>
-    </main>
+
+            <div class="bottom-bar-video-placeholder">
+                <!-- Camera will be docked here -->
+            </div>
+        </footer>
+    </div>
 
     <script src="../shared/js/storage.js"></script>
     <script src="../shared/js/gesture-engine.js"></script>

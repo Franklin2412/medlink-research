@@ -46,11 +46,7 @@ function setupEventListeners() {
     });
 
     // Activity stop buttons
-    document.getElementById('wh-stop-btn').addEventListener('click', () => stopActivity());
-    document.getElementById('ht-stop-btn').addEventListener('click', () => stopActivity());
-    document.getElementById('cs-stop-btn').addEventListener('click', () => stopActivity());
-    document.getElementById('bp-stop-btn').addEventListener('click', () => stopActivity());
-    document.getElementById('dc-stop-btn').addEventListener('click', () => stopActivity());
+    document.getElementById('universal-exit-btn').addEventListener('click', () => stopActivity());
 
     // Statistics modal
     document.getElementById('view-stats-btn').addEventListener('click', () => showStatsModal());
@@ -144,12 +140,14 @@ function startSelectedActivity() {
         return;
     }
 
+    document.getElementById('universal-exit-btn').classList.remove('hidden');
+    document.getElementById('game-info-display').innerHTML = 'Initializing...';
+
     switch (selectedActivity) {
         case 'which-hand':
             startWhichHandActivity();
             break;
         case 'hand-tracker':
-            startHandTrackerActivity();
             break;
         case 'catch-stars':
             startCatchStarsActivity();
@@ -266,6 +264,9 @@ function stopActivity() {
         currentActivity.stop();
         currentActivity = null;
     }
+
+    document.getElementById('universal-exit-btn').classList.add('hidden');
+    document.getElementById('game-info-display').innerHTML = '';
 
     stopCamera();
     showWelcomeScreen();

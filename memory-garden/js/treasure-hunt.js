@@ -244,11 +244,23 @@ class TreasureHuntGame {
     }
 
     updateUI() {
-        document.getElementById('th-found').textContent = this.foundTreasures;
-        document.getElementById('th-total').textContent = this.treasureCount;
-        document.getElementById('th-attempts').textContent = this.attempts;
-        document.getElementById('th-max-attempts').textContent = this.maxAttempts;
-        document.getElementById('th-score').textContent = this.score;
+        const infoDisplay = document.getElementById('game-info-display');
+        if (infoDisplay) {
+            infoDisplay.innerHTML = `
+                <div class="stat">
+                    <span class="stat-label">Found</span>
+                    <span class="stat-value">${this.foundTreasures}/${this.treasureCount}</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Attempts</span>
+                    <span class="stat-value">${this.attempts}/${this.maxAttempts}</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Score</span>
+                    <span class="stat-value">${this.score}</span>
+                </div>
+            `;
+        }
     }
 
     updateStatus(message) {

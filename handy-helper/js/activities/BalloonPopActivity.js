@@ -282,13 +282,17 @@ class BalloonPopActivity extends BaseActivity {
         this.ctx.restore();
     }
 
-    updateUI() {
-        if (document.getElementById('bp-score')) {
-            document.getElementById('bp-score').textContent = this.score;
-        }
-        if (document.getElementById('bp-time')) {
-            document.getElementById('bp-time').textContent = this.formatTime(this.time);
-        }
+    getInfoHTML() {
+        return `
+            <div class="stat">
+                <span class="stat-label">Popped</span>
+                <span class="stat-value">${this.score}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Time</span>
+                <span class="stat-value">${this.formatTime(this.time)}</span>
+            </div>
+        `;
     }
 
     saveStats() {

@@ -75,6 +75,14 @@ class PhonicsGame {
     }
 
     updateScore() {
-        document.getElementById('score').textContent = this.score;
+        const infoDisplay = document.getElementById('game-info-display');
+        if (infoDisplay) {
+            infoDisplay.innerHTML = `
+                <div class="stat">
+                    <span class="stat-label">Score</span>
+                    <span class="stat-value">${this.score}</span>
+                </div>
+            `;
+        }
     }
 }

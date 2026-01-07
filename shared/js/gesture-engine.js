@@ -196,6 +196,12 @@ class GestureEngine {
         if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
             const landmarks = results.multiHandLandmarks[0];
 
+            // Check for restriction mode
+            const isRestricted = document.body.classList.contains('wand-restricted');
+            const bottomBarHeight = 180; // Should match --bottom-bar-height
+            const screenHeight = window.innerHeight;
+            const thresholdY = screenHeight - bottomBarHeight;
+
             // Draw landmarks for clearer feedback
             // @ts-ignore
             drawConnectors(this.canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#4ECDC4', lineWidth: 4 });
@@ -221,8 +227,21 @@ class GestureEngine {
             const x = (1 - nx) * window.innerWidth;
             const y = ny * window.innerHeight;
 
-            this.updateCursor(x, y);
-            this.detectGestures(landmarks, x, y);
+            if (isRestricted) {
+                // If restricted, only show wand when in the bottom bar area
+                if (y >= thresholdY) {
+                    document.body.classList.add('wand-restricted-active');
+                    this.cursorElement.classList.remove('restricted');
+                    this.updateCursor(x, y);
+                    this.detectGestures(landmarks, x, y);
+                } else {
+                    document.body.classList.remove('wand-restricted-active');
+                    this.cursorElement.classList.add('restricted');
+                }
+            } else {
+                this.updateCursor(x, y);
+                this.detectGestures(landmarks, x, y);
+            }
         } else {
             // Reset wave history when hand is lost to prevent jumps
             this.waveDetector.history = [];
@@ -341,6 +360,12 @@ class GestureEngine {
 
 
     simulateMouseEvent(type, x, y) {
+        // If restricted and above bottom bar, ignore events
+        if (document.body.classList.contains('wand-restricted')) {
+            const bottomBarHeight = 180;
+            if (y < window.innerHeight - bottomBarHeight) return;
+        }
+
         const element = document.elementFromPoint(x, y);
         if (element) {
             const event = new MouseEvent(type, {

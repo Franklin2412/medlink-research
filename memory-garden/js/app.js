@@ -50,7 +50,7 @@ function setupEventListeners() {
         showWelcomeScreen();
     });
 
-    document.getElementById('back-to-menu-btn').addEventListener('click', () => {
+    document.getElementById('uni-back-to-menu-btn').addEventListener('click', () => {
         showWelcomeScreen();
     });
 
@@ -131,13 +131,8 @@ function setupEventListeners() {
         showWelcomeScreen();
     });
 
-    document.getElementById('th-play-again')?.addEventListener('click', () => {
-        // Store last difficulty
-        if (currentGame && currentGame instanceof TreasureHuntGame) {
-            startTreasureHunt(currentDifficulty);
-        } else {
-            startTreasureHunt('easy');
-        }
+    document.getElementById('gs-back-menu')?.addEventListener('click', () => {
+        showWelcomeScreen();
     });
 
     document.getElementById('th-back-menu')?.addEventListener('click', () => {
@@ -159,6 +154,8 @@ function showScreen(screenName) {
 
 function showWelcomeScreen() {
     showScreen('welcome');
+    document.getElementById('uni-back-to-menu-btn').classList.add('hidden');
+    document.getElementById('game-info-display').innerHTML = '';
 }
 
 function startMemoryMatch(difficulty) {
@@ -166,6 +163,7 @@ function startMemoryMatch(difficulty) {
     document.getElementById('difficulty-label').textContent = capitalizeFirst(difficulty);
     currentGame = new MemoryMatchGame(difficulty);
     showScreen('game');
+    document.getElementById('uni-back-to-menu-btn').classList.remove('hidden');
 }
 
 function startGardenSequence() {
@@ -198,6 +196,7 @@ function startGardenSequence() {
 
     currentGame = new GardenSequenceGame();
     showScreen('sequence');
+    document.getElementById('uni-back-to-menu-btn').classList.remove('hidden');
     currentGame.start();
 }
 
@@ -205,6 +204,7 @@ function startTreasureHunt(difficulty) {
     currentDifficulty = difficulty;
     currentGame = new TreasureHuntGame();
     showScreen('treasure');
+    document.getElementById('uni-back-to-menu-btn').classList.remove('hidden');
     currentGame.start(difficulty);
 }
 

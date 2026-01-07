@@ -12,7 +12,15 @@ class PatternGame {
     }
 
     nextLevel() {
-        document.getElementById('level').textContent = this.level;
+        const infoDisplay = document.getElementById('game-info-display');
+        if (infoDisplay) {
+            infoDisplay.innerHTML = `
+                <div class="stat">
+                    <span class="stat-label">Level</span>
+                    <span class="stat-value">${this.level}</span>
+                </div>
+            `;
+        }
         this.generatePattern();
         this.render();
     }

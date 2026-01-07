@@ -8,23 +8,22 @@ class HandTrackerActivity extends BaseActivity {
         this.updateInterval = null;
     }
 
+    getInfoHTML() {
+        const hands = this.detector.getDetectedHands();
+        let status = 'No hands detected';
+        if (hands.length === 1) status = `✅ ${hands[0].handedness} hand detected`;
+        if (hands.length > 1) status = `✅ Both hands detected`;
+
+        return `
+            <div class="stat">
+                <span class="stat-label">Status</span>
+                <span class="stat-value">${status}</span>
+            </div>
+        `;
+    }
+
     start() {
-        const infoElement = document.getElementById('ht-info');
-
-        this.updateInterval = setInterval(() => {
-            const hands = this.detector.getDetectedHands();
-
-            if (hands.length === 0) {
-                infoElement.innerHTML = '<p>No hands detected. Try waving your hands!</p>';
-                infoElement.classList.remove('hidden');
-            } else if (hands.length === 1) {
-                infoElement.innerHTML = `<p>✅ ${hands[0].handedness} hand detected!</p>`;
-                infoElement.classList.remove('hidden');
-            } else {
-                infoElement.innerHTML = `<p>✅ Both hands detected! ${hands[0].handedness} & ${hands[1].handedness}</p>`;
-                infoElement.classList.remove('hidden');
-            }
-        }, 500);
+        super.start();
     }
 
     stop() {

@@ -199,8 +199,19 @@ class MemoryMatchGame {
     }
 
     updateStats() {
-        document.getElementById('matches-count').textContent = this.matchedPairs;
-        document.getElementById('moves-count').textContent = this.moves;
+        const infoDisplay = document.getElementById('game-info-display');
+        if (infoDisplay) {
+            infoDisplay.innerHTML = `
+                <div class="stat">
+                    <span class="stat-label">Matches</span>
+                    <span class="stat-value">${this.matchedPairs}</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Moves</span>
+                    <span class="stat-value">${this.moves}</span>
+                </div>
+            `;
+        }
     }
 
     endGame() {

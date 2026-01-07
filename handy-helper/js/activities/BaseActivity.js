@@ -53,7 +53,10 @@ class BaseActivity {
      * UI Updates (to be overridden)
      */
     updateUI() {
-        // Placeholder for activity-specific UI updates
+        const infoDisplay = document.getElementById('game-info-display');
+        if (infoDisplay) {
+            infoDisplay.innerHTML = this.getInfoHTML ? this.getInfoHTML() : '';
+        }
     }
 
     /**

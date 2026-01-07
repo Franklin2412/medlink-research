@@ -15,26 +15,30 @@ document.addEventListener('DOMContentLoaded', () => {
         screens[screenId].classList.add('active');
     }
 
+    const backToMenuBtn = document.getElementById('back-to-menu-btn');
+
     document.getElementById('start-faces').addEventListener('click', () => {
         showScreen('game');
+        backToMenuBtn.classList.remove('hidden');
         emotionGame.start();
     });
 
     document.getElementById('start-breath').addEventListener('click', () => {
         showScreen('breath');
+        backToMenuBtn.classList.remove('hidden');
         breathingGame.start();
     });
 
     document.getElementById('start-bubbles').addEventListener('click', () => {
         showScreen('bubble');
+        backToMenuBtn.classList.remove('hidden');
         bubbleGame.start();
     });
 
-    document.querySelectorAll('.back-to-menu-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            breathingGame.stop();
-            bubbleGame.stop();
-            showScreen('welcome');
-        });
+    backToMenuBtn.addEventListener('click', () => {
+        breathingGame.stop();
+        bubbleGame.stop();
+        showScreen('welcome');
+        backToMenuBtn.classList.add('hidden');
     });
 });
