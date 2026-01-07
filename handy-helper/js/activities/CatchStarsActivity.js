@@ -31,45 +31,48 @@ class CatchStarsActivity extends BaseActivity {
     update() {
         super.update();
 
-        // Update time and score in UI
-        document.getElementById('cs-time').textContent = this.formatTime(this.time);
-        document.getElementById('cs-score').textContent = this.score;
-
         // Get hand positions
         const hands = this.detector.getDetectedHands();
 
-        // Update and draw stars
-        this.stars = this.stars.filter(star => {
-            if (star.caught) return false;
-
+        // Update stars
+        this.stars.forEach(star => {
+            if (star.caught) return;
             star.y += star.speed;
 
             // Check collision with hands
             hands.forEach(hand => {
-                const palm = hand.landmarks[0]; // Wrist position
-                const palmX = palm.x * this.gameCanvas.width;
-                const palmY = palm.y * this.gameCanvas.height;
+                const index = hand.landmarks[8]; // Use index tip for more precision
+                const x = index.x * this.gameCanvas.width;
+                const y = index.y * this.gameCanvas.height;
 
-                const distance = Math.sqrt(
-                    Math.pow(star.x - palmX, 2) + Math.pow(star.y - palmY, 2)
-                );
+                const distance = Math.hypot(star.x - x, star.y - y);
 
                 if (distance < star.radius + 30) {
                     this.score++;
-                    this.showCatchEffect(star.x, star.y);
                     star.caught = true;
+                    this.showCatchEffect(star.x, star.y);
                 }
             });
+        });
 
-            // Draw star
-            if (!star.caught && star.y < this.gameCanvas.height) {
-                this.drawStar(star.x, star.y, star.radius);
-                return true;
-            }
+        // Filter out caught stars or stars off screen
+        this.stars = this.stars.filter(star => !star.caught && star.y < this.gameCanvas.height);
 
-            return false;
+        this.draw();
+    }
+
+    draw() {
+        this.ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+        this.stars.forEach(star => {
+            this.drawStar(star.x, star.y, star.radius);
         });
     }
+
+    updateUI() {
+        document.getElementById('cs-time').textContent = this.formatTime(this.time);
+        document.getElementById('cs-score').textContent = this.score;
+    }
+
 
     drawStar(x, y, radius) {
         this.ctx.save();
