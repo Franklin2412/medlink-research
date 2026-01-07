@@ -161,11 +161,11 @@ class GestureEngine {
         if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
             const landmarks = results.multiHandLandmarks[0];
 
-            // Draw landmarks for debugging/feedback
+            // Draw landmarks for clearer feedback
             // @ts-ignore
-            drawConnectors(this.canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#4ECDC4', lineWidth: 5 });
+            drawConnectors(this.canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#4ECDC4', lineWidth: 4 });
             // @ts-ignore
-            drawLandmarks(this.canvasCtx, landmarks, { color: '#FFD93D', lineWidth: 2 });
+            drawLandmarks(this.canvasCtx, landmarks, { color: '#FFD93D', lineWidth: 1, radius: 2 });
 
             // Tracking index finger tip (8)
             const indexTip = landmarks[8];
@@ -174,29 +174,52 @@ class GestureEngine {
 
             this.updateCursor(x, y);
             this.detectGestures(landmarks, x, y);
+        } else {
+            // Reset wave history when hand is lost to prevent jumps
+            this.waveDetector.history = [];
         }
         this.canvasCtx.restore();
     }
 
     updateCursor(x, y) {
-        this.cursorElement.style.left = `${x}px`;
-        this.cursorElement.style.top = `${y}px`;
-        this.lastX = x;
-        this.lastY = y;
+        // Smooth cursor movement (Lerp)
+        const lerp = 0.4;
+        const targetX = x;
+        const targetY = y;
+
+        const curX = parseFloat(this.cursorElement.style.left) || targetX;
+        const curY = parseFloat(this.cursorElement.style.top) || targetY;
+
+        const finalX = curX + (targetX - curX) * lerp;
+        const finalY = curY + (targetY - curY) * lerp;
+
+        this.cursorElement.style.left = `${finalX}px`;
+        this.cursorElement.style.top = `${finalY}px`;
+        this.lastX = finalX;
+        this.lastY = finalY;
     }
 
     detectGestures(landmarks, x, y) {
-        // 1. Grab Detection (Fist)
-        // Check distance between fingertips and palm base
+        // 1. Click Detection (Fist OR Pinch)
+
+        // Fist Detection
         const palmBase = landmarks[0];
         const fingertips = [8, 12, 16, 20].map(i => landmarks[i]);
         const distances = fingertips.map(f => Math.hypot(f.x - palmBase.x, f.y - palmBase.y));
         const avgDistance = distances.reduce((a, b) => a + b) / 4;
+        const isFist = avgDistance < 0.14;
 
-        // Threshold for a fist (fingers tucked in)
-        if (avgDistance < 0.12 && !this.isGrabbing) {
+        // Pinch Detection (Thumb tip to Index tip)
+        const thumbTip = landmarks[4];
+        const indexTip = landmarks[8];
+        const pinchDist = Math.hypot(thumbTip.x - indexTip.x, thumbTip.y - indexTip.y);
+        const isPinch = pinchDist < 0.055; // Threshold for pinch
+
+        const isCurrentlyGrabbing = isFist || isPinch;
+
+        if (isCurrentlyGrabbing && !this.isGrabbing) {
             this.startGrab(x, y);
-        } else if (avgDistance > 0.18 && this.isGrabbing) {
+        } else if (!isCurrentlyGrabbing && this.isGrabbing) {
             this.stopGrab(x, y);
         }
 
@@ -220,14 +243,13 @@ class GestureEngine {
     detectWave(landmarks) {
         const wrist = landmarks[0];
         this.waveDetector.history.push(wrist.x);
-        if (this.waveDetector.history.length > 20) this.waveDetector.history.shift();
+        if (this.waveDetector.history.length > 25) this.waveDetector.history.shift();
 
-        if (this.waveDetector.history.length === 20) {
+        if (this.waveDetector.history.length === 25) {
             const min = Math.min(...this.waveDetector.history);
             const max = Math.max(...this.waveDetector.history);
             const range = max - min;
 
-            // Check for direction changes (back and forth motion)
             let directionChanges = 0;
             let lastDir = 0;
             for (let i = 1; i < this.waveDetector.history.length; i++) {
@@ -238,29 +260,36 @@ class GestureEngine {
                 }
             }
 
-            // A wave needs a significant range AND at least 2 direction changes
-            if (range > 0.25 && directionChanges >= 2) {
+            // Stricter Wave: Larger range and more direction changes
+            if (range > 0.35 && directionChanges >= 3) {
                 const now = Date.now();
-                if (now - this.waveDetector.lastWaveTime > 2000) {
+                if (now - this.waveDetector.lastWaveTime > 3000) {
                     this.onWaveDetected();
                     this.waveDetector.lastWaveTime = now;
+                    this.waveDetector.history = []; // Reset history
                 }
             }
         }
     }
 
     onWaveDetected() {
+        // Prevent accidental triggers if already on a menu or index page
+        const isMenu = document.getElementById('welcome-screen')?.classList.contains('active') ||
+            window.location.pathname.endsWith('index.html');
+        if (isMenu) return;
+
         document.body.classList.add('wave-active');
         setTimeout(() => document.body.classList.remove('wave-active'), 1000);
 
         // Trigger back navigation
-        const backBtn = document.querySelector('.btn-secondary[href*="index.html"], #back-to-menu, .back-to-menu-btn');
+        const backBtn = document.querySelector('.btn-secondary[href*="index.html"], #back-to-menu, .back-to-menu-btn, #back-to-menu-btn');
         if (backBtn) {
             backBtn.click();
         } else {
             console.log('Wave detected! No back button found.');
         }
     }
+
 
     simulateMouseEvent(type, x, y) {
         const element = document.elementFromPoint(x, y);
