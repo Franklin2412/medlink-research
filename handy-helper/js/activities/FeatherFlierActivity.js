@@ -32,9 +32,21 @@ class FeatherFlierActivity extends BaseActivity {
     start() {
         super.start();
         this.bird.y = this.gameCanvas.height / 2;
+        this.bird.emoji = '🐦';
         this.obstacles = [];
         this.isGameOver = false;
         this.score = 0;
+
+        // Hide overlay
+        document.getElementById('ff-game-over').classList.add('hidden');
+
+        // Setup restart button listener (if not already set)
+        if (!this.restartListenerSet) {
+            document.getElementById('ff-restart-btn').addEventListener('click', () => {
+                this.start();
+            });
+            this.restartListenerSet = true;
+        }
     }
 
     update() {
@@ -116,15 +128,14 @@ class FeatherFlierActivity extends BaseActivity {
     }
 
     handleCollision() {
-        // Visual feedback (Flash/Shake)
+        this.isGameOver = true;
         this.bird.emoji = '💥';
-        setTimeout(() => {
-            this.bird.emoji = '🐦';
-        }, 300);
 
-        // For toddlers, we don't end the game immediately. 
-        // Maybe just a small score penalty or pause?
-        // For now, let's keep it very gentle - just a visual alert.
+        // Show overlay
+        document.getElementById('ff-final-score').textContent = this.score;
+        document.getElementById('ff-game-over').classList.remove('hidden');
+
+        this.stop(); // Stop game loop
     }
 
     draw() {
@@ -177,6 +188,13 @@ class FeatherFlierActivity extends BaseActivity {
                 <span class="stat-value">${this.formatTime(this.time)}</span>
             </div>
         `;
+    }
+
+    stop() {
+        super.stop();
+        // Ensure overlay is hidden if exiting mid-game
+        document.getElementById('ff-game-over').classList.add('hidden');
+        this.bird.emoji = '🐦';
     }
 }
 
