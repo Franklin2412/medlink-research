@@ -20,6 +20,7 @@ class GestureEngine {
         this.isGrabbing = false;
         this.lastX = 0;
         this.lastY = 0;
+        this.lastGrabY = 0;
 
         this.waveDetector = {
             history: [],
@@ -291,7 +292,26 @@ class GestureEngine {
             this.stopGrab(x, y);
         }
 
-        // 2. Wave Detection (Back)
+        // 2. Scroll Detection (Drag while grabbing) - only if NOT restricted
+        if (this.isGrabbing && !document.body.classList.contains('wand-restricted')) {
+            const deltaY = y - this.lastGrabY;
+
+            // Sensitivity: adjust for more/less scroll speed
+            const sensitivity = 1.2;
+            const scrollAmount = deltaY * sensitivity;
+
+            // Target the scrollable playing area first, fallback to window
+            const scrollContainer = document.querySelector('.playing-area');
+            if (scrollContainer) {
+                scrollContainer.scrollTop += scrollAmount;
+            } else {
+                window.scrollBy(0, scrollAmount);
+            }
+        }
+
+        this.lastGrabY = y;
+
+        // 3. Wave Detection (Back)
         this.detectWave(landmarks);
     }
 
