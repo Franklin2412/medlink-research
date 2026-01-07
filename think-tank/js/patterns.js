@@ -1,64 +1,68 @@
-class PatternGame {
+/**
+ * GAME 1: Pattern Power++
+ * Logical sequencing with emojis.
+ */
+class PatternGame extends BaseLogicGame {
     constructor() {
-        this.level = 1;
-        this.items = ['🔴', '🔵', '⭐', '🍏', '🍄', '🎈'];
+        super();
+        this.items = ['🔴', '🔵', '⭐', '🍏', '🍄', '🎈', '🐶', '🐱', '🦋', '🌈'];
         this.currentSequence = [];
-        this.correctAnswer = null;
     }
 
-    start() {
-        this.level = 1;
-        this.nextLevel();
-    }
+    generateChallenge() {
+        // Diversified pattern types
+        const types = ['ABAB', 'AABA', 'ABC', 'AABB', 'ABBA'];
+        // Pick type based on level (introduce harder ones gradually)
+        let availableTypes = ['ABAB'];
+        if (this.level > 3) availableTypes.push('AABA', 'ABC');
+        if (this.level > 8) availableTypes.push('AABB', 'ABBA');
 
-    nextLevel() {
-        const infoDisplay = document.getElementById('game-info-display');
-        if (infoDisplay) {
-            infoDisplay.innerHTML = `
-                <div class="stat">
-                    <span class="stat-label">Level</span>
-                    <span class="stat-value">${this.level}</span>
-                </div>
-            `;
-        }
-        this.generatePattern();
-        this.render();
-    }
+        const type = availableTypes[Math.floor(Math.random() * availableTypes.length)];
+        const pool = [...this.items].sort(() => 0.5 - Math.random());
 
-    generatePattern() {
-        // ABAB, ABCABC, AABAAB types
-        const patternTypes = ['ABAB', 'AABA', 'ABC'];
-        const type = patternTypes[Math.floor(Math.random() * patternTypes.length)];
-
-        const availableItems = [...this.items].sort(() => 0.5 - Math.random());
-        const item1 = availableItems[0];
-        const item2 = availableItems[1];
-        const item3 = availableItems[2];
+        const A = pool[0];
+        const B = pool[1];
+        const C = pool[2];
 
         let base = [];
-        if (type === 'ABAB') base = [item1, item2];
-        else if (type === 'AABA') base = [item1, item1, item2];
-        else if (type === 'ABC') base = [item1, item2, item3];
+        switch (type) {
+            case 'ABAB': base = [A, B]; break;
+            case 'AABA': base = [A, A, B]; break;
+            case 'ABC': base = [A, B, C]; break;
+            case 'AABB': base = [A, A, B, B]; break;
+            case 'ABBA': base = [A, B, B, A]; break;
+        }
 
+        // Create a sequence of 2-3 repeats
         this.currentSequence = [...base, ...base];
-        this.correctAnswer = base[0]; // The next one in a repeating cycle
+        if (this.level > 5 && base.length < 4) {
+            this.currentSequence.push(...base);
+        }
+
+        // The correct answer is the NEXT item in the base sequence cycle
+        this.correctAnswer = base[0];
     }
 
     render() {
         const seqContainer = document.getElementById('sequence');
-        seqContainer.innerHTML = '';
+        const placeholder = document.getElementById('placeholder');
+        const optionsContainer = document.getElementById('pattern-options');
 
+        // Reset
+        seqContainer.innerHTML = '';
+        placeholder.textContent = '?';
+        placeholder.className = 'pattern-placeholder';
+        optionsContainer.innerHTML = '';
+
+        // Render Sequence
         this.currentSequence.forEach(item => {
             const div = document.createElement('div');
-            div.className = 'pattern-item';
+            div.className = 'pattern-item fade-in';
             div.textContent = item;
             seqContainer.appendChild(div);
         });
 
-        const optionsContainer = document.getElementById('pattern-options');
-        optionsContainer.innerHTML = '';
-
-        // Generate options (correct + 2 distractors)
+        // Generate Options
         const distractors = this.items
             .filter(i => i !== this.correctAnswer)
             .sort(() => 0.5 - Math.random())
@@ -75,27 +79,11 @@ class PatternGame {
         });
     }
 
-    checkAnswer(choice, btn) {
-        if (choice === this.correctAnswer) {
-            btn.classList.add('correct');
-            this.level++;
-            // Show feedback
-            const placeholder = document.getElementById('placeholder');
-            placeholder.textContent = choice;
-            placeholder.style.borderStyle = 'solid';
-            placeholder.style.borderColor = 'var(--success-color)';
-
-            setTimeout(() => {
-                placeholder.textContent = '?';
-                placeholder.style.borderStyle = 'dashed';
-                placeholder.style.borderColor = 'var(--primary-color)';
-                this.nextLevel();
-            }, 1000);
-        } else {
-            btn.classList.add('wrong');
-            const msg = new SpeechSynthesisUtterance('Try to see the pattern again.');
-            window.speechSynthesis.speak(msg);
-            setTimeout(() => btn.classList.remove('wrong'), 800);
-        }
+    onSuccess(choice) {
+        const placeholder = document.getElementById('placeholder');
+        placeholder.textContent = choice;
+        placeholder.classList.add('correct-highlight');
     }
 }
+
+window.PatternGame = PatternGame;

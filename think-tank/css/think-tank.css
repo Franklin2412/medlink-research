@@ -70,3 +70,53 @@
     background: #fab1a0;
     border-color: #e17055;
 }
+
+/* Category Patterns */
+.grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.logic-card {
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.bin-card {
+    min-height: 200px;
+    background: linear-gradient(135deg, #f5f6fa, #dcdde1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 4px dashed #7f8c8d;
+}
+
+.bin-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2f3640;
+}
+
+.correct-highlight {
+    border-style: solid !important;
+    border-color: #00b894 !important;
+    background: rgba(85, 239, 196, 0.2) !important;
+    animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
