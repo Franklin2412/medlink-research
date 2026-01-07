@@ -21,6 +21,8 @@ class GestureEngine {
         this.lastX = 0;
         this.lastY = 0;
         this.lastGrabY = 0;
+        this.isScrolling = false;
+        this.isClicking = false;
 
         this.waveDetector = {
             history: [],
@@ -284,29 +286,23 @@ class GestureEngine {
         const pinchDist = Math.hypot(thumbTip.x - indexTip.x, thumbTip.y - indexTip.y);
         const isPinch = pinchDist < 0.055; // Threshold for pinch
 
-        const isCurrentlyGrabbing = isFist || isPinch;
-
-        if (isCurrentlyGrabbing && !this.isGrabbing) {
-            this.startGrab(x, y);
-        } else if (!isCurrentlyGrabbing && this.isGrabbing) {
-            this.stopGrab(x, y);
+        // 1. Interaction Logic (Pinch to Click)
+        const isCurrentlyClicking = isPinch;
+        if (isCurrentlyClicking && !this.isClicking) {
+            this.startClick(x, y);
+        } else if (!isCurrentlyClicking && this.isClicking) {
+            this.stopClick(x, y);
         }
 
-        // 2. Scroll Detection (Drag while grabbing) - only if NOT restricted
-        if (this.isGrabbing && !document.body.classList.contains('wand-restricted')) {
-            const deltaY = y - this.lastGrabY;
-
-            // Sensitivity: adjust for more/less scroll speed
-            const sensitivity = 1.2;
-            const scrollAmount = deltaY * sensitivity;
-
-            // Target the scrollable playing area first, fallback to window
-            const scrollContainer = document.querySelector('.playing-area');
-            if (scrollContainer) {
-                scrollContainer.scrollTop += scrollAmount;
-            } else {
-                window.scrollBy(0, scrollAmount);
+        // 2. Scrolling Logic (Fist to Scroll) - only if NOT restricted and NOT clicking
+        const isCurrentlyScrolling = isFist && !isCurrentlyClicking && !document.body.classList.contains('wand-restricted');
+        if (isCurrentlyScrolling) {
+            if (!this.isScrolling) {
+                this.startScroll(y);
             }
+            this.handleScroll(y);
+        } else if (this.isScrolling) {
+            this.stopScroll();
         }
 
         this.lastGrabY = y;
@@ -315,17 +311,45 @@ class GestureEngine {
         this.detectWave(landmarks);
     }
 
-    startGrab(x, y) {
-        this.isGrabbing = true;
+    startClick(x, y) {
+        this.isClicking = true;
         this.cursorElement.classList.add('grabbing');
         this.simulateMouseEvent('mousedown', x, y);
     }
 
-    stopGrab(x, y) {
-        this.isGrabbing = false;
+    stopClick(x, y) {
+        this.isClicking = false;
         this.cursorElement.classList.remove('grabbing');
         this.simulateMouseEvent('mouseup', x, y);
         this.simulateMouseEvent('click', x, y);
+    }
+
+    startScroll(y) {
+        this.isScrolling = true;
+        this.lastGrabY = y;
+        this.cursorElement.classList.add('scrolling');
+        // Visual feedback for scrolling
+        this.cursorElement.setAttribute('data-content', '👆');
+    }
+
+    handleScroll(y) {
+        const deltaY = y - this.lastGrabY;
+        const sensitivity = 1.5;
+        const scrollAmount = deltaY * sensitivity;
+
+        const scrollContainer = document.querySelector('.playing-area');
+        if (scrollContainer) {
+            scrollContainer.scrollTop += scrollAmount;
+        } else {
+            window.scrollBy(0, scrollAmount);
+        }
+        this.lastGrabY = y;
+    }
+
+    stopScroll() {
+        this.isScrolling = false;
+        this.cursorElement.classList.remove('scrolling');
+        this.cursorElement.removeAttribute('data-content');
     }
 
     detectWave(landmarks) {

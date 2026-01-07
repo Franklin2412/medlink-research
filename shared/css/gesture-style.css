@@ -49,6 +49,12 @@ body.wand-restricted-active #gesture-cursor.restricted {
     /* Sparkle/Grab effect */
 }
 
+#gesture-cursor.scrolling::after {
+    content: attr(data-content);
+    /* Set to 👆 or similar in JS */
+    font-size: 30px;
+}
+
 /* Camera Overlay */
 #gesture-camera-container {
     position: fixed;
