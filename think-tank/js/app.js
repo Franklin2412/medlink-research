@@ -4,6 +4,12 @@ const patternGame = new PatternGame();
 const oddOneOutGame = new OddOneOutGame();
 const classificationGame = new ClassificationGame();
 const shadowMatchGame = new ShadowMatchGame();
+const sizeSortGame = new SizeSortGame();
+const colorMatchGame = new ColorMatchGame();
+const quantityGame = new QuantityMatchGame();
+const storyGame = new SequenceStoryGame();
+const attributeGame = new AttributeHunterGame();
+const sudokuGame = new EmojiSudokuGame();
 
 document.addEventListener('DOMContentLoaded', () => {
     const welcomeScreen = document.getElementById('welcome-screen');
@@ -26,6 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('start-odd-one').addEventListener('click', () => startGame(oddOneOutGame));
     document.getElementById('start-classification').addEventListener('click', () => startGame(classificationGame));
     document.getElementById('start-shadow').addEventListener('click', () => startGame(shadowMatchGame));
+    document.getElementById('start-size').addEventListener('click', () => startGame(sizeSortGame));
+    document.getElementById('start-color').addEventListener('click', () => startGame(colorMatchGame));
+    document.getElementById('start-quantity').addEventListener('click', () => startGame(quantityGame));
+    document.getElementById('start-story').addEventListener('click', () => startGame(storyGame));
+    document.getElementById('start-attribute').addEventListener('click', () => startGame(attributeGame));
+    document.getElementById('start-sudoku').addEventListener('click', () => startGame(sudokuGame));
 
     backToMenuBtn.addEventListener('click', () => {
         if (currentGame) currentGame.stop();
