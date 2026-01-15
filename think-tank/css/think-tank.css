@@ -25,6 +25,12 @@
     font-size: 3rem;
 }
 
+.shadow-item {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
 .pattern-placeholder {
     width: 80px;
     height: 80px;

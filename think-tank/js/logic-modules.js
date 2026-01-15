@@ -146,9 +146,9 @@ class ShadowMatchGame extends BaseLogicGame {
 
         instruction.textContent = "Which object matches the shadow?";
 
-        // Shadow display
+        // Shadow display - Using drop-shadow filter on the text itself for a better silhouette
         seqContainer.innerHTML = `
-            <div class="pattern-item shadow-item bounce" style="font-size: 6rem; filter: brightness(0); opacity: 0.8;">
+            <div class="pattern-item shadow-item bounce" style="font-size: 6rem; filter: drop-shadow(0 0 0 black) brightness(0); opacity: 0.8;">
                 ${this.correctAnswer}
             </div>
         `;
