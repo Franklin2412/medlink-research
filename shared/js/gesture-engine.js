@@ -312,14 +312,14 @@ class GestureEngine {
         const isCurrentlyScrolling = isFist && !isCurrentlyClicking && !document.body.classList.contains('wand-restricted');
         if (isCurrentlyScrolling) {
             if (!this.isScrolling) {
-                this.startScroll(y);
+                this.startScroll(this.lastY);
             }
-            this.handleScroll(y);
+            this.handleScroll(this.lastY);
         } else if (this.isScrolling) {
             this.stopScroll();
         }
 
-        this.lastGrabY = y;
+        this.lastGrabY = this.lastY;
 
         // 3. Wave Detection (Back)
         this.detectWave(landmarks);
@@ -348,14 +348,24 @@ class GestureEngine {
 
     handleScroll(y) {
         const deltaY = y - this.lastGrabY;
-        const sensitivity = 1.5;
+        const sensitivity = 1.2;
+        const deadZone = 3; // pixels
+
+        if (Math.abs(deltaY) < deadZone) return;
+
         const scrollAmount = deltaY * sensitivity;
 
-        const scrollContainer = document.querySelector('.playing-area');
+        const scrollContainer = document.querySelector('.playing-area, .main-canvas');
         if (scrollContainer) {
-            scrollContainer.scrollTop += scrollAmount;
+            scrollContainer.scrollBy({
+                top: scrollAmount,
+                behavior: 'smooth'
+            });
         } else {
-            window.scrollBy(0, scrollAmount);
+            window.scrollBy({
+                top: scrollAmount,
+                behavior: 'smooth'
+            });
         }
         this.lastGrabY = y;
     }

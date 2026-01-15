@@ -127,6 +127,7 @@ body.full-screen-game {
     position: relative;
     background: var(--background-color);
     padding-bottom: var(--space-xl);
+    scroll-behavior: smooth;
 }
 
 .side-controls {
