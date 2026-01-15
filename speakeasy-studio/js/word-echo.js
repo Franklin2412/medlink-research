@@ -93,9 +93,9 @@ class WordEchoGame {
 
         const utterance = new SpeechSynthesisUtterance(word);
 
-        // Map duration (1s - 5s) to high-quality TTS rate
-        // 1s -> ~1.2 (fast), 5s -> ~0.1 (ultra slow)
-        utterance.rate = Math.max(0.1, 1.3 - (this.duration * 0.25));
+        // Map duration (1s - 10s) to high-quality TTS rate
+        // 1s -> ~1.2, 5s -> ~0.3, 10s -> ~0.1
+        utterance.rate = Math.max(0.1, 1.2 - (this.duration * 0.11));
         utterance.pitch = 1.0;
 
         utterance.onstart = () => {
@@ -119,9 +119,9 @@ class WordEchoGame {
     startMouthAnimation() {
         const mouth = document.querySelector('.mouth');
         if (mouth) {
-            // Set animation duration based on TTS rate
-            // Higher duration -> slower animation
-            const animDuration = Math.max(0.2, this.duration * 0.15);
+            // Set animation duration based on TTS duration
+            // For 1s -> 0.25s, for 10s -> 1.5s
+            const animDuration = Math.max(0.2, 0.125 + (this.duration * 0.1375));
             mouth.style.setProperty('--mouth-anim-duration', `${animDuration}s`);
             mouth.classList.add('speaking');
         }
