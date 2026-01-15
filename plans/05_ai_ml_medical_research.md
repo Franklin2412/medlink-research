@@ -40,7 +40,7 @@ A medically-tuned variant of the Gemma architecture, designed for on-premises de
 | :--- | :--- | :--- |
 | **Mayo Clinic** | Clinical record summarization & research assistant. | [Official Announcement](https://www.prnewswire.com/news-releases/google-cloud-collaborates-with-mayo-clinic-to-transform-healthcare-with-generative-ai-301844510.html) |
 | **HCA Healthcare** | Ambient documentation in Emergency Departments. | [HCA & Augmedix Pilot](https://www.globenewswire.com/news-release/2023/04/20/2651036/0/en/Augmedix-Announces-Partnership-with-HCA-Healthcare-to-Accelerate-the-Development-of-AI-enabled-Ambient-Documentation.html) |
-| **Apollo 24\|7** | Evidence-based Clinical Intelligence Engine. | [CIE using MedLM](https://cloud.google.com/blog/topics/healthcare-life-sciences/apollo-247-google-cloud-clinical-intelligence-engine) |
+| **Apollo 24\|7** | Evidence-based Clinical Intelligence Engine. | [Official Site](https://www.ciengine.com/) |
 
 ---
 
