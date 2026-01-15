@@ -4,234 +4,383 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI/ML Research & Clinical AI - NMDA Therapy Tools</title>
+    <title>Clinical AI Research - Dashboard for Professionals</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Poppins:wght@400;500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="shared/css/common.css">
     <style>
         :root {
-            --research-bg: #f8fafc;
-            --research-accent: #3b82f6;
-            --research-text: #1e293b;
+            --medical-primary: #0f172a;
+            /* Deep Slate */
+            --medical-accent: #2563eb;
+            /* Clinical Blue */
+            --medical-bg: #fdfdfd;
+            --medical-text: #334155;
+            --medical-border: #e2e8f0;
+            --medical-surface: #ffffff;
         }
 
         body {
-            background-color: var(--research-bg);
-            color: var(--research-text);
-            line-height: 1.6;
+            background-color: var(--medical-bg);
+            color: var(--medical-text);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
-        .research-header {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        .top-nav {
+            background: var(--medical-primary);
             color: white;
-            padding: var(--space-2xl) 0;
-            text-align: center;
+            padding: var(--space-md) 0;
+            border-bottom: 2px solid var(--medical-accent);
         }
 
-        .research-container {
-            max-width: 900px;
-            margin: -60px auto var(--space-2xl);
-            background: white;
-            padding: var(--space-xl) var(--space-2xl);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-xl);
-            position: relative;
-            z-index: 10;
+        .top-nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .section-title {
-            color: var(--research-accent);
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: var(--space-xs);
-            margin-top: var(--space-xl);
-            margin-bottom: var(--space-md);
-        }
-
-        .card {
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: var(--radius-md);
-            padding: var(--space-md);
-            margin-bottom: var(--space-md);
-        }
-
-        .card h4 {
-            margin-top: 0;
-            color: var(--research-text);
-        }
-
-        .link-button {
-            display: inline-block;
-            background-color: var(--research-accent);
+        .top-nav a {
             color: white;
-            padding: var(--space-xs) var(--space-sm);
-            border-radius: var(--radius-sm);
             text-decoration: none;
-            font-size: var(--font-size-sm);
-            margin-top: var(--space-xs);
+            font-size: 0.9rem;
+            opacity: 0.8;
             transition: opacity 0.2s;
         }
 
-        .link-button:hover {
-            opacity: 0.9;
+        .top-nav a:hover {
+            opacity: 1;
+        }
+
+        .page-header {
+            background: var(--medical-surface);
+            padding: var(--space-xl) 0;
+            border-bottom: 1px solid var(--medical-border);
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 2.2rem;
+            color: var(--medical-primary);
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .page-header p {
+            color: var(--medical-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-top: var(--space-xs);
+        }
+
+        .main-content {
+            max-width: 1000px;
+            margin: var(--space-xl) auto;
+            padding: 0 var(--space-md);
+        }
+
+        .research-section {
+            background: var(--medical-surface);
+            border: 1px solid var(--medical-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-xl);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+            border-bottom: 1px solid var(--medical-border);
+            padding-bottom: var(--space-sm);
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+            margin: 0;
+            color: var(--medical-primary);
+        }
+
+        .icon-box {
+            background: #eff6ff;
+            color: var(--medical-accent);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-size: 1.2rem;
+        }
+
+        .summary-box {
+            background: #f8fafc;
+            border-left: 4px solid var(--medical-accent);
+            padding: var(--space-md);
+            font-style: italic;
+            color: #475569;
+            margin-bottom: var(--space-lg);
+        }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .card {
+            border: 1px solid var(--medical-border);
+            padding: var(--space-md);
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .card h4 {
+            margin: 0 0 var(--space-xs) 0;
+            color: var(--medical-primary);
+            font-size: 1.1rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-bottom: var(--space-md);
+        }
+
+        .card-link {
+            color: var(--medical-accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-link:hover {
+            text-decoration: underline;
         }
 
         table {
             width: 100%;
-            border-collapse: collapse;
-            margin: var(--space-md) 0;
-        }
-
-        th,
-        td {
-            text-align: left;
-            padding: var(--space-sm);
-            border-bottom: 1px solid #e2e8f0;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: var(--space-md);
         }
 
         th {
-            background-color: #f1f5f9;
+            background: #f8fafc;
+            padding: var(--space-sm) var(--space-md);
+            text-align: left;
+            font-size: 0.85rem;
+            color: #64748b;
+            font-weight: 600;
+            border-bottom: 2px solid var(--medical-border);
         }
 
-        .back-nav {
-            margin-bottom: var(--space-md);
+        td {
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--medical-border);
+            font-size: 0.95rem;
         }
 
-        .back-nav a {
-            color: white;
-            opacity: 0.8;
-            text-decoration: none;
+        .badge {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
 
-        .back-nav a:hover {
-            opacity: 1;
+        .footer {
+            text-align: center;
+            padding: var(--space-2xl) 0;
+            border-top: 1px solid var(--medical-border);
+            color: #94a3b8;
+            font-size: 0.85rem;
         }
 
-        @media (max-width: 768px) {
-            .research-container {
-                margin-top: 0;
-                border-radius: 0;
-                padding: var(--space-lg);
+        @media (max-width: 640px) {
+            .page-header h1 {
+                font-size: 1.75rem;
             }
         }
     </style>
 </head>
 
 <body>
-    <header class="research-header">
-        <div class="container text-center">
-            <div class="back-nav">
-                <a href="index.html">← Back to Home</a>
-            </div>
-            <h1>AI/ML Research & Clinical AI</h1>
-            <p>For Medical Professionals & Researchers</p>
+    <nav class="top-nav">
+        <div class="container">
+            <a href="index.html">← RETURN TO MAIN PORTAL</a>
+            <span style="font-size: 0.8rem; letter-spacing: 1px;">CLINICAL RESEARCH HUB</span>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>AI/ML Clinical Implementation</h1>
+            <p>Direct Research Insights & Case Studies (2025-2026)</p>
         </div>
     </header>
 
-    <main class="research-container">
-        <section>
-            <h2 class="section-title">🩺 Executive Summary</h2>
-            <p>
-                As of 2025-2026, healthcare has transitioned from experimental AI to <strong>operational clinical
-                    integration</strong>.
-                This research summary is designed to help healthcare professionals understand the current landscape of
-                Large Language Models (LLMs) and how they are being used to reduce administrative burden and improve
-                clinical accuracy.
-            </p>
+    <main class="main-content">
+        <!-- Summary Section -->
+        <section class="research-section">
+            <div class="section-header">
+                <div class="icon-box">🩺</div>
+                <h2>Executive Summary</h2>
+            </div>
+            <div class="summary-box">
+                Healthcare has transitioned from experimental AI to operational clinical integration. This repository
+                serves as a professional guide for clinicians navigating the implementation of Large Language Models
+                (LLMs) in modern medical workflows.
+            </div>
+            <p>The primary focus of current industry adoption is toward reducing cognitive load and administrative
+                friction while enhancing diagnostic precision through multimodal data analysis.</p>
         </section>
 
-        <section>
-            <h2 class="section-title">🔍 AI/ML Clinical Research & Trends (2025-2026)</h2>
-            <div class="card">
-                <h4>1. Ambient Medical Documentation</h4>
-                <p>Converting patient-physician conversations into structured medical notes in real-time. This workflow
-                    is piloted to reduce charting time by up to 50%.</p>
-                <a href="https://blog.google/technology/health/google-health-ai-research-updates-march-2024/"
-                    class="link-button" target="_blank">Official Link</a>
+        <!-- Trends Grid -->
+        <section class="research-section">
+            <div class="section-header">
+                <div class="icon-box">🔍</div>
+                <h2>Key Clinical Trends</h2>
             </div>
-            <div class="card">
-                <h4>2. Longitudinal Data Summarization</h4>
-                <p>Consolidating years of unstructured EHR data into a concise "longitudinal view" for rapid physician
-                    review.</p>
-                <a href="https://www.meditech.com/about-meditech/partnerships/google-cloud/" class="link-button"
-                    target="_blank">Reference</a>
-            </div>
-            <div class="card">
-                <h4>3. Precision Clinical Search</h4>
-                <p>Using medically-tuned search engines to find specific patterns across a patient's history.</p>
-                <a href="https://cloud.google.com/vertex-ai-search-for-healthcare" class="link-button"
-                    target="_blank">Official Link</a>
+            <div class="grid-cards">
+                <div class="card">
+                    <h4>Ambient Documentation</h4>
+                    <p>Real-time conversion of patient encounters into structured, compliant medical notes without
+                        manual keyboard entry.</p>
+                    <a href="https://blog.google/technology/health/google-health-ai-research-updates-march-2024/"
+                        class="card-link" target="_blank">View Research Updates →</a>
+                </div>
+                <div class="card">
+                    <h4>Longitudinal Narrative</h4>
+                    <p>Automated synthesis of fragmented EHR history into a unified timeline for rapid clinical decision
+                        making.</p>
+                    <a href="https://www.meditech.com/about-meditech/partnerships/google-cloud/" class="card-link"
+                        target="_blank">System Implementation →</a>
+                </div>
+                <div class="card">
+                    <h4>Precision Diagnostics</h4>
+                    <p>Medically-tuned retrieval systems providing evidence-based answers to complex diagnostic queries.
+                    </p>
+                    <a href="https://cloud.google.com/vertex-ai-search-for-healthcare" class="card-link"
+                        target="_blank">Search Infrastructure →</a>
+                </div>
             </div>
         </section>
 
-        <section>
-            <h2 class="section-title">🧠 Deep Dive: Medical LLMs</h2>
-            <h3>🅰️ <a href="https://research.google/blog/med-palm-2-shares-our-latest-development-in-medical-llms/"
-                    target="_blank">Med-PaLM 2</a></h3>
-            <p>Google's foundation model fine-tuned for high-fidelity medical reasoning. Achieved <strong>91.1%
-                    accuracy</strong> on USMLE-style questions.</p>
-            <a href="https://arxiv.org/abs/2305.09617" class="link-button" target="_blank">Read Research Paper</a>
+        <!-- Models Deep Dive -->
+        <section class="research-section">
+            <div class="section-header">
+                <div class="icon-box">🧠</div>
+                <h2>Medical Foundation Models</h2>
+            </div>
 
-            <h3 style="margin-top: var(--space-md);">🅱️ <a
-                    href="https://cloud.google.com/blog/topics/healthcare-life-sciences/introducing-medlm-for-the-healthcare-industry"
-                    target="_blank">MedLM</a></h3>
-            <p>Enterprise versions of Med-PaLM 2, optimized for clinical documentation and insights.</p>
+            <div style="margin-bottom: var(--space-lg);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; font-size: 1.15rem; color: var(--medical-primary);">Med-PaLM 2 / MedLM</h3>
+                    <span class="badge">Enterprise Ready</span>
+                </div>
+                <p>A flagship medical LLM demonstrating 91.1% accuracy on USMLE-style reasoning tasks. Optimized for
+                    high-fidelity clinical text comprehension.</p>
+                <div style="display: flex; gap: var(--space-md);">
+                    <a href="https://research.google/blog/med-palm-2-shares-our-latest-development-in-medical-llms/"
+                        class="card-link" target="_blank">Official Blog</a>
+                    <a href="https://arxiv.org/abs/2305.09617" class="card-link" target="_blank">Technical Paper
+                        (arXiv)</a>
+                </div>
+            </div>
 
-            <h3 style="margin-top: var(--space-md);">🅲 <a href="https://github.com/Google-Health/medgemma"
-                    target="_blank">MedGemma (Open Source)</a></h3>
-            <p>Medically-tuned variant of the Gemma architecture for on-premises deployment.</p>
-            <a href="https://research.google/blog/medgemma-1-5-new-medical-imaging-capabilities/" class="link-button"
-                target="_blank">MedGemma 1.5 Update</a>
+            <div
+                style="margin-top: var(--space-lg); padding-top: var(--space-lg); border-top: 1px solid var(--medical-border);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; font-size: 1.15rem; color: var(--medical-primary);">MedGemma (Open Source)
+                    </h3>
+                    <span class="badge">On-Premises / Privacy</span>
+                </div>
+                <p>Medically-tuned variant of the Gemma architecture. Specializes in multimodal imaging analysis (CT,
+                    MRI, X-Ray) and visual question answering.</p>
+                <div style="display: flex; gap: var(--space-md);">
+                    <a href="https://github.com/Google-Health/medgemma" class="card-link" target="_blank">GitHub
+                        Repository</a>
+                    <a href="https://research.google/blog/medgemma-1-5-new-medical-imaging-capabilities/"
+                        class="card-link" target="_blank">1.5 Vision Updates</a>
+                </div>
+            </div>
         </section>
 
-        <section>
-            <h2 class="section-title">🏥 Real-World Implementation Study Cases</h2>
+        <!-- Implementation Cases -->
+        <section class="research-section">
+            <div class="section-header">
+                <div class="icon-box">🏥</div>
+                <h2>Study Cases & Implementations</h2>
+            </div>
             <table>
                 <thead>
                     <tr>
                         <th>Organization</th>
-                        <th>Implementation Focus</th>
-                        <th>Source</th>
+                        <th>Workflow Focus</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td><strong>Mayo Clinic</strong></td>
-                        <td>Clinical record summarization</td>
+                        <td>Clinical record summarization & discovery</td>
                         <td><a href="https://www.techtarget.com/healthitanalytics/news/366614131/Mayo-Clinic-Partners-with-Google-to-Transform-Healthcare-via-Generative-AI"
-                                target="_blank">View</a></td>
+                                target="_blank" class="card-link">Release Notes</a></td>
                     </tr>
                     <tr>
                         <td><strong>HCA Healthcare</strong></td>
-                        <td>Ambient documentation (ED)</td>
+                        <td>Ambient reporting in Emergency Care</td>
                         <td><a href="https://www.globenewswire.com/news-release/2023/04/20/2651036/0/en/Augmedix-Announces-Partnership-with-HCA-Healthcare-to-Accelerate-the-Development-of-AI-enabled-Ambient-Documentation.html"
-                                target="_blank">View</a></td>
+                                target="_blank" class="card-link">Pilot Details</a></td>
                     </tr>
                     <tr>
-                        <td><strong>Meditech</strong></td>
-                        <td>Longitudinal narratives in EHR</td>
-                        <td><a href="https://www.meditech.com/about-meditech/news/2024/meditech-and-google-health-collaborate-for-ai-powered-expanse-search-and-summarisation/"
-                                target="_blank">View</a></td>
+                        <td><strong>Apollo 24|7</strong></td>
+                        <td>Evidence-based Intelligence Engines</td>
+                        <td><a href="https://cloud.google.com/blog/topics/healthcare-life-sciences/apollo-247-google-cloud-clinical-intelligence-engine"
+                                target="_blank" class="card-link">Technical Review</a></td>
                     </tr>
                 </tbody>
             </table>
         </section>
 
-        <section>
-            <h2 class="section-title">🛠️ Human-in-the-loop</h2>
-            <p>All current AI/ML implementations emphasize <strong>Augmentation</strong>:</p>
-            <ul>
-                <li><strong>Human Oversight:</strong> Final sign-off is ALWAYS by a licensed physician.</li>
-                <li><strong>Privacy:</strong> Full adherence to HIPAA and localized processing.</li>
-                <li><strong>Verification:</strong> Regular audits for hallucination or bias.</li>
+        <!-- Compliance & Human-in-the-loop -->
+        <section class="research-section" style="border: 1px solid #93c5fd; background: #f0f9ff;">
+            <div class="section-header">
+                <div class="icon-box">🛡️</div>
+                <h2 style="color: #1e3a8a;">Clinical Governance</h2>
+            </div>
+            <p style="color: #1e3a8a;"><strong>The Augmentation Principle:</strong> All implementations documented here
+                require strict human oversight. AI-generated artifacts must be validated by a licensed practitioner
+                prior to clinical decision finalization.</p>
+            <ul style="color: #1e40af; font-size: 0.9rem;">
+                <li>Full HIPAA-compliant pipeline availability</li>
+                <li>Localized data processing options (MedGemma)</li>
+                <li>Mandatory clinician verification loops</li>
             </ul>
         </section>
 
-        <footer style="margin-top: var(--space-2xl); text-align: center; font-size: 0.9rem; color: #64748b;">
-            <p>Research Status: Operational Review v3.0 (Jan 2026)</p>
-            <p>Target Audience: Medical Staff & Healthcare Researchers</p>
+        <footer class="footer">
+            <p>Operational Status: v3.1 Focused Clinical Review (January 2026)</p>
+            <p>© NMDA Therapy Tools - Professional Research Division</p>
         </footer>
     </main>
 </body>
