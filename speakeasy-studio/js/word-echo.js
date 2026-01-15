@@ -98,25 +98,17 @@ class WordEchoGame {
         }
     }
 
-    // Hybrid Stretch: Duplicates characters to extend duration beyond CSS rate limits
-    stretchWord(word, factor) {
-        if (factor <= 1) return word;
-        return word.split('').map(char => char.repeat(factor)).join('');
-    }
-
     speakSlowly() {
         const word = this.words[this.currentWordIndex];
         this.synth.cancel();
 
-        // Calculate Hybrid Params
-        // Factor: 1 (for 1-4s), 2 (for 5-7s), 3 (for 8-10s)
-        const stretchFactor = this.duration < 5 ? 1 : (this.duration < 8 ? 2 : 3);
+        const utterance = new SpeechSynthesisUtterance(word);
 
-        // Rate: 1.2 descending to 0.2
-        const rate = Math.max(0.1, 1.3 - (this.duration * 0.11));
-
-        const textToSpeak = this.stretchWord(word, stretchFactor);
-        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        // High-Fidelity Slow Motion
+        // We prioritize smooth audio over artificial stretching.
+        // Map 1s-10s slider to rate 1.2 -> 0.1
+        // This provides the slowest possible NATURAL speech the browser allows.
+        const rate = Math.max(0.1, 1.3 - (this.duration * 0.12));
 
         utterance.rate = rate;
         utterance.pitch = 1.0;
@@ -124,7 +116,7 @@ class WordEchoGame {
         utterance.onstart = () => {
             this.startVisualizer();
             this.startMouthAnimation();
-            this.updateStatus(`Speaking (${this.duration}s)...`);
+            this.updateStatus(`Speaking slowly...`);
             this.displayWord(word);
         };
 
@@ -142,10 +134,10 @@ class WordEchoGame {
     startMouthAnimation() {
         const mouth = document.querySelector('.mouth');
         if (mouth) {
-            // Adjust animation duration for the hybrid length
-            // Base duration * stretch factor * inverse rate
-            const baseAnim = 0.2 + (this.duration * 0.1);
-            mouth.style.setProperty('--mouth-anim-duration', `${baseAnim}s`);
+            // Animation matches the rate
+            // Rate 0.1 is 10x slower than normal, so animation should be very slow
+            const smoothDuration = 1.0 + (this.duration * 0.3);
+            mouth.style.setProperty('--mouth-anim-duration', `${smoothDuration}s`);
             mouth.classList.add('speaking');
         }
     }
