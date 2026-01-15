@@ -36,6 +36,12 @@
                                     <p>Match sounds to letters and images.</p>
                                     <button class="btn btn-primary mt-md">Start Matching</button>
                                 </div>
+                                <div class="card activity-card" id="start-word-echo">
+                                    <div class="activity-icon">🔁</div>
+                                    <h3>Word Echo</h3>
+                                    <p>Listen carefully and repeat the word!</p>
+                                    <button class="btn btn-primary mt-md">Start Repeating</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -58,6 +64,39 @@
                             <div id="options-grid" class="grid grid-3">
                                 <!-- Options will be generated here -->
                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="echo-screen" class="screen">
+                    <div class="container">
+                        <div class="card game-card text-center">
+                            <div class="echo-header mb-lg">
+                                <h2 id="echo-word-display">Get Ready!</h2>
+                                <p id="echo-status">Press the button and listen...</p>
+                            </div>
+
+                            <div class="echo-visualizer-container mb-xl">
+                                <div id="echo-visualizer" class="echo-visualizer">
+                                    <div class="wave-bar"></div>
+                                    <div class="wave-bar"></div>
+                                    <div class="wave-bar"></div>
+                                    <div class="wave-bar"></div>
+                                    <div class="wave-bar"></div>
+                                </div>
+                            </div>
+
+                            <div class="echo-actions">
+                                <button id="echo-listen-btn" class="btn btn-large btn-accent">
+                                    <span class="icon-pulse">🔊</span> Hear Word
+                                </button>
+                                <div id="mic-indicator" class="mic-indicator mt-lg hidden">
+                                    <div class="mic-pulse">🎤</div>
+                                    <p>Listening for you...</p>
+                                </div>
+                            </div>
+
+                            <div id="echo-feedback" class="mt-xl text-xl font-bold"></div>
                         </div>
                     </div>
                 </section>
@@ -84,6 +123,7 @@
     <script src="../shared/js/storage.js"></script>
     <script src="../shared/js/gesture-engine.js"></script>
     <script src="js/phonics.js"></script>
+    <script src="js/word-echo.js"></script>
     <script src="js/app.js"></script>
 </body>
 

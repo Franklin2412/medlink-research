@@ -151,3 +151,95 @@
     display: block;
     animation: fadeIn var(--transition-normal);
 }
+
+/* Word Echo Specific */
+.echo-visualizer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 100px;
+}
+
+.wave-bar {
+    width: 15px;
+    height: 40px;
+    background: var(--primary-color);
+    border-radius: 10px;
+    transition: height 0.1s ease;
+}
+
+.wave-bar.speaking {
+    animation: waveAnim 0.5s ease-in-out infinite alternate;
+}
+
+.wave-bar:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.wave-bar:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.wave-bar:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+.wave-bar:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+@keyframes waveAnim {
+    from {
+        height: 20px;
+        background: var(--primary-color);
+    }
+
+    to {
+        height: 80px;
+        background: var(--accent-color);
+    }
+}
+
+.mic-indicator {
+    text-align: center;
+}
+
+.mic-pulse {
+    font-size: 4rem;
+    animation: micPulse 1.5s infinite;
+}
+
+@keyframes micPulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.3);
+        opacity: 1;
+        text-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+}
+
+#echo-feedback.correct {
+    color: var(--success-color);
+    animation: bounce 0.5s ease;
+}
+
+#echo-feedback.wrong {
+    color: #ff7675;
+    animation: shake 0.5s ease;
+}
+
+#echo-word-display {
+    font-size: 3rem;
+    color: var(--primary-color);
+    font-family: var(--font-heading);
+}
