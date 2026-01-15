@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI/ML Research & Clinical AI - NMDA Therapy Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="shared/css/common.css">
+    <style>
+        :root {
+            --research-bg: #f8fafc;
+            --research-accent: #3b82f6;
+            --research-text: #1e293b;
+        }
+
+        body {
+            background-color: var(--research-bg);
+            color: var(--research-text);
+            line-height: 1.6;
+        }
+
+        .research-header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: var(--space-2xl) 0;
+            text-align: center;
+        }
+
+        .research-container {
+            max-width: 900px;
+            margin: -60px auto var(--space-2xl);
+            background: white;
+            padding: var(--space-xl) var(--space-2xl);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-title {
+            color: var(--research-accent);
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: var(--space-xs);
+            margin-top: var(--space-xl);
+            margin-bottom: var(--space-md);
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .card h4 {
+            margin-top: 0;
+            color: var(--research-text);
+        }
+
+        .link-button {
+            display: inline-block;
+            background-color: var(--research-accent);
+            color: white;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+            margin-top: var(--space-xs);
+            transition: opacity 0.2s;
+        }
+
+        .link-button:hover {
+            opacity: 0.9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--space-md) 0;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: var(--space-sm);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background-color: #f1f5f9;
+        }
+
+        .back-nav {
+            margin-bottom: var(--space-md);
+        }
+
+        .back-nav a {
+            color: white;
+            opacity: 0.8;
+            text-decoration: none;
+        }
+
+        .back-nav a:hover {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .research-container {
+                margin-top: 0;
+                border-radius: 0;
+                padding: var(--space-lg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="research-header">
+        <div class="container text-center">
+            <div class="back-nav">
+                <a href="index.html">← Back to Home</a>
+            </div>
+            <h1>AI/ML Research & Clinical AI</h1>
+            <p>For Medical Professionals & Researchers</p>
+        </div>
+    </header>
+
+    <main class="research-container">
+        <section>
+            <h2 class="section-title">🩺 Executive Summary</h2>
+            <p>
+                As of 2025-2026, healthcare has transitioned from experimental AI to <strong>operational clinical
+                    integration</strong>.
+                This research summary is designed to help healthcare professionals understand the current landscape of
+                Large Language Models (LLMs) and how they are being used to reduce administrative burden and improve
+                clinical accuracy.
+            </p>
+        </section>
+
+        <section>
+            <h2 class="section-title">🔍 AI/ML Clinical Research & Trends (2025-2026)</h2>
+            <div class="card">
+                <h4>1. Ambient Medical Documentation</h4>
+                <p>Converting patient-physician conversations into structured medical notes in real-time. This workflow
+                    is piloted to reduce charting time by up to 50%.</p>
+                <a href="https://blog.google/technology/health/google-health-ai-research-updates-march-2024/"
+                    class="link-button" target="_blank">Official Link</a>
+            </div>
+            <div class="card">
+                <h4>2. Longitudinal Data Summarization</h4>
+                <p>Consolidating years of unstructured EHR data into a concise "longitudinal view" for rapid physician
+                    review.</p>
+                <a href="https://www.meditech.com/about-meditech/partnerships/google-cloud/" class="link-button"
+                    target="_blank">Reference</a>
+            </div>
+            <div class="card">
+                <h4>3. Precision Clinical Search</h4>
+                <p>Using medically-tuned search engines to find specific patterns across a patient's history.</p>
+                <a href="https://cloud.google.com/vertex-ai-search-for-healthcare" class="link-button"
+                    target="_blank">Official Link</a>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">🧠 Deep Dive: Medical LLMs</h2>
+            <h3>🅰️ <a href="https://research.google/blog/med-palm-2-shares-our-latest-development-in-medical-llms/"
+                    target="_blank">Med-PaLM 2</a></h3>
+            <p>Google's foundation model fine-tuned for high-fidelity medical reasoning. Achieved <strong>91.1%
+                    accuracy</strong> on USMLE-style questions.</p>
+            <a href="https://arxiv.org/abs/2305.09617" class="link-button" target="_blank">Read Research Paper</a>
+
+            <h3 style="margin-top: var(--space-md);">🅱️ <a
+                    href="https://cloud.google.com/blog/topics/healthcare-life-sciences/introducing-medlm-for-the-healthcare-industry"
+                    target="_blank">MedLM</a></h3>
+            <p>Enterprise versions of Med-PaLM 2, optimized for clinical documentation and insights.</p>
+
+            <h3 style="margin-top: var(--space-md);">🅲 <a href="https://github.com/Google-Health/medgemma"
+                    target="_blank">MedGemma (Open Source)</a></h3>
+            <p>Medically-tuned variant of the Gemma architecture for on-premises deployment.</p>
+            <a href="https://research.google/blog/medgemma-1-5-new-medical-imaging-capabilities/" class="link-button"
+                target="_blank">MedGemma 1.5 Update</a>
+        </section>
+
+        <section>
+            <h2 class="section-title">🏥 Real-World Implementation Study Cases</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Organization</th>
+                        <th>Implementation Focus</th>
+                        <th>Source</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Mayo Clinic</strong></td>
+                        <td>Clinical record summarization</td>
+                        <td><a href="https://www.techtarget.com/healthitanalytics/news/366614131/Mayo-Clinic-Partners-with-Google-to-Transform-Healthcare-via-Generative-AI"
+                                target="_blank">View</a></td>
+                    </tr>
+                    <tr>
+                        <td><strong>HCA Healthcare</strong></td>
+                        <td>Ambient documentation (ED)</td>
+                        <td><a href="https://www.globenewswire.com/news-release/2023/04/20/2651036/0/en/Augmedix-Announces-Partnership-with-HCA-Healthcare-to-Accelerate-the-Development-of-AI-enabled-Ambient-Documentation.html"
+                                target="_blank">View</a></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Meditech</strong></td>
+                        <td>Longitudinal narratives in EHR</td>
+                        <td><a href="https://www.meditech.com/about-meditech/news/2024/meditech-and-google-health-collaborate-for-ai-powered-expanse-search-and-summarisation/"
+                                target="_blank">View</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2 class="section-title">🛠️ Human-in-the-loop</h2>
+            <p>All current AI/ML implementations emphasize <strong>Augmentation</strong>:</p>
+            <ul>
+                <li><strong>Human Oversight:</strong> Final sign-off is ALWAYS by a licensed physician.</li>
+                <li><strong>Privacy:</strong> Full adherence to HIPAA and localized processing.</li>
+                <li><strong>Verification:</strong> Regular audits for hallucination or bias.</li>
+            </ul>
+        </section>
+
+        <footer style="margin-top: var(--space-2xl); text-align: center; font-size: 0.9rem; color: #64748b;">
+            <p>Research Status: Operational Review v3.0 (Jan 2026)</p>
+            <p>Target Audience: Medical Staff & Healthcare Researchers</p>
+        </footer>
+    </main>
+</body>
+
+</html>
