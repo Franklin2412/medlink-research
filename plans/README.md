@@ -1,4 +1,4 @@
-# NMDA Encephalitis Therapy Tools - Project Planning
+# MedLink Research - Project Planning
 
 ## 📋 Overview
 

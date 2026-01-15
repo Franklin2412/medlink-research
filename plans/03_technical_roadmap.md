@@ -1,4 +1,4 @@
-# Technical Roadmap: Development & Deployment Strategy
+# Technical Roadmap: MedLink Research
 
 ## Project Structure
 
@@ -313,7 +313,7 @@ class VoiceRecorder {
 **Implementation:**
 ```javascript
 // service-worker.js
-const CACHE_NAME = 'nmda-therapy-tools-v1';
+const CACHE_NAME = 'medlink-research-v1';
 const urlsToCache = [
   '/',
   '/css/main.css',
@@ -340,9 +340,9 @@ self.addEventListener('fetch', (event) => {
 **Manifest file:**
 ```json
 {
-  "name": "NMDA Therapy Tools",
-  "short_name": "Therapy Tools",
-  "description": "Interactive rehabilitation tools for children",
+  "name": "MedLink Research",
+  "short_name": "MedLink",
+  "description": "Clinical AI & Rehabilitation Hub",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F8F9FA",
@@ -442,7 +442,7 @@ self.addEventListener('fetch', (event) => {
 
 ### GitHub Repository Structure
 ```
-Repository: nmda-therapy-tools
+Repository: medlink-research
 ├── main branch (production - GitHub Pages)
 ├── develop branch (active development)
 └── feature/* branches (individual features)

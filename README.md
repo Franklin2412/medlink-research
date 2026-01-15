@@ -1,4 +1,4 @@
-# NMDA Therapy Tools
+# MedLink Research
 
 Free, evidence-based therapeutic web applications designed to support children recovering from autoimmune NMDA encephalitis.
 
@@ -69,10 +69,10 @@ For comprehensive information about the project:
 
 ```bash
 # Clone the repository
-git clone https://github.com/[username]/nmda-therapy-tools.git
+git clone https://github.com/[username]/medlink-research.git
 
 # Navigate to project
-cd nmda-therapy-tools
+cd medlink-research
 
 # Open in browser (no build process needed!)
 # Just open index.html in your browser
@@ -139,6 +139,6 @@ For questions, feedback, or collaboration opportunities:
 
 ---
 
-**Built with ❤️ by families, for families affected by NMDA encephalitis**
+**Built with ❤️ for families affected by NMDA encephalitis**
 
-🌟 *"Technology empowering recovery, one game at a time."* 🌟
+🌟 *"Clinical Intelligence & Rehabilitation, Unified."* 🌟

@@ -1,5 +1,5 @@
 /**
- * Local Storage Management for NMDA Therapy Tools
+ * Local Storage Management for MedLink Research
  * Handles saving and retrieving user progress data
  * All data stays on user's device (privacy-first)
  */
@@ -12,7 +12,7 @@ const StorageManager = {
      */
     saveProgress(appName, data) {
         try {
-            const key = `nmda-therapy-${appName}`;
+            const key = `medlink-research-${appName}`;
             const timestamp = new Date().toISOString();
             const saveData = {
                 ...data,
@@ -33,7 +33,7 @@ const StorageManager = {
      */
     loadProgress(appName) {
         try {
-            const key = `nmda-therapy-${appName}`;
+            const key = `medlink-research-${appName}`;
             const data = localStorage.getItem(key);
             return data ? JSON.parse(data) : null;
         } catch (error) {
@@ -48,7 +48,7 @@ const StorageManager = {
      */
     clearProgress(appName) {
         try {
-            const key = `nmda-therapy-${appName}`;
+            const key = `medlink-research-${appName}`;
             localStorage.removeItem(key);
             return true;
         } catch (error) {
@@ -65,8 +65,8 @@ const StorageManager = {
         const allData = {};
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key.startsWith('nmda-therapy-')) {
-                const appName = key.replace('nmda-therapy-', '');
+            if (key.startsWith('medlink-research-')) {
+                const appName = key.replace('medlink-research-', '');
                 allData[appName] = JSON.parse(localStorage.getItem(key));
             }
         }
@@ -77,7 +77,7 @@ const StorageManager = {
      * Download progress data as a file
      * @param {string} filename - Name for the download file
      */
-    downloadData(filename = 'nmda-therapy-progress.json') {
+    downloadData(filename = 'medlink-research-progress.json') {
         const data = this.exportAllData();
         const blob = new Blob([data], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -105,8 +105,8 @@ const StorageManager = {
 
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key.startsWith('nmda-therapy-')) {
-                const appName = key.replace('nmda-therapy-', '');
+            if (key.startsWith('medlink-research-')) {
+                const appName = key.replace('medlink-research-', '');
                 const data = JSON.parse(localStorage.getItem(key));
 
                 stats.totalAppsUsed++;

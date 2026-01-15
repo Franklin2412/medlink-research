@@ -1,16 +1,16 @@
-# Deployment Guide - GitHub Pages
+# Deployment Guide - MedLink Research
 
 ## 🚀 Quick Deployment to GitHub Pages
 
-Follow these steps to deploy your NMDA Therapy Tools to GitHub Pages so it's accessible online.
+Follow these steps to deploy MedLink Research to GitHub Pages.
 
 ### Step 1: Create GitHub Repository
 
 1. **Go to GitHub**: Visit [github.com](https://github.com)
 2. **New Repository**:
    - Click the "+" icon → "New repository"
-   - Repository name: `nmda-therapy-tools` (or your preferred name)
-   - Description: "Free therapeutic web apps for children recovering from NMDA encephalitis"
+   - Repository name: `medlink-research`
+   - Description: `Clinical AI & Rehabilitation tools`
    - Choose: **Public** (so others can access it)
    - **Don't** initialize with README (we already have one)
    - Click "Create repository"
@@ -23,7 +23,7 @@ In your terminal (PowerShell), run:
 cd C:\Users\damer\Documents\Projects\medical
 
 # Add remote repository (replace [username] with your GitHub username)
-git remote add origin https://github.com/[username]/nmda-therapy-tools.git
+git remote add origin https://github.com/[username]/medlink-research.git
 
 # Push to GitHub
 git branch -M main
@@ -41,11 +41,11 @@ git push -u origin main
    - Click **Save**
 
 5. Wait 1-2 minutes for deployment
-6. Your site will be live at: `https://[username].github.io/nmda-therapy-tools/`
+6. Your site will be live at: `https://[username].github.io/medlink-research/`
 
 ### Step 4: Test Your Deployment
 
-1. Visit: `https://[username].github.io/nmda-therapy-tools/`
+1. Visit: `https://[username].github.io/medlink-research/`
 2. Click through all applications
 3. Test Memory Garden game
 4. Verify all features work online
@@ -75,7 +75,7 @@ GitHub Pages will automatically rebuild your site within 1-2 minutes.
 
 ## 📝 Custom Domain (Optional)
 
-If you want a custom domain like `nmda-therapy-tools.org`:
+If you want a custom domain like `medlink-research.org`:
 
 1. **Purchase domain** from a registrar (GoDaddy, Namecheap, etc.)
 2. **Add DNS records**:
@@ -97,7 +97,7 @@ If you want a custom domain like `nmda-therapy-tools.org`:
 
 ### Option 1: Direct Link
 Simply share the GitHub Pages URL with the medical team:
-- `https://[username].github.io/nmda-therapy-tools/`
+- `https://[username].github.io/medlink-research/`
 
 ### Option 2: Embed in Hospital Website
 
@@ -105,17 +105,17 @@ If the hospital wants to integrate it into their website, they can use an `<ifra
 
 ```html
 <iframe 
-  src="https://[username].github.io/nmda-therapy-tools/" 
+  src="https://[username].github.io/medlink-research/" 
   width="100%" 
   height="800px" 
   frameborder="0"
-  title="NMDA Therapy Tools">
+  title="MedLink Research">
 </iframe>
 ```
 
 Or link to individual apps:
-- Memory Garden: `https://[username].github.io/nmda-therapy-tools/memory-garden/`
-- HandyHelper: `https://[username].github.io/nmda-therapy-tools/handy-helper/` (when ready)
+- Memory Garden: `https://[username].github.io/medlink-research/memory-garden/`
+- HandyHelper: `https://[username].github.io/medlink-research/handy-helper/` (when ready)
 
 ### Option 3: White-Label Version
 
@@ -223,7 +223,7 @@ Your site automatically works on mobile devices! Users can:
 
 Congratulations! Your therapeutic tools are now accessible to families worldwide.
 
-**Example URL**: `https://yourusername.github.io/nmda-therapy-tools/`
+**Example URL**: `https://yourusername.github.io/medlink-research/`
 
 **Next Steps**:
 1. Test thoroughly on multiple devices

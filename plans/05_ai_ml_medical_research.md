@@ -60,4 +60,4 @@ All current AI/ML implementations emphasize the **"Augmentation"** approach:
 ---
 **Research Status:** Operational Review v3.0 (Jan 2026)  
 **Target Audience:** Medical Staff & Healthcare Researchers  
-**Location:** `c:\Users\damer\Documents\Projects\medical\plans\05_ai_ml_medical_research.md`
+**Location:** `c:\Users\damer\Documents\Projects\franklin\medical\plans\05_ai_ml_medical_research.md`

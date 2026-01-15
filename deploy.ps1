@@ -1,7 +1,7 @@
-# GitHub Deployment Script for NMDA Therapy Tools
+# GitHub Deployment Script for MedLink Research
 # Run this in PowerShell to deploy to GitHub Pages
 
-Write-Host "🚀 Deploying NMDA Therapy Tools to GitHub" -ForegroundColor Cyan
+Write-Host "🚀 Deploying MedLink Research to GitHub" -ForegroundColor Cyan
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -16,18 +16,18 @@ Write-Host ""
 Write-Host "📡 Connecting to GitHub repository..." -ForegroundColor Yellow
 
 try {
-    git remote add origin "https://github.com/$GITHUB_USERNAME/nmda-therapy-tools.git" 2>$null
+    git remote add origin "https://github.com/$GITHUB_USERNAME/medlink-research.git" 2>$null
     
     if ($LASTEXITCODE -eq 0) {
         Write-Host "✅ Remote repository added successfully" -ForegroundColor Green
     } else {
         Write-Host "⚠️  Remote 'origin' already exists, updating URL..." -ForegroundColor Yellow
-        git remote set-url origin "https://github.com/$GITHUB_USERNAME/nmda-therapy-tools.git"
+        git remote set-url origin "https://github.com/$GITHUB_USERNAME/medlink-research.git"
         Write-Host "✅ Remote URL updated" -ForegroundColor Green
     }
 } catch {
     Write-Host "⚠️  Remote 'origin' already exists, updating URL..." -ForegroundColor Yellow
-    git remote set-url origin "https://github.com/$GITHUB_USERNAME/nmda-therapy-tools.git"
+    git remote set-url origin "https://github.com/$GITHUB_USERNAME/medlink-research.git"
     Write-Host "✅ Remote URL updated" -ForegroundColor Green
 }
 
@@ -51,20 +51,20 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "🎉 SUCCESS! Your code is now on GitHub!" -ForegroundColor Green
     Write-Host ""
     Write-Host "📋 Next Steps:" -ForegroundColor Cyan
-    Write-Host "1. Go to: https://github.com/$GITHUB_USERNAME/nmda-therapy-tools" -ForegroundColor White
+    Write-Host "1. Go to: https://github.com/$GITHUB_USERNAME/medlink-research" -ForegroundColor White
     Write-Host "2. Click 'Settings' tab" -ForegroundColor White
     Write-Host "3. Click 'Pages' in the left sidebar" -ForegroundColor White
     Write-Host "4. Under 'Source', select branch: 'main' and folder: '/ (root)'" -ForegroundColor White
     Write-Host "5. Click 'Save'" -ForegroundColor White
     Write-Host ""
     Write-Host "⏳ Wait 1-2 minutes, then your site will be live at:" -ForegroundColor Yellow
-    Write-Host "   https://$GITHUB_USERNAME.github.io/nmda-therapy-tools/" -ForegroundColor Green
+    Write-Host "   https://$GITHUB_USERNAME.github.io/medlink-research/" -ForegroundColor Green
     Write-Host ""
     
     # Open browser to GitHub repository
     $openBrowser = Read-Host "Would you like to open the GitHub repository in your browser? (Y/N)"
     if ($openBrowser -eq "Y" -or $openBrowser -eq "y") {
-        Start-Process "https://github.com/$GITHUB_USERNAME/nmda-therapy-tools"
+        Start-Process "https://github.com/$GITHUB_USERNAME/medlink-research"
     }
 } else {
     Write-Host ""

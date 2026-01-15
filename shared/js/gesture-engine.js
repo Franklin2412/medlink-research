@@ -1,7 +1,7 @@
 /**
  * Gesture Engine
  * Uses MediaPipe Hands to detect simple gestures and simulate mouse events.
- * Designed for NMDA Therapy Tools.
+ * Designed for MedLink Research.
  */
 
 class GestureEngine {

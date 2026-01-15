@@ -1,4 +1,4 @@
-# 🚀 Quick Deployment Guide
+# 🚀 MedLink Research: Deployment Guide
 
 ## Deploy to GitHub Pages in 5 Minutes
 
@@ -15,8 +15,8 @@
 1. Go to **https://github.com**
 2. Click **"+" button** (top right) → **"New repository"**
 3. Fill in:
-   - **Repository name**: `nmda-therapy-tools`
-   - **Description**: `Free therapeutic web apps for children recovering from NMDA encephalitis`
+   - **Repository name**: `medlink-research`
+   - **Description**: `Clinical AI & Rehabilitation hub`
    - **Visibility**: ✅ Public
    - ❌ **DO NOT** check "Initialize with README"
 4. Click **"Create repository"**
@@ -32,7 +32,7 @@ Open **PowerShell** and run these commands:
 cd C:\Users\damer\Documents\Projects\medical
 
 # Add GitHub as remote (replace [YOUR-USERNAME] with your actual GitHub username!)
-git remote add origin https://github.com/[YOUR-USERNAME]/nmda-therapy-tools.git
+git remote add origin https://github.com/[YOUR-USERNAME]/medlink-research.git
 
 # Rename branch to main
 git branch -M main
@@ -49,7 +49,7 @@ git push -u origin main
 
 ### 3️⃣ Enable GitHub Pages (1 minute)
 
-1. Go to your repository: `https://github.com/[YOUR-USERNAME]/nmda-therapy-tools`
+1. Go to your repository: `https://github.com/[YOUR-USERNAME]/medlink-research`
 2. Click **"Settings"** tab (top right, gear icon)
 3. Scroll down left sidebar → Click **"Pages"**
 4. Under **"Source"**:
@@ -57,7 +57,7 @@ git push -u origin main
    - **Folder**: Select `/ (root)` (dropdown)
 5. Click **"Save"**
 
-✅ **You'll see**: "Your site is ready to be published at https://[YOUR-USERNAME].github.io/nmda-therapy-tools/"
+✅ **You'll see**: "Your site is ready to be published at https://[YOUR-USERNAME].github.io/medlink-research/"
 
 ---
 
@@ -65,7 +65,7 @@ git push -u origin main
 
 1. Wait **1-2 minutes** for GitHub to build your site
 2. **Refresh the Settings → Pages** page
-3. When ready, you'll see: ✅ "Your site is live at https://[YOUR-USERNAME].github.io/nmda-therapy-tools/"
+3. When ready, you'll see: ✅ "Your site is live at https://[YOUR-USERNAME].github.io/medlink-research/"
 4. **Click the link** to visit your live site!
 
 ---
@@ -74,10 +74,10 @@ git push -u origin main
 
 Once deployed, share these links:
 
-- **Landing Page**: `https://[YOUR-USERNAME].github.io/nmda-therapy-tools/`
-- **Memory Garden**: `https://[YOUR-USERNAME].github.io/nmda-therapy-tools/memory-garden/`
-- **HandyHelper**: `https://[YOUR-USERNAME].github.io/nmda-therapy-tools/handy-helper/`
-- **Documentation**: `https://[YOUR-USERNAME].github.io/nmda-therapy-tools/plans/`
+- **Landing Page**: `https://[YOUR-USERNAME].github.io/medlink-research/`
+- **Memory Garden**: `https://[YOUR-USERNAME].github.io/medlink-research/memory-garden/`
+- **HandyHelper**: `https://[YOUR-USERNAME].github.io/medlink-research/handy-helper/`
+- **Documentation**: `https://[YOUR-USERNAME].github.io/medlink-research/plans/`
 
 ---
 
@@ -126,14 +126,14 @@ GitHub Pages will automatically rebuild (takes 1-2 minutes).
 Email template:
 
 ```
-Subject: NMDA Therapy Tools - Free Web Applications for Review
+Subject: MedLink Research - Clinical AI & Rehabilitation Tools for Review
 
 Dear [Doctor/Therapist Name],
 
-I've developed free, web-based therapeutic applications to support 
-children recovering from NMDA encephalitis, including my daughter.
+I've developed MedLink Research, a suite of clinical AI and 
+rehabilitation tools to support children in recovery.
 
-Live Demo: https://[YOUR-USERNAME].github.io/nmda-therapy-tools/
+Live Demo: https://[YOUR-USERNAME].github.io/medlink-research/
 
 Applications:
 1. Memory Garden - Memory training games
@@ -142,7 +142,7 @@ Applications:
 I would appreciate your clinical feedback before wider deployment.
 
 Planning documents are here: 
-https://[YOUR-USERNAME].github.io/nmda-therapy-tools/plans/
+https://[YOUR-USERNAME].github.io/medlink-research/plans/
 
 Thank you for your time and expertise.
 
