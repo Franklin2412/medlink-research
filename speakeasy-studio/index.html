@@ -103,14 +103,17 @@
                                 </div>
                             </div>
 
-                            <div class="echo-actions">
+                            <div class="echo-actions flex justify-center gap-md">
                                 <button id="echo-listen-btn" class="btn btn-large btn-accent">
                                     <span class="icon-pulse">🔊</span> Hear Word
                                 </button>
-                                <div id="mic-indicator" class="mic-indicator mt-lg hidden">
-                                    <div class="mic-pulse">🎤</div>
-                                    <p>Listening for you...</p>
-                                </div>
+                                <button id="echo-skip-btn" class="btn btn-large btn-secondary">
+                                    <span>⏭️</span> Skip Word
+                                </button>
+                            </div>
+                            <div id="mic-indicator" class="mic-indicator mt-lg hidden">
+                                <div class="mic-pulse">🎤</div>
+                                <p>Listening for you...</p>
                             </div>
 
                             <div id="echo-feedback" class="mt-xl text-xl font-bold"></div>

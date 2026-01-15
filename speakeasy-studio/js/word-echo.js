@@ -57,6 +57,15 @@ class WordEchoGame {
             slider.value = this.duration;
             valDisplay.textContent = this.duration;
         }
+
+        const skipBtn = document.getElementById('echo-skip-btn');
+        if (skipBtn) {
+            skipBtn.addEventListener('click', () => {
+                this.updateStatus('Skipping word...');
+                this.currentWordIndex++;
+                setTimeout(() => this.nextWord(), 1000);
+            });
+        }
     }
 
     start() {
@@ -71,31 +80,22 @@ class WordEchoGame {
             this.displayWord('???');
             this.updateStatus('Listen to the word...');
             this.clearFeedback();
-            this.speakSlowly(); // Call speakSlowly here
+            // Automatically speak the word when it appears
+            setTimeout(() => this.speakSlowly(), 500);
         } else {
             this.endGame();
         }
     }
 
-    stretchWord(word) {
-        // Equal stretching: Higher duration means all characters repeated more
-        // Map 1s-5s to a base repeat factor
-        const baseRepeat = Math.max(1, Math.floor(this.duration * 1.5));
-
-        return word.split('').map(char => {
-            // Repeat every character equally to stretch the sound
-            return char.repeat(baseRepeat);
-        }).join('');
-    }
-
     speakSlowly() {
         const word = this.words[this.currentWordIndex];
-        const stretchedWord = this.stretchWord(word);
         this.synth.cancel();
 
-        const utterance = new SpeechSynthesisUtterance(stretchedWord);
-        // Map duration (1-5) to rate (1.0 down to 0.1)
-        utterance.rate = Math.max(0.1, 1.1 - (this.duration * 0.2));
+        const utterance = new SpeechSynthesisUtterance(word);
+
+        // Map duration (1s - 5s) to high-quality TTS rate
+        // 1s -> ~1.2 (fast), 5s -> ~0.1 (ultra slow)
+        utterance.rate = Math.max(0.1, 1.3 - (this.duration * 0.25));
         utterance.pitch = 1.0;
 
         utterance.onstart = () => {
@@ -118,7 +118,13 @@ class WordEchoGame {
 
     startMouthAnimation() {
         const mouth = document.querySelector('.mouth');
-        if (mouth) mouth.classList.add('speaking');
+        if (mouth) {
+            // Set animation duration based on TTS rate
+            // Higher duration -> slower animation
+            const animDuration = Math.max(0.2, this.duration * 0.15);
+            mouth.style.setProperty('--mouth-anim-duration', `${animDuration}s`);
+            mouth.classList.add('speaking');
+        }
     }
 
     stopMouthAnimation() {

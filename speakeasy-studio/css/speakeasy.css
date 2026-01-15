@@ -261,10 +261,11 @@
     border: 4px solid var(--primary-color);
     overflow: hidden;
     transition: all 0.3s ease;
+    --mouth-anim-duration: 0.4s;
 }
 
 .mouth.speaking {
-    animation: mouthOpen 0.4s ease-in-out infinite alternate;
+    animation: mouthOpen var(--mouth-anim-duration) ease-in-out infinite alternate;
 }
 
 .lip {
@@ -318,6 +319,7 @@
 
 .slider {
     -webkit-appearance: none;
+    appearance: none;
     width: 100%;
     height: 12px;
     border-radius: 6px;
@@ -325,6 +327,18 @@
     outline: none;
     margin: 15px 0;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #ffa726, #fb8c00);
+    color: white;
+    box-shadow: 0 4px 15px rgba(251, 140, 0, 0.3);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #fb8c00, #f57c00);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(251, 140, 0, 0.4);
 }
 
 .slider::-webkit-slider-thumb {
