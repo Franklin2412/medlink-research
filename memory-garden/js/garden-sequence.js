@@ -112,6 +112,7 @@ class GardenSequenceGame {
 
         // Save progress
         this.saveProgress();
+        StorageManager.recordSessionActivity('Memory Garden', 'Garden Sequence', `Level ${this.level - 1}, Score ${this.score}`, 'N/A');
 
         // Show game over after a delay
         setTimeout(() => {

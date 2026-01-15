@@ -36,9 +36,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     backToMenuBtn.addEventListener('click', () => {
+        if (screens.game.classList.contains('active')) {
+            StorageManager.recordSessionActivity('Emotion Explorer', 'Face Matcher', `Score: ${emotionGame.score}`, 'N/A');
+        } else if (screens.breath.classList.contains('active')) {
+            StorageManager.recordSessionActivity('Emotion Explorer', 'Deep Breath', 'Completed', 'N/A');
+        } else if (screens.bubble.classList.contains('active')) {
+            StorageManager.recordSessionActivity('Emotion Explorer', 'Calm Bubbles', 'Completed', 'N/A');
+        }
+
         breathingGame.stop();
         bubbleGame.stop();
         showScreen('welcome');
         backToMenuBtn.classList.add('hidden');
+    });
+
+    document.getElementById('view-stats-btn').addEventListener('click', () => {
+        StorageManager.showSessionStats();
     });
 });

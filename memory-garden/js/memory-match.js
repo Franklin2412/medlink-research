@@ -220,6 +220,7 @@ class MemoryMatchGame {
 
         // Save progress
         this.saveProgress(timeElapsed);
+        StorageManager.recordSessionActivity('Memory Garden', 'Flower Match', `${this.moves} moves`, this.formatTime(timeElapsed));
 
         // Show victory screen
         setTimeout(() => {

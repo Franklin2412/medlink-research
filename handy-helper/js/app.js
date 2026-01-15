@@ -50,7 +50,7 @@ function setupEventListeners() {
     document.getElementById('universal-exit-btn').addEventListener('click', () => stopActivity());
 
     // Statistics modal
-    document.getElementById('view-stats-btn').addEventListener('click', () => showStatsModal());
+    document.getElementById('view-stats-btn').addEventListener('click', () => StorageManager.showSessionStats());
     document.getElementById('close-stats-modal').addEventListener('click', () => closeStatsModal());
     document.getElementById('close-stats-btn').addEventListener('click', () => closeStatsModal());
     document.getElementById('export-stats-btn').addEventListener('click', () => exportStats());
@@ -283,6 +283,7 @@ function transferCamera(newVideo, newHandCanvas, newGameCanvas) {
 
 function stopActivity() {
     if (currentActivity) {
+        StorageManager.recordSessionActivity('HandyHelper', currentActivity.constructor.name.replace('Activity', ''), `Completed`, 'N/A');
         currentActivity.stop();
         currentActivity = null;
     }

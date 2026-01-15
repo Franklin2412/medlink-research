@@ -202,6 +202,7 @@ class TreasureHuntGame {
     gameWon() {
         this.updateStatus('🎉 Amazing! You found all the treasures!');
         this.saveProgress(true);
+        StorageManager.recordSessionActivity('Memory Garden', 'Treasure Hunt', `Victory! ${this.foundTreasures}/${this.treasureCount}`, 'N/A');
 
         setTimeout(() => {
             this.showGameOver(true);
@@ -223,6 +224,7 @@ class TreasureHuntGame {
         });
 
         this.saveProgress(false);
+        StorageManager.recordSessionActivity('Memory Garden', 'Treasure Hunt', `Failed (${this.foundTreasures}/${this.treasureCount})`, 'N/A');
 
         setTimeout(() => {
             this.showGameOver(false);

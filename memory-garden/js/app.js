@@ -232,6 +232,30 @@ function closeProgressModal() {
 function generateProgressHTML(data) {
     let html = '';
 
+    // Current Session Stats
+    const sessionData = StorageManager.getSessionStats();
+    if (sessionData && sessionData.length > 0) {
+        html += `
+      <div class="progress-section current-session">
+        <h3>✨ Current Session Activity</h3>
+        <p style="font-size: 0.8rem; color: var(--text-light); margin-top: -10px; margin-bottom: 15px;">
+          Resets on page refresh or tab close
+        </p>
+    `;
+
+        sessionData.slice().reverse().forEach(activity => {
+            const time = new Date(activity.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            html += `
+        <div class="progress-stat">
+          <span>${activity.activity} (${time})</span>
+          <strong>${activity.score}</strong>
+        </div>
+      `;
+        });
+
+        html += `</div>`;
+    }
+
     // Overall Stats
     html += `
     <div class="progress-section">

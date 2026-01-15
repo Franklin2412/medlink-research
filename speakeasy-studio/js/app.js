@@ -16,6 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     backToMenuBtn.addEventListener('click', () => {
+        if (welcomeScreen.classList.contains('active')) return; // already there
+
+        // Record activity if we were playing
+        if (gameScreen.classList.contains('active')) {
+            StorageManager.recordSessionActivity('SpeakEasy Studio', 'Phonics Fun', `Score: ${phonicsGame.score}`, 'N/A');
+        }
+
         gameScreen.classList.remove('active');
         welcomeScreen.classList.add('active');
         backToMenuBtn.classList.add('hidden');
@@ -24,5 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('play-sound-btn').addEventListener('click', () => {
         phonicsGame.speakSound();
+    });
+
+    document.getElementById('progress-btn').addEventListener('click', () => {
+        StorageManager.showSessionStats();
     });
 });

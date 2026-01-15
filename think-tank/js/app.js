@@ -40,7 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('start-sudoku').addEventListener('click', () => startGame(sudokuGame));
 
     backToMenuBtn.addEventListener('click', () => {
-        if (currentGame) currentGame.stop();
+        if (currentGame) {
+            StorageManager.recordSessionActivity('Think Tank', currentGame.constructor.name.replace('Game', ''), `Completed`, 'N/A');
+            currentGame.stop();
+        }
         gameScreen.classList.remove('active');
         welcomeScreen.classList.add('active');
         backToMenuBtn.classList.add('hidden');
@@ -48,5 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Reset instructions
         document.getElementById('instruction').textContent = 'What comes next in the pattern?';
+    });
+
+    document.getElementById('progress-btn').addEventListener('click', () => {
+        StorageManager.showSessionStats();
     });
 });
