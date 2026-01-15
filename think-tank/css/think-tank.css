@@ -98,10 +98,35 @@
 
 .screen {
     display: none;
+    height: 100%;
 }
 
 .screen.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - 160px);
+    /* Adjust for header/footer */
+}
+
+#game-screen .container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-card {
+    width: 100%;
+    max-width: 900px;
+    padding: var(--space-xl) !important;
+    margin: 0 auto;
+}
+
+#pattern-display {
+    margin-bottom: var(--space-xl);
+    /* Increased spacing */
+    padding: var(--space-lg) 0;
 }
 
 .option-btn.correct {
