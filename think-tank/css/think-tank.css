@@ -104,16 +104,15 @@
 .screen.active {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     min-height: calc(100vh - 160px);
     /* Adjust for header/footer */
 }
 
-#game-screen .container {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+#game-screen .container,
+#welcome-screen .container {
+    margin: auto 0;
+    /* Safe centering: centers if there's space, starts at top if there isn't */
+    width: 100%;
 }
 
 .game-card {
