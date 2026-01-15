@@ -11,13 +11,9 @@ As of 2025-2026, healthcare has transitioned from experimental AI to **operation
 Converting patient-physician conversations into structured medical notes in real-time. This "ambient" workflow is being piloted to reduce charting time by up to 50%.
 - **Official Link:** [Google Health - Research Center](https://health.google/research/)
 
-### 2. Longitudinal Data Summarization
-Consolidating years of unstructured Electronic Health Record (EHR) data into a concise "longitudinal view" for rapid physician review.
-- **Reference:** [Google Cloud & Healthcare AI Advancements](https://www.prnewswire.com/news-releases/google-cloud-announces-new-generative-ai-advancements-for-healthcare-and-life-science-organizations-302086151.html)
-
-### 3. Precision Clinical Search
+### 2. Precision Clinical Search
 Using medically-tuned search engines to find specific patterns across a patient's entire medical history (EHR, lab reports, and imaging).
-- **Official Link:** [Vertex AI Search for Healthcare Documentation](https://cloud.google.com/vertex-ai-search/docs/healthcare/overview)
+- **Official Link:** [Vertex AI Search for Healthcare Documentation](https://sites.research.google/gr/med-palm/)
 
 ---
 
