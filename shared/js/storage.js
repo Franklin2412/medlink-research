@@ -192,25 +192,29 @@ const StorageManager = {
             `).join('');
 
         modal.innerHTML = `
-            <div style="background: white; padding: 30px; border-radius: 15px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative;">
-                <button onclick="this.closest('#session-stats-modal').remove()" style="position: absolute; top: 10px; right: 15px; border: none; background: none; font-size: 24px; cursor: pointer;">&times;</button>
-                <h2 style="color: #4ECDC4; margin-top: 0;">📊 Current Session Progress</h2>
+            <div style="background: white; padding: 30px; border-radius: 15px; max-width: 600px; width: 90%; max-height: 80vh; display: flex; flex-direction: column; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+                <button onclick="this.closest('#session-stats-modal').remove()" style="position: absolute; top: 15px; right: 15px; border: none; background: #eee; width: 30px; height: 30px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10;">&times;</button>
+                <h2 style="color: #4ECDC4; margin-top: 0; margin-bottom: 5px;">📊 Current Session Progress</h2>
                 <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">Detailed log of your activities since you joined or refreshed.</p>
-                <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                    <thead style="background: #f8f9fa;">
-                        <tr>
-                            <th style="padding: 10px; border-bottom: 2px solid #4ECDC4;">App</th>
-                            <th style="padding: 10px; border-bottom: 2px solid #4ECDC4;">Activity</th>
-                            <th style="padding: 10px; border-bottom: 2px solid #4ECDC4;">Result</th>
-                            <th style="padding: 10px; border-bottom: 2px solid #4ECDC4;">Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${rows}
-                    </tbody>
-                </table>
-                <div style="margin-top: 30px; text-align: center;">
-                    <button onclick="this.closest('#session-stats-modal').remove()" class="btn btn-primary" style="padding: 10px 30px;">Close</button>
+                
+                <div style="flex: 1; overflow-y: auto; margin-bottom: 20px; border: 1px solid #eee; border-radius: 8px;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead style="background: #f8f9fa; position: sticky; top: 0; z-index: 5;">
+                            <tr>
+                                <th style="padding: 12px 10px; border-bottom: 2px solid #4ECDC4; background: #f8f9fa;">App</th>
+                                <th style="padding: 12px 10px; border-bottom: 2px solid #4ECDC4; background: #f8f9fa;">Activity</th>
+                                <th style="padding: 12px 10px; border-bottom: 2px solid #4ECDC4; background: #f8f9fa;">Result</th>
+                                <th style="padding: 12px 10px; border-bottom: 2px solid #4ECDC4; background: #f8f9fa;">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rows}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="text-align: center;">
+                    <button onclick="this.closest('#session-stats-modal').remove()" class="btn btn-primary" style="padding: 10px 40px; border-radius: 30px; font-weight: bold; cursor: pointer;">Close</button>
                 </div>
             </div>
         `;

@@ -1,59 +1,131 @@
-.app-header {
-    background: linear-gradient(135deg, var(--secondary-color), var(--accent-purple));
-    color: white;
-    padding: var(--space-md) 0;
+/* Speakeasy Studio Custom Styles */
+
+.welcome-card {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: var(--space-2xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
 }
 
 .welcome-icon {
     font-size: 5rem;
     margin-bottom: var(--space-md);
+    animation: bounce 2s ease-in-out infinite;
+    display: inline-block;
+}
+
+.activity-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-xl);
 }
 
 .activity-card {
-    transition: transform 0.3s ease;
+    background: linear-gradient(135deg, #FFF 0%, #F8F9FA 100%);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    border: 3px solid var(--border-color);
+    transition: all var(--transition-normal);
     cursor: pointer;
+    text-align: center;
 }
 
 .activity-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-lg);
+}
+
+.activity-icon {
+    font-size: 4rem;
+    margin-bottom: var(--space-md);
+}
+
+.game-card {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-xl);
 }
 
 #play-sound-btn {
     font-size: var(--font-size-xl);
     padding: var(--space-lg) var(--space-2xl);
     border-radius: var(--radius-full);
+    background: linear-gradient(135deg, var(--accent-color), #FF5585);
+    box-shadow: 0 8px 15px rgba(255, 107, 157, 0.3);
+}
+
+#play-sound-btn:hover {
+    transform: scale(1.05);
 }
 
 .option-btn {
-    font-size: 4rem;
+    font-size: 4.5rem;
     padding: var(--space-xl);
     background: white;
     border: 4px solid var(--border-color);
     border-radius: var(--radius-lg);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-sm);
+    font-family: var(--font-heading);
 }
 
 .option-btn:hover {
     border-color: var(--primary-color);
     background: var(--background-color);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
 }
 
 .option-btn.correct {
     background: var(--success-color);
     border-color: #27ae60;
     color: white;
+    transform: scale(1.1);
 }
 
 .option-btn.wrong {
     background: #ff7675;
     border-color: #d63031;
     color: white;
+    animation: shake 0.5s ease;
 }
 
 .icon-pulse {
     display: inline-block;
     animation: pulse 2s infinite;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
 }
 
 @keyframes pulse {
@@ -72,8 +144,10 @@
 
 .screen {
     display: none;
+    padding: var(--space-xl) 0;
 }
 
 .screen.active {
     display: block;
+    animation: fadeIn var(--transition-normal);
 }
