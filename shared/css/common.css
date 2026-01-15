@@ -107,42 +107,62 @@ body.full-screen-game {
     height: 100vh;
 }
 
-.game-layout-container {
+
+/* 80/20 Layout Grid */
+.app-layout {
+    display: grid;
+    grid-template-columns: 1fr 20%;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.main-canvas {
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
+    background: var(--background-color);
+    padding-bottom: var(--space-xl);
+}
+
+.side-controls {
+    height: 100%;
+    background: var(--card-background);
+    border-left: 2px solid var(--border-color);
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    width: 100%;
-}
-
-.playing-area {
-    flex-grow: 1;
-    position: relative;
-    overflow-y: auto;
-    background: var(--background-color);
-}
-
-.bottom-control-bar {
-    height: var(--bottom-bar-height);
-    background: var(--card-background);
-    border-top: 4px solid var(--primary-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 var(--space-lg);
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
-    z-index: 100;
-}
-
-.bottom-bar-controls {
-    display: flex;
+    padding: var(--space-md);
     gap: var(--space-md);
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.05);
 }
 
-.bottom-bar-video-placeholder {
-    width: 192px;
-    /* Space for camera overlay */
-    height: 100%;
+.side-controls .btn {
+    width: 100%;
+    justify-content: flex-start;
+    padding: var(--space-md);
 }
+
+.side-controls h2,
+.side-controls h3 {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-xs);
+    text-align: center;
+}
+
+.camera-dock {
+    margin-top: auto;
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #000;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    position: relative;
+    border: 2px solid var(--primary-color);
+}
+
+
 
 /* ===== RESET & BASE STYLES ===== */
 * {

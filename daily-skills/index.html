@@ -11,84 +11,83 @@
 </head>
 
 <body class="full-screen-game">
-    <!-- Skip link -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <div class="game-layout-container">
-        <!-- Main Playing Area -->
-        <main id="main-content" class="playing-area">
-            <section id="welcome-screen" class="screen active">
-                <div class="container">
-                    <div class="card welcome-card text-center">
-                        <div class="welcome-icon">🏘️</div>
-                        <h2>Master Your Day</h2>
-                        <p>Learn and practice the skills you use every day!</p>
-                        <div class="activity-grid">
-                            <div class="card activity-card" id="start-routine">
-                                <div class="activity-icon">🌅</div>
-                                <h3>Morning Routine</h3>
-                                <button class="btn btn-primary mt-md">Start Routine</button>
+    <div class="app-layout">
+        <!-- Main Content Area -->
+        <div class="main-canvas">
+            <main id="main-content">
+                <section id="welcome-screen" class="screen active">
+                    <div class="container">
+                        <div class="card welcome-card text-center">
+                            <div class="welcome-icon">🏘️</div>
+                            <h2>Master Your Day</h2>
+                            <p>Learn and practice the skills you use every day!</p>
+                            <div class="activity-grid">
+                                <div class="card activity-card" id="start-routine">
+                                    <div class="activity-icon">🌅</div>
+                                    <h3>Morning Routine</h3>
+                                    <button class="btn btn-primary mt-md">Start Routine</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section id="game-screen" class="screen">
-                <div class="container">
-                    <div class="card game-card">
-                        <div id="instruction" class="text-center text-xl font-bold mb-lg">
-                            Drag the tasks to the timeline in the correct order!
-                        </div>
-
-                        <div class="routine-workspace">
-                            <div id="task-pool" class="task-pool mb-xl">
-                                <!-- Tasks appear here -->
+                <section id="game-screen" class="screen">
+                    <div class="container">
+                        <div class="card game-card">
+                            <div id="instruction" class="text-center text-xl font-bold mb-lg">
+                                Drag the tasks to the timeline in the correct order!
                             </div>
 
-                            <div id="timeline" class="timeline">
-                                <div class="timeline-slot" data-index="0">1</div>
-                                <div class="timeline-slot" data-index="1">2</div>
-                                <div class="timeline-slot" data-index="2">3</div>
-                                <div class="timeline-slot" data-index="3">4</div>
+                            <div class="routine-workspace">
+                                <div id="task-pool" class="task-pool mb-xl">
+                                    <!-- Tasks appear here -->
+                                </div>
+
+                                <div id="timeline" class="timeline">
+                                    <div class="timeline-slot" data-index="0">1</div>
+                                    <div class="timeline-slot" data-index="1">2</div>
+                                    <div class="timeline-slot" data-index="2">3</div>
+                                    <div class="timeline-slot" data-index="3">4</div>
+                                </div>
+                            </div>
+
+                            <div class="game-footer mt-xl text-center">
+                                <button id="check-routine" class="btn btn-large btn-success">Check My Routine</button>
                             </div>
                         </div>
+                    </div>
+                </section>
 
-                        <div class="game-footer mt-xl text-center">
-                            <button id="check-routine" class="btn btn-large btn-success">Check My Routine</button>
+                <!-- Victory Overlay -->
+                <div id="victory-overlay" class="overlay hidden">
+                    <div class="card victory-card text-center">
+                        <div class="victory-icon">🎉</div>
+                        <h2>Great Job!</h2>
+                        <p id="victory-message">Perfect! You've mastered your morning routine!</p>
+                        <div class="victory-actions mt-xl">
+                            <button id="play-again" class="btn btn-large btn-primary">Play Again</button>
                         </div>
                     </div>
                 </div>
-            </section>
+            </main>
+        </div>
 
-            <!-- Victory Overlay -->
-            <div id="victory-overlay" class="overlay hidden">
-                <div class="card victory-card text-center">
-                    <div class="victory-icon">🎉</div>
-                    <h2>Great Job!</h2>
-                    <p id="victory-message">Perfect! You've mastered your morning routine!</p>
-                    <div class="victory-actions mt-xl">
-                        <button id="play-again" class="btn btn-large btn-primary">Play Again</button>
-                    </div>
-                </div>
-            </div>
-        </main>
+        <!-- Right Side Controls -->
+        <aside class="side-controls">
+            <h3>Navigation</h3>
+            <a href="../index.html" class="btn btn-secondary">🏠 Home</a>
+            <button class="btn btn-accent hidden" id="back-to-menu-btn">⬅️ Back to Menu</button>
 
-        <!-- Bottom Control Bar -->
-        <footer class="bottom-control-bar">
-            <div class="bottom-bar-controls">
-                <a href="../index.html" class="btn btn-secondary">🏠 Home</a>
-                <button class="btn btn-accent hidden" id="back-to-menu-btn">⬅️ Back to Menu</button>
-            </div>
-
-            <div class="bottom-bar-info text-center" id="game-info-display">
+            <div id="game-info-display" class="mt-md text-center">
                 <!-- Stats or info here -->
             </div>
 
-            <div class="bottom-bar-video-placeholder">
-                <!-- Camera will be docked here -->
+            <div class="camera-dock" id="gesture-camera-dock">
+                <!-- Camera feed will dock here -->
             </div>
-        </footer>
+        </aside>
     </div>
 
     <!-- SortableJS for drag and drop -->

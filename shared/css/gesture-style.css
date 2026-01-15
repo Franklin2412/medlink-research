@@ -57,18 +57,17 @@ body.wand-restricted-active #gesture-cursor.restricted {
 
 /* Camera Overlay */
 #gesture-camera-container {
-    position: fixed;
+    position: absolute;
+    /* Relative to sidebar */
     bottom: 0;
     right: 0;
-    width: 192px;
-    height: var(--bottom-bar-height, 144px);
+    width: 100%;
+    aspect-ratio: 4/3;
     background: #000;
     border-top: 4px solid var(--primary-color);
-    border-left: 4px solid var(--primary-color);
-    border-top-left-radius: var(--radius-md);
     overflow: hidden;
     z-index: 9998;
-    box-shadow: -4px -4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
     transition: opacity 0.3s;
 }
 

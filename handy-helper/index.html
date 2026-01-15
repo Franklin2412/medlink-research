@@ -21,186 +21,187 @@
 </head>
 
 <body class="full-screen-game">
-    <!-- Skip link -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <div class="game-layout-container">
-        <!-- Main Playing Area -->
-        <main id="main-content" class="playing-area">
-            <!-- Welcome Screen -->
-            <section id="welcome-screen" class="screen active">
-                <div class="container">
-                    <div class="welcome-card">
-                        <div class="welcome-icon">👋</div>
-                        <h2>HandyHelper</h2>
-                        <div class="activity-grid">
-                            <div class="activity-card" data-activity="which-hand">
-                                <div class="activity-icon">🖐️</div>
-                                <h4>Which Hand?</h4>
-                                <button class="btn btn-primary start-activity-btn">Start</button>
-                            </div>
-                            <div class="activity-card" data-activity="hand-tracker">
-                                <div class="activity-icon">📍</div>
-                                <h4>Hand Tracker</h4>
-                                <button class="btn btn-primary start-activity-btn">Start</button>
-                            </div>
-                            <div class="activity-card" data-activity="catch-stars">
-                                <div class="activity-icon">⭐</div>
-                                <h4>Catch Stars</h4>
-                                <button class="btn btn-primary start-activity-btn">Start</button>
-                            </div>
-                            <div class="activity-card" data-activity="balloon-pop">
-                                <div class="activity-icon">🎈</div>
-                                <h4>Balloon Pop</h4>
-                                <button class="btn btn-primary start-activity-btn">Start</button>
-                            </div>
-                            <div class="activity-card" data-activity="duck-catch">
-                                <div class="activity-icon">🦆</div>
-                                <h4>Duck Catch</h4>
-                                <button class="btn btn-primary start-activity-btn">Start</button>
-                            </div>
-                            <div class="activity-card" data-activity="feather-flyer">
-                                <div class="activity-icon">🐦</div>
-                                <h4>Feather Flyer</h4>
-                                <button class="btn btn-primary start-activity-btn">Start</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Camera Setup Screen -->
-            <section id="camera-setup-screen" class="screen">
-                <div class="container">
-                    <div class="setup-card">
-                        <h2>📹 Camera Setup</h2>
-                        <div class="camera-preview-container">
-                            <video id="camera-video" autoplay playsinline></video>
-                            <canvas id="camera-hand-canvas"></canvas>
-                            <canvas id="camera-game-canvas"></canvas>
-                        </div>
-                        <div id="camera-status" class="setup-status hidden">
-                            <span class="status-icon">⏳</span>
-                            <span class="status-text">Initializing camera...</span>
-                        </div>
-                        <div class="setup-controls mt-lg">
-                            <button class="btn btn-large btn-primary" id="start-activity-btn" disabled>Ready!</button>
-                            <button class="btn btn-large btn-secondary" id="cancel-setup-btn">Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Activity Screen: Which Hand? -->
-            <section id="which-hand-screen" class="screen activity-screen">
-                <div class="container-fluid">
-                    <div class="game-area">
-                        <div class="video-section">
-                            <video id="wh-video" autoplay playsinline></video>
-                            <canvas id="wh-hand-canvas"></canvas>
-                            <canvas id="wh-game-canvas"></canvas>
-                        </div>
-                        <div class="instruction-section">
-                            <div class="instruction-card" id="wh-instruction">
-                                <div class="instruction-icon" id="wh-hand-icon">👋</div>
-                                <h3 id="wh-prompt">Get Ready!</h3>
-                                <p id="wh-subtext"></p>
+    <div class="app-layout">
+        <!-- Main Content Area -->
+        <div class="main-canvas">
+            <main id="main-content">
+                <!-- Welcome Screen -->
+                <section id="welcome-screen" class="screen active">
+                    <div class="container">
+                        <div class="welcome-card">
+                            <div class="welcome-icon">👋</div>
+                            <h2>HandyHelper</h2>
+                            <div class="activity-grid">
+                                <div class="activity-card" data-activity="which-hand">
+                                    <div class="activity-icon">🖐️</div>
+                                    <h4>Which Hand?</h4>
+                                    <button class="btn btn-primary start-activity-btn">Start</button>
+                                </div>
+                                <div class="activity-card" data-activity="hand-tracker">
+                                    <div class="activity-icon">📍</div>
+                                    <h4>Hand Tracker</h4>
+                                    <button class="btn btn-primary start-activity-btn">Start</button>
+                                </div>
+                                <div class="activity-card" data-activity="catch-stars">
+                                    <div class="activity-icon">⭐</div>
+                                    <h4>Catch Stars</h4>
+                                    <button class="btn btn-primary start-activity-btn">Start</button>
+                                </div>
+                                <div class="activity-card" data-activity="balloon-pop">
+                                    <div class="activity-icon">🎈</div>
+                                    <h4>Balloon Pop</h4>
+                                    <button class="btn btn-primary start-activity-btn">Start</button>
+                                </div>
+                                <div class="activity-card" data-activity="duck-catch">
+                                    <div class="activity-icon">🦆</div>
+                                    <h4>Duck Catch</h4>
+                                    <button class="btn btn-primary start-activity-btn">Start</button>
+                                </div>
+                                <div class="activity-card" data-activity="feather-flyer">
+                                    <div class="activity-icon">🐦</div>
+                                    <h4>Feather Flyer</h4>
+                                    <button class="btn btn-primary start-activity-btn">Start</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Activity Screen: Hand Tracker -->
-            <section id="hand-tracker-screen" class="screen activity-screen">
-                <div class="container-fluid">
-                    <div class="game-area">
-                        <div class="video-section full-width">
-                            <video id="ht-video" autoplay playsinline></video>
-                            <canvas id="ht-hand-canvas"></canvas>
-                            <canvas id="ht-game-canvas"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Activity Screen: Catch the Stars -->
-            <section id="catch-stars-screen" class="screen activity-screen">
-                <div class="container-fluid">
-                    <div class="game-area">
-                        <div class="video-section full-width">
-                            <video id="cs-video" autoplay playsinline></video>
-                            <canvas id="cs-hand-canvas"></canvas>
-                            <canvas id="cs-game-canvas"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Activity Screen: Balloon Pop -->
-            <section id="balloon-pop-screen" class="screen activity-screen">
-                <div class="container-fluid">
-                    <div class="game-area">
-                        <div class="video-section full-width">
-                            <video id="bp-video" autoplay playsinline></video>
-                            <canvas id="bp-hand-canvas"></canvas>
-                            <canvas id="bp-game-canvas"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Activity Screen: Duck Catch -->
-            <section id="duck-catch-screen" class="screen activity-screen">
-                <div class="container-fluid">
-                    <div class="game-area">
-                        <div class="video-section full-width">
-                            <video id="dc-video" autoplay playsinline></video>
-                            <canvas id="dc-hand-canvas"></canvas>
-                            <canvas id="dc-game-canvas"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Activity Screen: Feather Flyer -->
-            <section id="feather-flyer-screen" class="screen activity-screen">
-                <div class="container-fluid">
-                    <div class="game-area">
-                        <div class="video-section full-width">
-                            <video id="ff-video" autoplay playsinline></video>
-                            <canvas id="ff-hand-canvas"></canvas>
-                            <canvas id="ff-game-canvas"></canvas>
-                        </div>
-                        <!-- Game Over Overlay -->
-                        <div id="ff-game-over" class="game-overlay hidden">
-                            <div class="overlay-content">
-                                <h2 class="text-accent">Game Over!</h2>
-                                <p>You flew through <span id="ff-final-score">0</span> gaps!</p>
-                                <button class="btn btn-primary btn-large mt-md" id="ff-restart-btn">Play Again</button>
+                <!-- Camera Setup Screen -->
+                <section id="camera-setup-screen" class="screen">
+                    <div class="container">
+                        <div class="setup-card">
+                            <h2>📹 Camera Setup</h2>
+                            <div class="camera-preview-container">
+                                <video id="camera-video" autoplay playsinline></video>
+                                <canvas id="camera-hand-canvas"></canvas>
+                                <canvas id="camera-game-canvas"></canvas>
+                            </div>
+                            <div id="camera-status" class="setup-status hidden">
+                                <span class="status-icon">⏳</span>
+                                <span class="status-text">Initializing camera...</span>
+                            </div>
+                            <div class="setup-controls mt-lg">
+                                <button class="btn btn-large btn-primary" id="start-activity-btn"
+                                    disabled>Ready!</button>
+                                <button class="btn btn-large btn-secondary" id="cancel-setup-btn">Cancel</button>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </main>
+                </section>
 
-        <!-- Bottom Control Bar -->
-        <footer class="bottom-control-bar">
-            <div class="bottom-bar-controls">
-                <a href="../index.html" class="btn btn-secondary">🏠 Home</a>
-                <button class="btn btn-accent" id="view-stats-btn">📊 Stats</button>
-                <button class="btn btn-danger hidden" id="universal-exit-btn">🛑 Stop Game</button>
-            </div>
+                <!-- Activity Screen: Which Hand? -->
+                <section id="which-hand-screen" class="screen activity-screen">
+                    <div class="container-fluid">
+                        <div class="game-area">
+                            <div class="video-section">
+                                <video id="wh-video" autoplay playsinline></video>
+                                <canvas id="wh-hand-canvas"></canvas>
+                                <canvas id="wh-game-canvas"></canvas>
+                            </div>
+                            <div class="instruction-section">
+                                <div class="instruction-card" id="wh-instruction">
+                                    <div class="instruction-icon" id="wh-hand-icon">👋</div>
+                                    <h3 id="wh-prompt">Get Ready!</h3>
+                                    <p id="wh-subtext"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-            <div class="bottom-bar-info text-center" id="game-info-display">
+                <!-- Activity Screen: Hand Tracker -->
+                <section id="hand-tracker-screen" class="screen activity-screen">
+                    <div class="container-fluid">
+                        <div class="game-area">
+                            <div class="video-section full-width">
+                                <video id="ht-video" autoplay playsinline></video>
+                                <canvas id="ht-hand-canvas"></canvas>
+                                <canvas id="ht-game-canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Activity Screen: Catch the Stars -->
+                <section id="catch-stars-screen" class="screen activity-screen">
+                    <div class="container-fluid">
+                        <div class="game-area">
+                            <div class="video-section full-width">
+                                <video id="cs-video" autoplay playsinline></video>
+                                <canvas id="cs-hand-canvas"></canvas>
+                                <canvas id="cs-game-canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Activity Screen: Balloon Pop -->
+                <section id="balloon-pop-screen" class="screen activity-screen">
+                    <div class="container-fluid">
+                        <div class="game-area">
+                            <div class="video-section full-width">
+                                <video id="bp-video" autoplay playsinline></video>
+                                <canvas id="bp-hand-canvas"></canvas>
+                                <canvas id="bp-game-canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Activity Screen: Duck Catch -->
+                <section id="duck-catch-screen" class="screen activity-screen">
+                    <div class="container-fluid">
+                        <div class="game-area">
+                            <div class="video-section full-width">
+                                <video id="dc-video" autoplay playsinline></video>
+                                <canvas id="dc-hand-canvas"></canvas>
+                                <canvas id="dc-game-canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Activity Screen: Feather Flyer -->
+                <section id="feather-flyer-screen" class="screen activity-screen">
+                    <div class="container-fluid">
+                        <div class="game-area">
+                            <div class="video-section full-width">
+                                <video id="ff-video" autoplay playsinline></video>
+                                <canvas id="ff-hand-canvas"></canvas>
+                                <canvas id="ff-game-canvas"></canvas>
+                            </div>
+                            <!-- Game Over Overlay -->
+                            <div id="ff-game-over" class="game-overlay hidden">
+                                <div class="overlay-content">
+                                    <h2 class="text-accent">Game Over!</h2>
+                                    <p>You flew through <span id="ff-final-score">0</span> gaps!</p>
+                                    <button class="btn btn-primary btn-large mt-md" id="ff-restart-btn">Play
+                                        Again</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Right Side Controls -->
+        <aside class="side-controls">
+            <h3>Navigation</h3>
+            <a href="../index.html" class="btn btn-secondary">🏠 Home</a>
+            <button class="btn btn-accent" id="view-stats-btn">📊 Stats</button>
+            <button class="btn btn-danger hidden" id="universal-exit-btn">🛑 Stop Game</button>
+
+            <div id="game-info-display" class="mt-md text-center">
                 <!-- Game stats like score/time will appear here -->
             </div>
 
-            <div class="bottom-bar-video-placeholder">
-                <!-- Camera will be docked here by CSS -->
+            <div class="camera-dock" id="gesture-camera-dock">
+                <!-- Camera feed will dock here -->
             </div>
-        </footer>
+        </aside>
     </div>
 
     <!-- Statistics Modal -->

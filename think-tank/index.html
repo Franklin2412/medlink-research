@@ -12,119 +12,108 @@
 
 <body class="full-screen-game">
     <!-- Skip link -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <div class="game-layout-container">
-        <!-- Main Content -->
-        <main id="main-content" class="playing-area">
-            <section id="welcome-screen" class="screen active">
-                <div class="container">
-                    <div class="card welcome-card text-center">
-                        <div class="welcome-icon">⚡</div>
-                        <h2>Train Your Brain</h2>
-                        <p>Puzzles and games to boost your focus and problem-solving skills!</p>
-                        <div class="activity-grid">
-                            <div class="card activity-card" id="start-patterns">
-                                <div class="activity-icon">🧩</div>
-                                <h3>Pattern Power</h3>
-                                <p>Complete the sequences.</p>
-                                <button class="btn btn-primary mt-md">Play</button>
-                            </div>
-                            <div class="card activity-card" id="start-odd-one">
-                                <div class="activity-icon">🧐</div>
-                                <h3>Odd One Out</h3>
-                                <p>Find what doesn't belong.</p>
-                                <button class="btn btn-primary mt-md">Play</button>
-                            </div>
-                            <div class="card activity-card" id="start-classification">
-                                <div class="activity-icon">📂</div>
-                                <h3>Sort It Out</h3>
-                                <p>Categorize the items.</p>
-                                <button class="btn btn-primary mt-md">Play</button>
-                            </div>
-                            <div class="card activity-card" id="start-shadow">
-                                <div class="activity-icon">👣</div>
-                                <h3>Shadow Match</h3>
-                                <p>Identify the silhouette.</p>
-                                <button class="btn btn-primary mt-md">Play</button>
-                            </div>
-                            <div class="card activity-card" id="start-size">
-                                <div class="activity-icon">📏</div>
-                                <h3>Size Sort</h3>
-                                <p>Smallest to largest.</p>
-                                <button class="btn btn-primary mt-md">Play</button>
-                            </div>
-                            <div class="card activity-card" id="start-color">
-                                <div class="activity-icon">🎨</div>
-                                <h3>Color Match</h3>
-                                <p>Match the colors.</p>
-                                <button class="btn btn-primary mt-md">Play</button>
-                            </div>
-                            <div class="card activity-card" id="start-quantity">
-                                <div class="activity-icon">🔢</div>
-                                <h3>How Many?</h3>
-                                <p>Count the items.</p>
-                                <button class="btn btn-primary mt-md">Play</button>
-                            </div>
-                            <div class="card activity-card" id="start-story">
-                                <div class="activity-icon">📖</div>
-                                <h3>Story Steps</h3>
-                                <p>What happens next?</p>
-                                <button class="btn btn-primary mt-md">Play</button>
-                            </div>
-                            <div class="card activity-card" id="start-attribute">
-                                <div class="activity-icon">🔍</div>
-                                <h3>Attribute Hunter</h3>
-                                <p>Find the right one.</p>
-                                <button class="btn btn-primary mt-md">Play</button>
-                            </div>
-                            <div class="card activity-card" id="start-sudoku">
-                                <div class="activity-icon">🔢</div>
-                                <h3>Sudoku Fun</h3>
-                                <p>Complete the grid.</p>
-                                <button class="btn btn-primary mt-md">Play</button>
+    <div class="app-layout">
+        <!-- Main Content Area -->
+        <div class="main-canvas">
+            <main id="main-content">
+                <section id="welcome-screen" class="screen active">
+                    <div class="container">
+                        <div class="card welcome-card text-center">
+                            <div class="welcome-icon">⚡</div>
+                            <h2>Train Your Brain</h2>
+                            <p>Puzzles and games to boost your focus and problem-solving skills!</p>
+                            <div class="activity-grid">
+                                <div class="card activity-card" id="start-patterns">
+                                    <div class="activity-icon">🧩</div>
+                                    <h3>Pattern Power</h3>
+                                    <button class="btn btn-primary mt-md">Play</button>
+                                </div>
+                                <div class="card activity-card" id="start-odd-one">
+                                    <div class="activity-icon">🧐</div>
+                                    <h3>Odd One Out</h3>
+                                    <button class="btn btn-primary mt-md">Play</button>
+                                </div>
+                                <div class="card activity-card" id="start-classification">
+                                    <div class="activity-icon">📂</div>
+                                    <h3>Sort It Out</h3>
+                                    <button class="btn btn-primary mt-md">Play</button>
+                                </div>
+                                <div class="card activity-card" id="start-shadow">
+                                    <div class="activity-icon">👣</div>
+                                    <h3>Shadow Match</h3>
+                                    <button class="btn btn-primary mt-md">Play</button>
+                                </div>
+                                <div class="card activity-card" id="start-size">
+                                    <div class="activity-icon">📏</div>
+                                    <h3>Size Sort</h3>
+                                    <button class="btn btn-primary mt-md">Play</button>
+                                </div>
+                                <div class="card activity-card" id="start-color">
+                                    <div class="activity-icon">🎨</div>
+                                    <h3>Color Match</h3>
+                                    <button class="btn btn-primary mt-md">Play</button>
+                                </div>
+                                <div class="card activity-card" id="start-quantity">
+                                    <div class="activity-icon">🔢</div>
+                                    <h3>How Many?</h3>
+                                    <button class="btn btn-primary mt-md">Play</button>
+                                </div>
+                                <div class="card activity-card" id="start-story">
+                                    <div class="activity-icon">📖</div>
+                                    <h3>Story Steps</h3>
+                                    <button class="btn btn-primary mt-md">Play</button>
+                                </div>
+                                <div class="card activity-card" id="start-attribute">
+                                    <div class="activity-icon">🔍</div>
+                                    <h3>Attribute Hunter</h3>
+                                    <button class="btn btn-primary mt-md">Play</button>
+                                </div>
+                                <div class="card activity-card" id="start-sudoku">
+                                    <div class="activity-icon">🔢</div>
+                                    <h3>Sudoku Fun</h3>
+                                    <button class="btn btn-primary mt-md">Play</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section id="game-screen" class="screen">
-                <div class="container">
-                    <div class="card game-card">
-                        <div class="game-board-header text-center mb-lg">
-                            <div id="instruction" class="text-xl font-bold">What comes next in the pattern?</div>
-                        </div>
+                <section id="game-screen" class="screen">
+                    <div class="container">
+                        <div class="card game-card">
+                            <div class="game-board-header text-center mb-lg">
+                                <div id="instruction" class="text-xl font-bold">What comes next in the pattern?</div>
+                            </div>
 
-                        <div id="pattern-display" class="flex-center mb-xl">
-                            <!-- Pattern elements will be here -->
-                            <div class="pattern-sequence" id="sequence"></div>
-                            <div class="pattern-placeholder" id="placeholder">?</div>
-                        </div>
+                            <div id="pattern-display" class="flex-center mb-xl">
+                                <div class="pattern-sequence" id="sequence"></div>
+                                <div class="pattern-placeholder" id="placeholder">?</div>
+                            </div>
 
-                        <div id="pattern-options" class="grid grid-3">
-                            <!-- Choice options -->
+                            <div id="pattern-options" class="grid grid-3">
+                                <!-- Choice options -->
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </main>
+                </section>
+            </main>
+        </div>
 
-        <!-- Bottom Control Bar -->
-        <footer class="bottom-control-bar">
-            <div class="bottom-bar-controls">
-                <a href="../index.html" class="btn btn-secondary">🏠 Home</a>
-                <button class="btn btn-accent hidden" id="back-to-menu-btn">⬅️ Back to Menu</button>
-            </div>
+        <!-- Right Side Controls -->
+        <aside class="side-controls">
+            <h3>Navigation</h3>
+            <a href="../index.html" class="btn btn-secondary">🏠 Home</a>
+            <button class="btn btn-accent hidden" id="back-to-menu-btn">⬅️ Back to Menu</button>
 
-            <div class="bottom-bar-info text-center" id="game-info-display">
+            <div id="game-info-display" class="mt-md text-center">
                 <!-- Stats or info here -->
             </div>
 
-            <div class="bottom-bar-video-placeholder">
-                <!-- Camera will be docked here -->
+            <div class="camera-dock" id="gesture-camera-dock">
+                <!-- Camera feed will dock here -->
             </div>
-        </footer>
+        </aside>
     </div>
 
     <script src="../shared/js/storage.js"></script>

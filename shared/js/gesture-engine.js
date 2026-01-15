@@ -90,7 +90,15 @@ class GestureEngine {
 
         container.appendChild(this.videoElement);
         container.appendChild(this.canvasElement);
-        document.body.appendChild(container);
+
+        // Try to dock in the sidebar if it exists
+        const dock = document.getElementById('gesture-camera-dock');
+        if (dock) {
+            dock.appendChild(container);
+            container.style.position = 'relative';
+        } else {
+            document.body.appendChild(container);
+        }
 
         // Toggle Button (Add to menu or float)
         this.addToggleControl();
@@ -105,9 +113,15 @@ class GestureEngine {
         btn.onclick = () => this.toggle();
 
         // Try to find a navigation container for better alignment
-        const nav = document.querySelector('.nav-links, nav, .header-actions, .accessibility-toolbar');
+        const nav = document.querySelector('.side-controls, .accessibility-toolbar, .nav-links, nav, .header-actions');
         if (nav) {
-            nav.appendChild(btn);
+            // Ensure we insert before the camera dock if it's in the same container
+            const dock = nav.querySelector('#gesture-camera-dock');
+            if (dock) {
+                nav.insertBefore(btn, dock);
+            } else {
+                nav.appendChild(btn);
+            }
         } else {
             // Fallback to fixed positioning if no header container is found
             btn.classList.add('fixed');

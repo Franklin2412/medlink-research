@@ -11,93 +11,92 @@
 </head>
 
 <body class="full-screen-game">
-    <!-- Skip link -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <div class="game-layout-container">
-        <!-- Main Playing Area -->
-        <main id="main-content" class="playing-area">
-            <section id="welcome-screen" class="screen active">
-                <div class="container">
-                    <div class="card welcome-card text-center">
-                        <div class="welcome-icon">🌈</div>
-                        <h2>How are you feeling?</h2>
-                        <p>Explore different emotions and learn how to recognize them!</p>
-                        <div class="activity-grid">
-                            <div class="card activity-card" id="start-faces">
-                                <div class="activity-icon">🎭</div>
-                                <h3>Face Matcher</h3>
-                                <button class="btn btn-primary mt-md">Start Exploring</button>
+    <div class="app-layout">
+        <!-- Main Content Area -->
+        <div class="main-canvas">
+            <main id="main-content">
+                <section id="welcome-screen" class="screen active">
+                    <div class="container">
+                        <div class="card welcome-card text-center">
+                            <div class="welcome-icon">🌈</div>
+                            <h2>How are you feeling?</h2>
+                            <p>Explore different emotions and learn how to recognize them!</p>
+                            <div class="activity-grid">
+                                <div class="card activity-card" id="start-faces">
+                                    <div class="activity-icon">🎭</div>
+                                    <h3>Face Matcher</h3>
+                                    <button class="btn btn-primary mt-md">Start Exploring</button>
+                                </div>
+                                <div class="card activity-card" id="start-breath">
+                                    <div class="activity-icon">🌬️</div>
+                                    <h3>Deep Breath</h3>
+                                    <button class="btn btn-secondary mt-md">Breathe</button>
+                                </div>
+                                <div class="card activity-card" id="start-bubbles">
+                                    <div class="activity-icon">🫧</div>
+                                    <h3>Calm Bubbles</h3>
+                                    <button class="btn btn-secondary mt-md">Play</button>
+                                </div>
                             </div>
-                            <div class="card activity-card" id="start-breath">
-                                <div class="activity-icon">🌬️</div>
-                                <h3>Deep Breath</h3>
-                                <button class="btn btn-secondary mt-md">Breathe</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Face Matcher Screen -->
+                <section id="game-screen" class="screen">
+                    <div class="container">
+                        <div class="card game-card">
+                            <div id="instruction" class="text-center text-2xl font-bold mb-xl">
+                                Which face looks <span id="target-emotion" class="text-primary">Happy</span>?
                             </div>
-                            <div class="card activity-card" id="start-bubbles">
-                                <div class="activity-icon">🫧</div>
-                                <h3>Calm Bubbles</h3>
-                                <button class="btn btn-secondary mt-md">Play</button>
+
+                            <div id="emotion-options" class="grid grid-2">
+                                <!-- Emotion faces will be here -->
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Face Matcher Screen -->
-            <section id="game-screen" class="screen">
-                <div class="container">
-                    <div class="card game-card">
-                        <div id="instruction" class="text-center text-2xl font-bold mb-xl">
-                            Which face looks <span id="target-emotion" class="text-primary">Happy</span>?
-                        </div>
-
-                        <div id="emotion-options" class="grid grid-2">
-                            <!-- Emotion faces will be here -->
+                <!-- Deep Breath Screen -->
+                <section id="breath-screen" class="screen">
+                    <div class="container">
+                        <div class="card breathing-card text-center">
+                            <h2 id="breath-instruction">Get ready...</h2>
+                            <div class="breath-container">
+                                <div id="breathing-circle" class="breathing-circle"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Deep Breath Screen -->
-            <section id="breath-screen" class="screen">
-                <div class="container">
-                    <div class="card breathing-card text-center">
-                        <h2 id="breath-instruction">Get ready...</h2>
-                        <div class="breath-container">
-                            <div id="breathing-circle" class="breathing-circle"></div>
+                <!-- Bubble Screen -->
+                <section id="bubble-screen" class="screen">
+                    <div class="container">
+                        <div class="card bubble-card">
+                            <div id="bubble-container" class="bubble-container">
+                                <!-- Bubbles will be created here -->
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </main>
+        </div>
 
-            <!-- Bubble Screen -->
-            <section id="bubble-screen" class="screen">
-                <div class="container">
-                    <div class="card bubble-card">
-                        <div id="bubble-container" class="bubble-container">
-                            <!-- Bubbles will be created here -->
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
+        <!-- Right Side Controls -->
+        <aside class="side-controls">
+            <h3>Navigation</h3>
+            <a href="../index.html" class="btn btn-secondary">🏠 Home</a>
+            <button class="btn btn-accent hidden" id="back-to-menu-btn">⬅️ Back to Menu</button>
 
-        <!-- Bottom Control Bar -->
-        <footer class="bottom-control-bar">
-            <div class="bottom-bar-controls">
-                <a href="../index.html" class="btn btn-secondary">🏠 Home</a>
-                <button class="btn btn-accent hidden" id="back-to-menu-btn">⬅️ Back to Menu</button>
-            </div>
-
-            <div class="bottom-bar-info text-center" id="game-info-display">
+            <div id="game-info-display" class="mt-md text-center">
                 <!-- Stats or info here -->
             </div>
 
-            <div class="bottom-bar-video-placeholder">
-                <!-- Camera will be docked here -->
+            <div class="camera-dock" id="gesture-camera-dock">
+                <!-- Camera feed will dock here -->
             </div>
-        </footer>
+        </aside>
     </div>
 
     <script src="../shared/js/storage.js"></script>

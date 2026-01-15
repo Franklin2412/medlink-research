@@ -196,168 +196,176 @@
     </style>
 </head>
 
-<body>
-    <!-- Accessibility Toolbar -->
-    <div class="accessibility-toolbar" role="toolbar" aria-label="Accessibility options">
-        <button class="btn btn-small btn-secondary" id="toggle-contrast" aria-label="Toggle high contrast mode">
-            High Contrast
-        </button>
-        <button class="btn btn-small btn-secondary" id="toggle-text-size" aria-label="Toggle large text mode">
-            Large Text
-        </button>
-    </div>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content container">
-            <h1>🌟 MedLink Research</h1>
-            <p>
-                Supporting the journey of recovery with interactive tools built on
-                medical insights. Helping families rebuild cognitive foundations,
-                one step at a time.
-            </p>
-        </div>
-    </section>
-
-    <!-- Main Content -->
-    <main id="main-content">
-        <!-- Applications Grid -->
-        <section id="apps" class="section">
-            <div class="container">
-                <h2 class="text-center mb-lg">Therapeutic Applications</h2>
-
-                <div class="grid grid-3">
-                    <!-- Memory Garden -->
-                    <div class="app-card">
-                        <span class="app-icon" role="img" aria-label="Flower">🌱</span>
-                        <h3>Memory Garden</h3>
-                        <p>
-                            Fun memory games to rebuild working memory, visual memory,
-                            and sequential processing through colorful garden activities.
-                        </p>
-                        <a href="memory-garden/index.html" class="btn btn-primary">Play Now</a>
-                    </div>
-
-                    <!-- HandyHelper -->
-                    <div class="app-card">
-                        <span class="app-icon" role="img" aria-label="Hand">👋</span>
-                        <h3>HandyHelper</h3>
-                        <p>
-                            Gesture tracking and hand motor skill activities. Practice hand
-                            dominance, bilateral coordination, and fine motor control.
-                        </p>
-                        <a href="handy-helper/index.html" class="btn btn-primary">Try It</a>
-                    </div>
-
-                    <!-- SpeakEasy Studio -->
-                    <div class="app-card">
-                        <span class="app-icon" role="img" aria-label="Microphone">🎤</span>
-                        <h3>SpeakEasy Studio</h3>
-                        <p>
-                            Speech and language rehabilitation through interactive phonics,
-                            sentence building, and storytelling activities.
-                        </p>
-                        <a href="speakeasy-studio/index.html" class="btn btn-primary">Try It</a>
-                    </div>
-
-                    <!-- Think Tank Challenge -->
-                    <div class="app-card">
-                        <span class="app-icon" role="img" aria-label="Brain">🧠</span>
-                        <h3>Think Tank Challenge</h3>
-                        <p>
-                            Cognitive skill building with puzzles, patterns, and problem-solving
-                            games that improve attention and executive function.
-                        </p>
-                        <a href="think-tank/index.html" class="btn btn-primary">Try It</a>
-                    </div>
-
-                    <!-- Emotion Explorer -->
-                    <div class="app-card">
-                        <span class="app-icon" role="img" aria-label="Smile">😊</span>
-                        <h3>Emotion Explorer</h3>
-                        <p>
-                            Learn to recognize, understand, and manage emotions through
-                            gentle activities and calming exercises.
-                        </p>
-                        <a href="emotion-explorer/index.html" class="btn btn-primary">Try It</a>
-                    </div>
-
-                    <!-- Research Area -->
-                    <div class="app-card">
-                        <span class="app-icon" role="img" aria-label="Research Icon">
-                            <img src="assets/images/research-icon.png" alt="Microscope Research Icon">
-                        </span>
-                        <h3>Research Area</h3>
-                        <p>
-                            Explore the clinical evidence, medical publications, and research
-                            foundations supporting these therapeutic tools.
-                        </p>
-                        <a href="research.html" class="btn btn-primary">Explore Research</a>
-                    </div>
-                </div>
+<div class="app-layout">
+    <!-- Main Content Area -->
+    <div class="main-canvas">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content container">
+                <h1>🌟 MedLink Research</h1>
+                <p>
+                    Supporting the journey of recovery with interactive tools built on
+                    medical insights. Helping families rebuild cognitive foundations,
+                    one step at a time.
+                </p>
             </div>
         </section>
 
-    </main>
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Applications Grid -->
+            <section id="apps" class="section">
+                <div class="container">
+                    <h2 class="text-center mb-lg">Therapeutic Applications</h2>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p>
-                <strong>MedLink Research</strong> - Supporting children in recovery
-            </p>
-            <p>
-                Open source project. <a href="https://github.com" target="_blank" rel="noopener">View on GitHub</a> |
-                <a href="plans/README.md">Documentation</a> |
-                <a href="research.html" style="font-weight: bold; color: var(--primary-color);">Research Area</a> |
-                <a href="#" id="export-data">Export My Progress</a>
-            </p>
-            <p style="margin-top: var(--space-md); font-size: var(--font-size-sm); opacity: 0.8;">
-                These tools are not a substitute for professional medical care.
-                Always consult with healthcare providers about your child's treatment plan.
-            </p>
+                    <div class="grid grid-3">
+                        <!-- Memory Garden -->
+                        <div class="app-card">
+                            <span class="app-icon" role="img" aria-label="Flower">🌱</span>
+                            <h3>Memory Garden</h3>
+                            <p>
+                                Fun memory games to rebuild working memory, visual memory,
+                                and sequential processing through colorful garden activities.
+                            </p>
+                            <a href="memory-garden/index.html" class="btn btn-primary">Play Now</a>
+                        </div>
+
+                        <!-- HandyHelper -->
+                        <div class="app-card">
+                            <span class="app-icon" role="img" aria-label="Hand">👋</span>
+                            <h3>HandyHelper</h3>
+                            <p>
+                                Gesture tracking and hand motor skill activities. Practice hand
+                                dominance, bilateral coordination, and fine motor control.
+                            </p>
+                            <a href="handy-helper/index.html" class="btn btn-primary">Try It</a>
+                        </div>
+
+                        <!-- SpeakEasy Studio -->
+                        <div class="app-card">
+                            <span class="app-icon" role="img" aria-label="Microphone">🎤</span>
+                            <h3>SpeakEasy Studio</h3>
+                            <p>
+                                Speech and language rehabilitation through interactive phonics,
+                                sentence building, and storytelling activities.
+                            </p>
+                            <a href="speakeasy-studio/index.html" class="btn btn-primary">Try It</a>
+                        </div>
+
+                        <!-- Think Tank Challenge -->
+                        <div class="app-card">
+                            <span class="app-icon" role="img" aria-label="Brain">🧠</span>
+                            <h3>Think Tank Challenge</h3>
+                            <p>
+                                Cognitive skill building with puzzles, patterns, and problem-solving
+                                games that improve attention and executive function.
+                            </p>
+                            <a href="think-tank/index.html" class="btn btn-primary">Try It</a>
+                        </div>
+
+                        <!-- Emotion Explorer -->
+                        <div class="app-card">
+                            <span class="app-icon" role="img" aria-label="Smile">😊</span>
+                            <h3>Emotion Explorer</h3>
+                            <p>
+                                Learn to recognize, understand, and manage emotions through
+                                gentle activities and calming exercises.
+                            </p>
+                            <a href="emotion-explorer/index.html" class="btn btn-primary">Try It</a>
+                        </div>
+
+                        <!-- Research Area -->
+                        <div class="app-card">
+                            <span class="app-icon" role="img" aria-label="Research Icon">
+                                <img src="assets/images/research-icon.png" alt="Microscope Research Icon">
+                            </span>
+                            <h3>Research Area</h3>
+                            <p>
+                                Explore the clinical evidence, medical publications, and research
+                                foundations supporting these therapeutic tools.
+                            </p>
+                            <a href="research.html" class="btn btn-primary">Explore Research</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <p>
+                    <strong>MedLink Research</strong> - Supporting children in recovery
+                </p>
+                <p>
+                    Open source project. <a href="https://github.com" target="_blank" rel="noopener">View on GitHub</a>
+                    |
+                    <a href="plans/README.md">Documentation</a> |
+                    <a href="research.html" style="font-weight: bold; color: var(--primary-color);">Research Area</a> |
+                    <a href="#" id="export-data">Export My Progress</a>
+                </p>
+                <p style="margin-top: var(--space-md); font-size: var(--font-size-sm); opacity: 0.8;">
+                    These tools are not a substitute for professional medical care.
+                    Always consult with healthcare providers about your child's treatment plan.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Right Side Controls -->
+    <aside class="side-controls">
+        <h3>Accessibility</h3>
+        <button class="btn btn-secondary" id="toggle-contrast">🌗 High Contrast</button>
+        <button class="btn btn-secondary" id="toggle-text-size">🅰️ Large Text</button>
+
+        <h3>Navigation</h3>
+        <a href="research.html" class="btn btn-primary">📚 Research Area</a>
+
+        <div class="camera-dock" id="gesture-camera-dock">
+            <!-- Camera feed will dock here when enabled -->
         </div>
-    </footer>
+    </aside>
+</div>
 
-    <!-- Scripts -->
-    <link rel="stylesheet" href="shared/css/gesture-style.css">
-    <script src="shared/js/storage.js"></script>
-    <script src="shared/js/gesture-engine.js"></script>
-    <script>
-        // Accessibility toggles
-        const toggleContrast = document.getElementById('toggle-contrast');
-        const toggleTextSize = document.getElementById('toggle-text-size');
+<!-- Scripts -->
+<link rel="stylesheet" href="shared/css/gesture-style.css">
+<script src="shared/js/storage.js"></script>
+<script src="shared/js/gesture-engine.js"></script>
+<script>
+    // Accessibility toggles
+    const toggleContrast = document.getElementById('toggle-contrast');
+    const toggleTextSize = document.getElementById('toggle-text-size');
 
-        toggleContrast.addEventListener('click', () => {
-            document.body.classList.toggle('high-contrast');
-            const isActive = document.body.classList.contains('high-contrast');
-            toggleContrast.setAttribute('aria-pressed', isActive);
-            localStorage.setItem('high-contrast', isActive);
-        });
+    toggleContrast.addEventListener('click', () => {
+        document.body.classList.toggle('high-contrast');
+        const isActive = document.body.classList.contains('high-contrast');
+        toggleContrast.setAttribute('aria-pressed', isActive);
+        localStorage.setItem('high-contrast', isActive);
+    });
 
-        toggleTextSize.addEventListener('click', () => {
-            document.body.classList.toggle('large-text');
-            const isActive = document.body.classList.contains('large-text');
-            toggleTextSize.setAttribute('aria-pressed', isActive);
-            localStorage.setItem('large-text', isActive);
-        });
+    toggleTextSize.addEventListener('click', () => {
+        document.body.classList.toggle('large-text');
+        const isActive = document.body.classList.contains('large-text');
+        toggleTextSize.setAttribute('aria-pressed', isActive);
+        localStorage.setItem('large-text', isActive);
+    });
 
-        // Restore accessibility preferences
-        if (localStorage.getItem('high-contrast') === 'true') {
-            document.body.classList.add('high-contrast');
-            toggleContrast.setAttribute('aria-pressed', 'true');
-        }
-        if (localStorage.getItem('large-text') === 'true') {
-            document.body.classList.add('large-text');
-            toggleTextSize.setAttribute('aria-pressed', 'true');
-        }
+    // Restore accessibility preferences
+    if (localStorage.getItem('high-contrast') === 'true') {
+        document.body.classList.add('high-contrast');
+        toggleContrast.setAttribute('aria-pressed', 'true');
+    }
+    if (localStorage.getItem('large-text') === 'true') {
+        document.body.classList.add('large-text');
+        toggleTextSize.setAttribute('aria-pressed', 'true');
+    }
 
-        // Export data functionality
-        document.getElementById('export-data').addEventListener('click', (e) => {
-            e.preventDefault();
-            StorageManager.downloadData();
-        });
-    </script>
+    // Export data functionality
+    document.getElementById('export-data').addEventListener('click', (e) => {
+        e.preventDefault();
+        StorageManager.downloadData();
+    });
+</script>
 </body>
 
 </html>
