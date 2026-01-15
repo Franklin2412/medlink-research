@@ -1,13 +1,15 @@
 class WordEchoGame {
     constructor() {
-        this.words = ['Apple', 'Banana', 'Cat', 'Dog', 'Elephant', 'Flower', 'Garden', 'Happy', 'Ice', 'Jump'];
+        this.words = ['Apple', 'Banana', 'Cat', 'Dog', 'Elephant', 'Flower', 'Garden', 'Happy', 'Ice', 'Jump', 'Sun', 'Moon', 'Water', 'Book', 'Tree'];
         this.currentWordIndex = 0;
         this.score = 0;
         this.isListening = false;
         this.synth = window.speechSynthesis;
         this.recognition = null;
 
+        this.duration = 4; // Default 4 seconds
         this.initSpeechRecognition();
+        this.initControls();
     }
 
     initSpeechRecognition() {
@@ -38,6 +40,17 @@ class WordEchoGame {
         }
     }
 
+    initControls() {
+        const slider = document.getElementById('duration-slider');
+        const valDisplay = document.getElementById('duration-val');
+        if (slider && valDisplay) {
+            slider.addEventListener('input', (e) => {
+                this.duration = parseInt(e.target.value);
+                valDisplay.textContent = this.duration;
+            });
+        }
+    }
+
     start() {
         this.currentWordIndex = 0;
         this.score = 0;
@@ -55,17 +68,37 @@ class WordEchoGame {
         }
     }
 
+    stretchWord(word) {
+        // Higher duration means more character repetition
+        // Map 2s-10s to repeat factor 2-15
+        const repeatFactor = Math.floor((this.duration - 2) * 1.5) + 2;
+
+        return word.split('').map(char => {
+            // Stretch vowels and liquid consonants more
+            if ('aeioulnmrsh'.includes(char.toLowerCase())) {
+                return char.repeat(repeatFactor);
+            }
+            // Stops and others stretch less
+            return char.repeat(Math.ceil(repeatFactor / 2));
+        }).join('');
+    }
+
     speakSlowly() {
         const word = this.words[this.currentWordIndex];
+        const stretchedWord = this.stretchWord(word);
         this.synth.cancel();
 
-        const utterance = new SpeechSynthesisUtterance(word);
-        utterance.rate = 0.4; // Very slow
+        const utterance = new SpeechSynthesisUtterance(stretchedWord);
+        // Map duration (2-10) to rate (1.0 down to 0.1)
+        // 2s -> ~1.0, 10s -> ~0.1
+        utterance.rate = Math.max(0.1, 1 - (this.duration - 2) * 0.1);
         utterance.pitch = 1.1; // Friendly pitch
 
         utterance.onstart = () => {
             this.startVisualizer();
             this.updateStatus('Speaking slowly...');
+            // Reveal actual word partially or fully? Let's reveal fully now.
+            this.displayWord(word);
         };
 
         utterance.onend = () => {
