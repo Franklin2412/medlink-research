@@ -244,6 +244,72 @@
     font-family: var(--font-heading);
 }
 
+/* Mouth Animation */
+.mouth-container {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mouth {
+    width: 120px;
+    height: 60px;
+    position: relative;
+    background: #e1f5fe;
+    border-radius: 50% 50% 50% 50% / 100% 100% 0% 0%;
+    border: 4px solid var(--primary-color);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.mouth.speaking {
+    animation: mouthOpen 0.4s ease-in-out infinite alternate;
+}
+
+.lip {
+    position: absolute;
+    width: 100%;
+    height: 10px;
+    background: var(--primary-color);
+    left: 0;
+}
+
+.lip.top {
+    top: 0;
+}
+
+.lip.bottom {
+    bottom: 0;
+}
+
+.mouth-inner {
+    position: absolute;
+    width: 80%;
+    height: 60%;
+    background: #4a90e2;
+    bottom: -10%;
+    left: 10%;
+    border-radius: 50% 50% 0 0;
+    opacity: 0.3;
+}
+
+@keyframes mouthOpen {
+    0% {
+        height: 20px;
+        border-radius: 50%;
+    }
+
+    100% {
+        height: 80px;
+        border-radius: 30% 30% 50% 50%;
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
 /* Slider Styling */
 .echo-controls {
     max-width: 400px;

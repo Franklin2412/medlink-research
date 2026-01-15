@@ -77,7 +77,14 @@
                             </div>
 
                             <div class="echo-visualizer-container mb-xl">
-                                <div id="echo-visualizer" class="echo-visualizer">
+                                <div id="mouth-visualizer" class="mouth-container">
+                                    <div class="mouth">
+                                        <div class="lip top"></div>
+                                        <div class="lip bottom"></div>
+                                        <div class="mouth-inner"></div>
+                                    </div>
+                                </div>
+                                <div id="echo-visualizer" class="echo-visualizer hidden">
                                     <div class="wave-bar"></div>
                                     <div class="wave-bar"></div>
                                     <div class="wave-bar"></div>
@@ -88,11 +95,11 @@
 
                             <div class="echo-controls mb-xl">
                                 <label for="duration-slider" class="block mb-sm font-bold">Speech Duration: <span
-                                        id="duration-val">4</span>s</label>
-                                <input type="range" id="duration-slider" min="2" max="10" value="4" class="slider">
+                                        id="duration-val">3</span>s</label>
+                                <input type="range" id="duration-slider" min="1" max="5" value="3" class="slider">
                                 <div class="flex justify-between text-sm mt-xs">
-                                    <span>Fast (2s)</span>
-                                    <span>Slow (10s)</span>
+                                    <span>Fast (1s)</span>
+                                    <span>Slow (5s)</span>
                                 </div>
                             </div>
 

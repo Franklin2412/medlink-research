@@ -33,7 +33,12 @@ class WordEchoGame {
             this.recognition.onerror = (event) => {
                 console.error('Speech recognition error:', event.error);
                 this.stopListening();
-                this.updateStatus('Try again! I didn\'t hear that.');
+
+                if (event.error === 'network') {
+                    this.updateStatus('Network error! Please check your internet connection and microphone permissions.');
+                } else {
+                    this.updateStatus('Try again! I didn\'t hear that.');
+                }
             };
         } else {
             console.warn('Speech Recognition not supported in this browser.');
@@ -48,6 +53,9 @@ class WordEchoGame {
                 this.duration = parseInt(e.target.value);
                 valDisplay.textContent = this.duration;
             });
+            // Ensure slider matches initial default
+            slider.value = this.duration;
+            valDisplay.textContent = this.duration;
         }
     }
 
@@ -63,23 +71,20 @@ class WordEchoGame {
             this.displayWord('???');
             this.updateStatus('Listen to the word...');
             this.clearFeedback();
+            this.speakSlowly(); // Call speakSlowly here
         } else {
             this.endGame();
         }
     }
 
     stretchWord(word) {
-        // Higher duration means more character repetition
-        // Map 2s-10s to repeat factor 2-15
-        const repeatFactor = Math.floor((this.duration - 2) * 1.5) + 2;
+        // Equal stretching: Higher duration means all characters repeated more
+        // Map 1s-5s to a base repeat factor
+        const baseRepeat = Math.max(1, Math.floor(this.duration * 1.5));
 
         return word.split('').map(char => {
-            // Stretch vowels and liquid consonants more
-            if ('aeioulnmrsh'.includes(char.toLowerCase())) {
-                return char.repeat(repeatFactor);
-            }
-            // Stops and others stretch less
-            return char.repeat(Math.ceil(repeatFactor / 2));
+            // Repeat every character equally to stretch the sound
+            return char.repeat(baseRepeat);
         }).join('');
     }
 
@@ -89,27 +94,36 @@ class WordEchoGame {
         this.synth.cancel();
 
         const utterance = new SpeechSynthesisUtterance(stretchedWord);
-        // Map duration (2-10) to rate (1.0 down to 0.1)
-        // 2s -> ~1.0, 10s -> ~0.1
-        utterance.rate = Math.max(0.1, 1 - (this.duration - 2) * 0.1);
-        utterance.pitch = 1.1; // Friendly pitch
+        // Map duration (1-5) to rate (1.0 down to 0.1)
+        utterance.rate = Math.max(0.1, 1.1 - (this.duration * 0.2));
+        utterance.pitch = 1.0;
 
         utterance.onstart = () => {
             this.startVisualizer();
+            this.startMouthAnimation();
             this.updateStatus('Speaking slowly...');
-            // Reveal actual word partially or fully? Let's reveal fully now.
             this.displayWord(word);
         };
 
         utterance.onend = () => {
             this.stopVisualizer();
-            this.displayWord(word); // reveal word
+            this.stopMouthAnimation();
             setTimeout(() => {
                 this.startListening();
             }, 500);
         };
 
         this.synth.speak(utterance);
+    }
+
+    startMouthAnimation() {
+        const mouth = document.querySelector('.mouth');
+        if (mouth) mouth.classList.add('speaking');
+    }
+
+    stopMouthAnimation() {
+        const mouth = document.querySelector('.mouth');
+        if (mouth) mouth.classList.remove('speaking');
     }
 
     startListening() {
@@ -124,6 +138,7 @@ class WordEchoGame {
             this.recognition.start();
         } catch (e) {
             console.error('Recognition start error:', e);
+            this.stopListening();
         }
     }
 
