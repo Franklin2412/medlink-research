@@ -315,7 +315,7 @@
     <!-- Right Side Controls -->
     <aside class="side-controls">
         <h3>Accessibility</h3>
-        <button class="btn btn-secondary" id="toggle-contrast">🌗 High Contrast</button>
+        <button class="btn btn-secondary" id="toggle-dark-mode">� Dark Mode</button>
         <button class="btn btn-secondary" id="toggle-text-size">🅰️ Large Text</button>
 
         <h3>Navigation</h3>
@@ -333,14 +333,20 @@
 <script src="shared/js/gesture-engine.js"></script>
 <script>
     // Accessibility toggles
-    const toggleContrast = document.getElementById('toggle-contrast');
+    const toggleDarkMode = document.getElementById('toggle-dark-mode');
     const toggleTextSize = document.getElementById('toggle-text-size');
 
-    toggleContrast.addEventListener('click', () => {
-        document.body.classList.toggle('high-contrast');
-        const isActive = document.body.classList.contains('high-contrast');
-        toggleContrast.setAttribute('aria-pressed', isActive);
-        localStorage.setItem('high-contrast', isActive);
+    function updateThemeUI() {
+        const isDark = document.body.classList.contains('dark-mode');
+        toggleDarkMode.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+        toggleDarkMode.setAttribute('aria-pressed', isDark);
+    }
+
+    toggleDarkMode.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('theme-preference', isDark ? 'dark' : 'light');
+        updateThemeUI();
     });
 
     toggleTextSize.addEventListener('click', () => {
@@ -351,10 +357,10 @@
     });
 
     // Restore accessibility preferences
-    if (localStorage.getItem('high-contrast') === 'true') {
-        document.body.classList.add('high-contrast');
-        toggleContrast.setAttribute('aria-pressed', 'true');
+    if (localStorage.getItem('theme-preference') === 'dark') {
+        document.body.classList.add('dark-mode');
     }
+    updateThemeUI();
     if (localStorage.getItem('large-text') === 'true') {
         document.body.classList.add('large-text');
         toggleTextSize.setAttribute('aria-pressed', 'true');

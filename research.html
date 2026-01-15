@@ -23,6 +23,15 @@
             --medical-surface: #ffffff;
         }
 
+        body.dark-mode {
+            --medical-primary: #E0E0E0;
+            --medical-accent: #4ECDC4;
+            --medical-bg: #121212;
+            --medical-text: #A0A0A0;
+            --medical-border: #333333;
+            --medical-surface: #1E1E1E;
+        }
+
         body {
             background-color: var(--medical-bg);
             color: var(--medical-text);
@@ -395,6 +404,10 @@
 
         <!-- Right Side Controls -->
         <aside class="side-controls">
+            <h3>Accessibility</h3>
+            <button class="btn btn-secondary" id="toggle-dark-mode">🌙 Dark Mode</button>
+            <button class="btn btn-secondary" id="toggle-text-size">🅰️ Large Text</button>
+
             <h3>Navigation</h3>
             <a href="index.html" class="btn btn-secondary">🏠 Portal Home</a>
 
@@ -409,6 +422,41 @@
             </div>
         </aside>
     </div>
+    <script>
+        // Accessibility toggles
+        const toggleDarkMode = document.getElementById('toggle-dark-mode');
+        const toggleTextSize = document.getElementById('toggle-text-size');
+
+        function updateThemeUI() {
+            const isDark = document.body.classList.contains('dark-mode');
+            toggleDarkMode.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+            toggleDarkMode.setAttribute('aria-pressed', isDark);
+        }
+
+        toggleDarkMode.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme-preference', isDark ? 'dark' : 'light');
+            updateThemeUI();
+        });
+
+        toggleTextSize.addEventListener('click', () => {
+            document.body.classList.toggle('large-text');
+            const isActive = document.body.classList.contains('large-text');
+            toggleTextSize.setAttribute('aria-pressed', isActive);
+            localStorage.setItem('large-text', isActive);
+        });
+
+        // Restore accessibility preferences
+        if (localStorage.getItem('theme-preference') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+        updateThemeUI();
+        if (localStorage.getItem('large-text') === 'true') {
+            document.body.classList.add('large-text');
+            toggleTextSize.setAttribute('aria-pressed', 'true');
+        }
+    </script>
 </body>
 
 </html>
