@@ -35,13 +35,22 @@ class WordEchoGame {
                 this.stopListening();
 
                 if (event.error === 'network') {
-                    this.updateStatus('Network error! Please check your internet connection and microphone permissions.');
+                    if (window.location.protocol === 'file:') {
+                        this.updateStatus('⚠️ Browser Restriction: Speech Recognition requires a local server (http://localhost) or a secure HTTPS connection. It often fails when opening HTML files directly.');
+                    } else {
+                        this.updateStatus('Network error! Please check your internet connection.');
+                    }
+                } else if (event.error === 'not-allowed') {
+                    this.updateStatus('Microphone access denied. Please allow permissions.');
+                } else if (event.error === 'no-speech') {
+                    this.updateStatus('I didn\'t hear anything. Try again!');
                 } else {
-                    this.updateStatus('Try again! I didn\'t hear that.');
+                    this.updateStatus(`Error: ${event.error}. Please try skipping.`);
                 }
             };
         } else {
             console.warn('Speech Recognition not supported in this browser.');
+            this.updateStatus('Browser not supported. Please use Google Chrome.');
         }
     }
 
@@ -61,6 +70,8 @@ class WordEchoGame {
         const skipBtn = document.getElementById('echo-skip-btn');
         if (skipBtn) {
             skipBtn.addEventListener('click', () => {
+                if (this.recognition) this.recognition.abort();
+                this.stopListening();
                 this.updateStatus('Skipping word...');
                 this.currentWordIndex++;
                 setTimeout(() => this.nextWord(), 1000);
