@@ -5,6 +5,43 @@
 
 .welcome-icon {
     font-size: 5rem;
+    margin-bottom: var(--space-md);
+}
+
+.activity-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-xl);
+}
+
+.activity-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-lg) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent !important;
+    height: 100%;
+}
+
+.activity-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color) !important;
+}
+
+.activity-icon {
+    font-size: 3.5rem;
+    margin-bottom: var(--space-sm);
+    background: var(--bg-color);
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: var(--shadow-sm);
 }
 
 #target-emotion {
@@ -52,10 +89,35 @@
 
 .screen {
     display: none;
+    height: 100%;
 }
 
 .screen.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 160px);
+    /* Adjust for header/footer */
+}
+
+#game-screen .container,
+#breath-screen .container,
+#bubble-screen .container,
+#welcome-screen .container {
+    margin: auto 0;
+    /* Safe centering: centers if there's space, starts at top if there isn't */
+    width: 100%;
+}
+
+.game-card {
+    width: 100%;
+    max-width: 900px;
+    padding: var(--space-xl) !important;
+    margin: 0 auto;
+}
+
+#emotion-options {
+    margin-top: var(--space-xl);
+    /* Increased spacing between question and options */
 }
 
 /* Breathing Activity */
