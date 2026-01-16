@@ -140,14 +140,18 @@ class WordEchoGame {
             this.voices = this.synth.getVoices();
         }
 
-        // Try to match specific region (ta-IN) first, then fallback to general language (ta)
-        const voice = this.voices.find(v => v.lang === this.lang) ||
-            this.voices.find(v => v.lang.startsWith(this.lang.split('-')[0]));
+        // Normalize search: match ta-IN, ta_IN, or just ta
+        const targetLang = this.lang.toLowerCase().replace('_', '-');
+        const voice = this.voices.find(v => v.lang.toLowerCase().replace('_', '-') === targetLang) ||
+            this.voices.find(v => v.lang.toLowerCase().startsWith(targetLang.split('-')[0]));
 
         if (voice) {
             utterance.voice = voice;
         } else {
             console.warn(`No voice found for ${this.lang}`);
+            if (this.lang !== 'en-US') {
+                this.updateStatus('⚠️ Tamil voice not found. Please install Tamil language pack in OS settings.');
+            }
         }
 
         // High-Fidelity Slow Motion
