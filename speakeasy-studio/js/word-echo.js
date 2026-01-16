@@ -164,15 +164,13 @@ class WordEchoGame {
         utterance.pitch = 1.0;
 
         utterance.onstart = () => {
-            this.startVisualizer();
-            this.startMouthAnimation();
+            this.setVisualizerState('speaking');
             this.updateStatus(`Speaking slowly...`);
             this.displayWord(word);
         };
 
         utterance.onend = () => {
-            this.stopVisualizer();
-            this.stopMouthAnimation();
+            this.setVisualizerState('idle'); // Brief idle before listening
             setTimeout(() => {
                 this.startListening();
             }, 500);
@@ -181,20 +179,27 @@ class WordEchoGame {
         this.synth.speak(utterance);
     }
 
-    startMouthAnimation() {
-        const mouth = document.querySelector('.mouth');
-        if (mouth) {
-            // Animation matches the rate
-            // Rate 0.1 is 10x slower than normal, so animation should be very slow
-            const smoothDuration = 1.0 + (this.duration * 0.3);
-            mouth.style.setProperty('--mouth-anim-duration', `${smoothDuration}s`);
-            mouth.classList.add('speaking');
-        }
-    }
+    // Unified Visualizer Control
+    setVisualizerState(state) {
+        const wave = document.getElementById('echo-visualizer');
+        const mic = document.getElementById('mic-indicator');
+        const idle = document.getElementById('echo-idle-icon');
 
-    stopMouthAnimation() {
-        const mouth = document.querySelector('.mouth');
-        if (mouth) mouth.classList.remove('speaking');
+        // Hide all first
+        if (wave) wave.classList.add('hidden');
+        if (mic) mic.classList.add('hidden');
+        if (idle) idle.classList.add('hidden');
+
+        // Show active state
+        if (state === 'speaking' && wave) {
+            wave.classList.remove('hidden');
+            const bars = document.querySelectorAll('.wave-bar');
+            bars.forEach(bar => bar.classList.add('speaking'));
+        } else if (state === 'listening' && mic) {
+            mic.classList.remove('hidden');
+        } else if (state === 'idle' && idle) {
+            idle.classList.remove('hidden');
+        }
     }
 
     startListening() {
@@ -202,7 +207,7 @@ class WordEchoGame {
 
         this.isListening = true;
         this.updateStatus('Now your turn! Say it!');
-        document.getElementById('mic-indicator').classList.remove('hidden');
+        this.setVisualizerState('listening');
         document.getElementById('echo-listen-btn').disabled = true;
 
         try {
@@ -219,7 +224,7 @@ class WordEchoGame {
 
     stopListening() {
         this.isListening = false;
-        document.getElementById('mic-indicator').classList.add('hidden');
+        this.setVisualizerState('idle');
         document.getElementById('echo-listen-btn').disabled = false;
     }
 
@@ -244,15 +249,7 @@ class WordEchoGame {
         }
     }
 
-    startVisualizer() {
-        const bars = document.querySelectorAll('.wave-bar');
-        bars.forEach(bar => bar.classList.add('speaking'));
-    }
-
-    stopVisualizer() {
-        const bars = document.querySelectorAll('.wave-bar');
-        bars.forEach(bar => bar.classList.remove('speaking'));
-    }
+    // startVisualizer and stopVisualizer removed in favor of setVisualizerState
 
     displayWord(text) {
         document.getElementById('echo-word-display').textContent = text;

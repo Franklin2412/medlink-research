@@ -76,14 +76,9 @@
                                 <p id="echo-status">Press the button and listen...</p>
                             </div>
 
-                            <div class="echo-visualizer-container mb-xl">
-                                <div id="mouth-visualizer" class="mouth-container">
-                                    <div class="mouth">
-                                        <div class="lip top"></div>
-                                        <div class="lip bottom"></div>
-                                        <div class="mouth-inner"></div>
-                                    </div>
-                                </div>
+                            <div class="echo-visualizer-container mb-xl"
+                                style="height: 120px; display: flex; align-items: center; justify-content: center;">
+                                <!-- Unified Stage -->
                                 <div id="echo-visualizer" class="echo-visualizer hidden">
                                     <div class="wave-bar"></div>
                                     <div class="wave-bar"></div>
@@ -91,10 +86,16 @@
                                     <div class="wave-bar"></div>
                                     <div class="wave-bar"></div>
                                 </div>
+                                <div id="mic-indicator" class="mic-indicator hidden">
+                                    <div class="mic-pulse">🎤</div>
+                                </div>
+                                <div id="echo-idle-icon" class="text-4xl opacity-50">
+                                    👂
+                                </div>
                             </div>
 
                             <div class="echo-controls mb-xl">
-                                <div class="mb-lg">
+                                <div class="mb-lg hidden"> <!-- Hidden as per user request -->
                                     <label for="language-select" class="block mb-sm font-bold">Language / மொழி:</label>
                                     <select id="language-select" class="language-dropdown">
                                         <option value="en-US">English</option>
@@ -119,10 +120,7 @@
                                     <span>⏭️</span> Skip Word
                                 </button>
                             </div>
-                            <div id="mic-indicator" class="mic-indicator mt-lg hidden">
-                                <div class="mic-pulse">🎤</div>
-                                <p>Listening for you...</p>
-                            </div>
+                            <p id="mic-listening-text" class="mt-lg hidden">Listening for you...</p>
 
                             <div id="echo-feedback" class="mt-xl text-xl font-bold"></div>
                         </div>
