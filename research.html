@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Poppins:wght@400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:wght@300;400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="shared/css/common.css">
     <link rel="stylesheet" href="shared/css/gesture-style.css">
@@ -18,7 +18,7 @@
             /* Deep Slate */
             --medical-accent: #2563eb;
             /* Clinical Blue */
-            --medical-bg: #fdfdfd;
+            --medical-bg: #f8fafc;
             --medical-text: #334155;
             --medical-border: #e2e8f0;
             --medical-surface: #ffffff;
@@ -27,18 +27,19 @@
         body.dark-mode {
             --medical-primary: #E0E0E0;
             --medical-accent: #4ECDC4;
-            --medical-bg: #121212;
-            --medical-text: #A0A0A0;
-            --medical-border: #333333;
-            --medical-surface: #1E1E1E;
+            --medical-bg: #0f172a;
+            --medical-text: #94a3b8;
+            --medical-border: #1e293b;
+            --medical-surface: #1e293b;
         }
 
         body {
             background-color: var(--medical-bg);
             color: var(--medical-text);
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
+            line-height: 1.6;
         }
 
         .top-nav {
@@ -79,6 +80,7 @@
             margin: 0;
             font-weight: 700;
             letter-spacing: -0.025em;
+            font-family: 'Merriweather', serif;
         }
 
         .page-header p {
@@ -118,6 +120,8 @@
             font-size: 1.25rem;
             margin: 0;
             color: var(--medical-primary);
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
         }
 
         .icon-box {
