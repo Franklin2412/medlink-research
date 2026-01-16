@@ -1,6 +1,10 @@
 class WordEchoGame {
     constructor() {
-        this.words = ['Apple', 'Banana', 'Cat', 'Dog', 'Elephant', 'Flower', 'Garden', 'Happy', 'Ice', 'Jump', 'Sun', 'Moon', 'Water', 'Book', 'Tree'];
+        this.lang = 'en-US';
+        this.wordsEn = ['Apple', 'Banana', 'Cat', 'Dog', 'Elephant', 'Flower', 'Garden', 'Happy', 'Ice', 'Jump', 'Sun', 'Moon', 'Water', 'Book', 'Tree'];
+        this.wordsTa = ['அம்மா', 'அப்பா', 'நாய்', 'பூனை', 'மரம்', 'பழம்', 'பால்', 'வானம்', 'வீடு', 'பள்ளி', 'கண்', 'காது', 'வாய்', 'மூக்கு', 'கைகள்'];
+        this.words = [...this.wordsEn];
+
         this.currentWordIndex = 0;
         this.score = 0;
         this.isListening = false;
@@ -17,7 +21,7 @@ class WordEchoGame {
         if (SpeechRecognition) {
             this.recognition = new SpeechRecognition();
             this.recognition.continuous = false;
-            this.recognition.lang = 'en-US';
+            this.recognition.lang = this.lang;
             this.recognition.interimResults = false;
             this.recognition.maxAlternatives = 1;
 
@@ -25,6 +29,7 @@ class WordEchoGame {
                 const speechToText = event.results[0][0].transcript.toLowerCase();
                 this.checkResult(speechToText);
             };
+            // ... (rest of method maintained implicitly, but replacing up to initControls start in next chunk if needed, but here we focus on constructor/init mostly)
 
             this.recognition.onspeechend = () => {
                 this.stopListening();
@@ -55,6 +60,20 @@ class WordEchoGame {
     }
 
     initControls() {
+        const langSelect = document.getElementById('language-select');
+        if (langSelect) {
+            langSelect.addEventListener('change', (e) => {
+                this.lang = e.target.value;
+                this.words = this.lang === 'ta-IN' ? [...this.wordsTa] : [...this.wordsEn];
+
+                if (this.recognition) {
+                    this.recognition.lang = this.lang;
+                }
+
+                this.start();
+            });
+        }
+
         const slider = document.getElementById('duration-slider');
         const valDisplay = document.getElementById('duration-val');
         if (slider && valDisplay) {
@@ -103,6 +122,7 @@ class WordEchoGame {
         this.synth.cancel();
 
         const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = this.lang;
 
         // High-Fidelity Slow Motion
         // We prioritize smooth audio over artificial stretching.
