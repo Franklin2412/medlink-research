@@ -67,10 +67,13 @@ class WordEchoGame {
                 this.words = this.lang === 'ta-IN' ? [...this.wordsTa] : [...this.wordsEn];
 
                 if (this.recognition) {
+                    this.recognition.abort();
                     this.recognition.lang = this.lang;
                 }
+                this.stopListening();
 
-                this.start();
+                // Small delay to allow abort to finalize
+                setTimeout(() => this.start(), 100);
             });
         }
 
@@ -178,8 +181,12 @@ class WordEchoGame {
         try {
             this.recognition.start();
         } catch (e) {
-            console.error('Recognition start error:', e);
-            this.stopListening();
+            if (e.name !== 'InvalidStateError') {
+                console.error('Recognition start error:', e);
+                this.stopListening();
+            } else {
+                console.warn('Recognition already started. Continuing...');
+            }
         }
     }
 
