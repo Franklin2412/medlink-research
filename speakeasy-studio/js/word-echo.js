@@ -10,6 +10,14 @@ class WordEchoGame {
         this.isListening = false;
         this.synth = window.speechSynthesis;
         this.recognition = null;
+        this.voices = [];
+
+        // Load voices explicitly
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = () => {
+                this.voices = this.synth.getVoices();
+            };
+        }
 
         this.duration = 4; // Default 4 seconds
         this.initSpeechRecognition();
@@ -126,6 +134,21 @@ class WordEchoGame {
 
         const utterance = new SpeechSynthesisUtterance(word);
         utterance.lang = this.lang;
+
+        // Explicitly selecting voice improves reliability for non-English languages
+        if (this.voices.length === 0) {
+            this.voices = this.synth.getVoices();
+        }
+
+        // Try to match specific region (ta-IN) first, then fallback to general language (ta)
+        const voice = this.voices.find(v => v.lang === this.lang) ||
+            this.voices.find(v => v.lang.startsWith(this.lang.split('-')[0]));
+
+        if (voice) {
+            utterance.voice = voice;
+        } else {
+            console.warn(`No voice found for ${this.lang}`);
+        }
 
         // High-Fidelity Slow Motion
         // We prioritize smooth audio over artificial stretching.
