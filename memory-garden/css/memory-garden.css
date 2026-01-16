@@ -27,13 +27,18 @@
 /* ===== SCREENS ===== */
 .screen {
     display: none;
-    min-height: calc(100vh - 100px);
-    padding: var(--space-xl) 0;
+    min-height: calc(100vh - 40px);
+    padding: var(--space-md) 0;
 }
 
 .screen.active {
     display: block;
     animation: fadeIn var(--transition-normal);
+}
+
+/* Maximize game space */
+body.full-screen-game .main-canvas {
+    padding-bottom: 0 !important;
 }
 
 /* ===== WELCOME SCREEN ===== */

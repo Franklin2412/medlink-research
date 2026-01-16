@@ -144,12 +144,19 @@
 
 .screen {
     display: none;
-    padding: var(--space-xl) 0;
+    min-height: calc(100vh - 60px);
+    /* Fill available space */
+    padding: var(--space-md) 0;
 }
 
 .screen.active {
     display: block;
     animation: fadeIn var(--transition-normal);
+}
+
+/* Maximize game space */
+body.full-screen-game .main-canvas {
+    padding-bottom: 0 !important;
 }
 
 /* Word Echo Specific */

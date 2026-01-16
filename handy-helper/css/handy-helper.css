@@ -280,10 +280,17 @@
     gap: var(--space-md);
 }
 
+/* Maximize game space */
+body.full-screen-game .main-canvas {
+    padding-bottom: 0 !important;
+}
+
 .game-area {
     display: flex;
-    height: calc(100vh - 120px);
+    height: calc(100vh - 40px);
+    /* Use almost full height, leaving small margin */
     background: var(--background-color);
+    margin-bottom: 10px;
 }
 
 @media (max-width: 1024px) {
