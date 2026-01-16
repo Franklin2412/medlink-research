@@ -94,7 +94,22 @@
                                 </div>
                             </div>
 
-                            <div class="echo-controls mb-xl">
+                            <!-- Feedback Center -->
+                            <div id="echo-feedback" class="mb-lg text-xl font-bold" style="min-height: 1.5em;"></div>
+                            <p id="mic-listening-text" class="mb-lg hidden">Listening for you...</p>
+
+                            <!-- Actions Middle -->
+                            <div class="echo-actions flex justify-center gap-md mb-xl">
+                                <button id="echo-listen-btn" class="btn btn-large btn-accent">
+                                    <span class="icon-pulse">🔊</span> Hear Word
+                                </button>
+                                <button id="echo-skip-btn" class="btn btn-large btn-secondary">
+                                    <span>⏭️</span> Skip Word
+                                </button>
+                            </div>
+
+                            <!-- Controls Bottom -->
+                            <div class="echo-controls border-t pt-lg mt-lg">
                                 <div class="mb-lg hidden"> <!-- Hidden as per user request -->
                                     <label for="language-select" class="block mb-sm font-bold">Language / மொழி:</label>
                                     <select id="language-select" class="language-dropdown">
@@ -103,26 +118,14 @@
                                     </select>
                                 </div>
 
-                                <label for="duration-slider" class="block mb-sm font-bold">Speech Duration: <span
-                                        id="duration-val">3</span>s</label>
+                                <label for="duration-slider" class="block mb-sm text-sm text-gray-500">Speech Duration:
+                                    <span id="duration-val">3</span>s</label>
                                 <input type="range" id="duration-slider" min="1" max="10" value="3" class="slider">
-                                <div class="flex justify-between text-sm mt-xs">
+                                <div class="flex justify-between text-xs text-gray-400 mt-xs">
                                     <span>Fast (1s)</span>
                                     <span>Slow (10s)</span>
                                 </div>
                             </div>
-
-                            <div class="echo-actions flex justify-center gap-md">
-                                <button id="echo-listen-btn" class="btn btn-large btn-accent">
-                                    <span class="icon-pulse">🔊</span> Hear Word
-                                </button>
-                                <button id="echo-skip-btn" class="btn btn-large btn-secondary">
-                                    <span>⏭️</span> Skip Word
-                                </button>
-                            </div>
-                            <p id="mic-listening-text" class="mt-lg hidden">Listening for you...</p>
-
-                            <div id="echo-feedback" class="mt-xl text-xl font-bold"></div>
                         </div>
                     </div>
                 </section>
