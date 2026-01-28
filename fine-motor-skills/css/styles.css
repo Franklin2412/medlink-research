@@ -363,3 +363,33 @@
 .nav-title {
     animation: float 3s ease-in-out infinite;
 }
+
+/* Camera Dock Positioning (Fixed Bottom-Right PiP) */
+#gesture-camera-dock {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 200px;
+    /* PiP size */
+    height: 150px;
+    margin: 0;
+    z-index: 2000;
+    /* Above game overlay */
+    border: 4px solid var(--fms-secondary);
+    border-radius: 12px;
+    background: #000;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+#gesture-camera-dock video,
+#gesture-camera-dock canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+    /* Mirror */
+}
+
+/* Hide dock when setup modal is active to prevent duplication confusion? 
+   Actually, keep it visible so they see it move. */
