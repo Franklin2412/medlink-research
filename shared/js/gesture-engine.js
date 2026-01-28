@@ -468,7 +468,7 @@ class GestureEngine {
 }
 
 // Global instance
-const gestureEngine = new GestureEngine();
+window.gestureEngine = new GestureEngine();
 document.addEventListener('DOMContentLoaded', () => {
-    gestureEngine.init();
+    window.gestureEngine.init();
 });
