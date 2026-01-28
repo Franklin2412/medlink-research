@@ -127,10 +127,7 @@ class BaseGame {
     }
 }
 
-// Initial dummy implementations to prevent errors before files are created
-class TracingGame extends BaseGame { start() { console.log('Tracing started'); } }
-class PinchPlaceGame extends BaseGame { start() { console.log('Pinch started'); } }
-class SteadyHandGame extends BaseGame { start() { console.log('Steady started'); } }
+// Game classes are loaded from separate files
 
 document.addEventListener('DOMContentLoaded', () => {
     app.init();
