@@ -73,6 +73,15 @@ const app = {
                 };
 
                 checkCamera();
+            }).catch(err => {
+                console.error("GestureEngine init failed:", err);
+                status.textContent = "Error initializing gesture engine.";
+                const retryBtn = document.createElement('button');
+                retryBtn.className = 'btn-secondary btn-small mt-sm';
+                retryBtn.textContent = "Retry";
+                retryBtn.onclick = () => window.location.reload();
+                status.appendChild(document.createElement('br'));
+                status.appendChild(retryBtn);
             });
         }
     },
