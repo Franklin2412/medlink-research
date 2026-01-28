@@ -190,6 +190,45 @@ const app = {
     }
 };
 
+// Base class for Games to ensure consistent API
+class BaseGame {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.isRunning = false;
+        this.animationFrame = null;
+    }
+
+    start() {
+        this.isRunning = true;
+        this.loop();
+    }
+
+    stop() {
+        this.isRunning = false;
+        cancelAnimationFrame(this.animationFrame);
+    }
+
+    restart() {
+        // Override me
+    }
+
+    loop() {
+        if (!this.isRunning) return;
+        this.update();
+        this.draw();
+        this.animationFrame = requestAnimationFrame(() => this.loop());
+    }
+
+    update() {
+        // Override me
+    }
+
+    draw() {
+        // Override me
+    }
+}
+
 // Game classes are loaded from separate files
 
 /**
