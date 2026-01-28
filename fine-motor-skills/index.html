@@ -80,6 +80,27 @@
 
     </main>
 
+    <!-- Camera Setup Modal -->
+    <div id="camera-setup-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="setup-icon">📹</div>
+            <h2>Let's Get Ready!</h2>
+            <p>We need to see your hands to play.</p>
+
+            <div id="setup-preview-container" class="setup-preview">
+                <!-- Camera feed mirrors here during setup -->
+                <div class="loading-spinner"></div>
+            </div>
+
+            <div id="setup-status" class="status-message">Starting camera...</div>
+
+            <div class="modal-actions">
+                <button id="btn-start-game" class="btn-primary" disabled onclick="app.startGame()">I'm Ready!</button>
+                <button class="btn-secondary" onclick="app.cancelSetup()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Game Container (Hidden by default, overlays main menu) -->
     <div id="game-overlay" class="game-overlay hidden">
         <div class="game-header">
