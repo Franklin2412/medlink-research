@@ -20,70 +20,92 @@ const app = {
     },
 
     showCameraSetup() {
+        console.log("showCameraSetup: Called");
         const modal = document.getElementById('camera-setup-modal');
         modal.classList.remove('hidden');
 
         const status = document.getElementById('setup-status');
         const btn = document.getElementById('btn-start-game');
-        const preview = document.getElementById('setup-preview-container');
 
         status.textContent = "waking up camera...";
         btn.disabled = true;
 
-        // Initialize Gesture Engine
-        if (window.gestureEngine) {
-            // First ensure it's initialized
-            const startPromise = window.gestureEngine.isInitialized
-                ? Promise.resolve()
-                : window.gestureEngine.init();
-
-            startPromise.then(() => {
-                // Ensure enabled
-                if (!window.gestureEngine.isEnabled) {
-                    window.gestureEngine.enable();
-                }
-
-                // Robust polling for camera readiness
-                let attempts = 0;
-                const maxAttempts = 20; // 10 seconds (20 * 500ms)
-
-                const checkCamera = () => {
-                    const video = document.getElementById('gesture-video');
-                    // Check if video exists and has data
-                    if (video && video.readyState >= 2) {
-                        this.onCameraReady();
-                    } else {
-                        attempts++;
-                        if (attempts > maxAttempts) {
-                            status.innerHTML = "Camera is taking a while...<br>";
-
-                            const retryBtn = document.createElement('button');
-                            retryBtn.className = 'btn-secondary btn-small mt-sm';
-                            retryBtn.textContent = "Force Retry";
-                            retryBtn.onclick = () => window.location.reload();
-                            status.appendChild(retryBtn);
-
-                            // Enable button anyway just in case
-                            btn.textContent = "Try Anyway";
-                            btn.disabled = false;
-                        } else {
-                            setTimeout(checkCamera, 500);
-                        }
-                    }
-                };
-
-                checkCamera();
-            }).catch(err => {
-                console.error("GestureEngine init failed:", err);
-                status.textContent = "Error initializing gesture engine.";
-                const retryBtn = document.createElement('button');
-                retryBtn.className = 'btn-secondary btn-small mt-sm';
-                retryBtn.textContent = "Retry";
-                retryBtn.onclick = () => window.location.reload();
-                status.appendChild(document.createElement('br'));
-                status.appendChild(retryBtn);
-            });
+        if (!window.gestureEngine) {
+            console.error("showCameraSetup: gestureEngine not found on window!");
+            status.textContent = "Error: Engine not found";
+            return;
         }
+
+        console.log("showCameraSetup: checking gestureEngine state", {
+            isInitialized: window.gestureEngine.isInitialized,
+            isEnabled: window.gestureEngine.isEnabled
+        });
+
+        // Initialize Gesture Engine
+        // First ensure it's initialized
+        const startPromise = window.gestureEngine.isInitialized
+            ? Promise.resolve()
+            : window.gestureEngine.init();
+
+        console.log("showCameraSetup: startPromise created");
+
+        startPromise.then(() => {
+            console.log("showCameraSetup: init promise resolved");
+            // Ensure enabled
+            if (!window.gestureEngine.isEnabled) {
+                console.log("showCameraSetup: enabling engine...");
+                window.gestureEngine.enable();
+            } else {
+                console.log("showCameraSetup: engine already enabled");
+            }
+
+            // Robust polling for camera readiness
+            let attempts = 0;
+            const maxAttempts = 20; // 10 seconds (20 * 500ms)
+
+            const checkCamera = () => {
+                const video = document.getElementById('gesture-video');
+                const readyState = video ? video.readyState : 'N/A';
+
+                console.log(`checkCamera: Attempt ${attempts}/${maxAttempts}. Video found: ${!!video}, ReadyState: ${readyState}`);
+
+                // Check if video exists and has data
+                if (video && video.readyState >= 2) {
+                    console.log("checkCamera: Camera is ready!");
+                    this.onCameraReady();
+                } else {
+                    attempts++;
+                    if (attempts > maxAttempts) {
+                        console.warn("checkCamera: Timed out waiting for camera");
+                        status.innerHTML = "Camera is taking a while...<br>";
+
+                        const retryBtn = document.createElement('button');
+                        retryBtn.className = 'btn-secondary btn-small mt-sm';
+                        retryBtn.textContent = "Force Retry";
+                        retryBtn.onclick = () => window.location.reload();
+                        status.appendChild(retryBtn);
+
+                        // Enable button anyway just in case
+                        btn.textContent = "Try Anyway";
+                        btn.disabled = false;
+                    } else {
+                        setTimeout(checkCamera, 500);
+                    }
+                }
+            };
+
+            console.log("showCameraSetup: Starting polling loop");
+            checkCamera();
+        }).catch(err => {
+            console.error("GestureEngine init failed:", err);
+            status.textContent = "Error initializing gesture engine: " + err.message;
+            const retryBtn = document.createElement('button');
+            retryBtn.className = 'btn-secondary btn-small mt-sm';
+            retryBtn.textContent = "Retry";
+            retryBtn.onclick = () => window.location.reload();
+            status.appendChild(document.createElement('br'));
+            status.appendChild(retryBtn);
+        });
     },
 
     onCameraReady() {
