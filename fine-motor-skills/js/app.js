@@ -43,31 +43,36 @@ const app = {
                     window.gestureEngine.enable();
                 }
 
-                // Wait a moment for camera to actually start
-                setTimeout(() => {
-                    // Check if we can find the video element to mirror it?
-                    // The gesture engine creates its own video element.
-                    // We can try to append it or clone it? 
-                    // Actually, GestureEngine docks it into 'gesture-camera-dock'.
-                    // For setup, we might want to temporarily move it or just trust the status.
+                // Robust polling for camera readiness
+                let attempts = 0;
+                const maxAttempts = 20; // 10 seconds (20 * 500ms)
 
-                    // Let's rely on the dock.
-                    // But strictly speaking, the user wants a "Setup" screen.
-                    // Let's verify readiness.
+                const checkCamera = () => {
                     const video = document.getElementById('gesture-video');
+                    // Check if video exists and has data
                     if (video && video.readyState >= 2) {
                         this.onCameraReady();
                     } else {
-                        // Polling check
-                        const checkInt = setInterval(() => {
-                            const v = document.getElementById('gesture-video');
-                            if (v && v.readyState >= 2) {
-                                clearInterval(checkInt);
-                                this.onCameraReady();
-                            }
-                        }, 500);
+                        attempts++;
+                        if (attempts > maxAttempts) {
+                            status.innerHTML = "Camera is taking a while...<br>";
+
+                            const retryBtn = document.createElement('button');
+                            retryBtn.className = 'btn-secondary btn-small mt-sm';
+                            retryBtn.textContent = "Force Retry";
+                            retryBtn.onclick = () => window.location.reload();
+                            status.appendChild(retryBtn);
+
+                            // Enable button anyway just in case
+                            btn.textContent = "Try Anyway";
+                            btn.disabled = false;
+                        } else {
+                            setTimeout(checkCamera, 500);
+                        }
                     }
-                }, 1000);
+                };
+
+                checkCamera();
             });
         }
     },
