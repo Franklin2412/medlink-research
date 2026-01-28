@@ -34,27 +34,17 @@ class GestureEngine {
     }
 
     async init() {
-        console.log("GestureEngine.init: Called");
-        if (this.isInitialized) {
-            console.log("GestureEngine.init: Already initialized");
-            return;
-        }
+        if (this.isInitialized) return;
 
         // Load MediaPipe scripts dynamically if not already present
-        console.log("GestureEngine.init: Loading scripts...");
         await this.loadScripts();
-        console.log("GestureEngine.init: Scripts loaded");
 
         this.createElements();
-        console.log("GestureEngine.init: Elements created");
-
         this.setupHands();
-        console.log("GestureEngine.init: Hands setup complete");
 
         this.isInitialized = true;
 
         if (this.isEnabled) {
-            console.log("GestureEngine.init: Enabling immediately (pref saved)");
             this.enable();
         }
     }
@@ -200,11 +190,6 @@ class GestureEngine {
     }
 
     startCamera() {
-        console.log("GestureEngine.startCamera: Starting...");
-        if (!this.videoElement) {
-            console.error("GestureEngine.startCamera: No videoElement found!");
-            return;
-        }
         // @ts-ignore
         this.camera = new Camera(this.videoElement, {
             onFrame: async () => {
@@ -213,11 +198,7 @@ class GestureEngine {
             width: 640,
             height: 480
         });
-        this.camera.start().then(() => {
-            console.log("GestureEngine.startCamera: Camera started successfully");
-        }).catch(e => {
-            console.error("GestureEngine.startCamera: Failed to start camera", e);
-        });
+        this.camera.start();
     }
 
     toggle() {
@@ -468,7 +449,7 @@ class GestureEngine {
 }
 
 // Global instance
-window.gestureEngine = new GestureEngine();
+const gestureEngine = new GestureEngine();
 document.addEventListener('DOMContentLoaded', () => {
-    window.gestureEngine.init();
+    gestureEngine.init();
 });

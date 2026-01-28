@@ -659,46 +659,6 @@ body.large-text {
     *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
-
-        /* ===== GESTURE CURSOR ===== */
-        #gesture-cursor {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 25px;
-            height: 25px;
-            border: 3px solid var(--primary-color);
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            /* Always on top */
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s ease-out, opacity 0.2s;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-        }
-
-        #gesture-cursor.grabbing {
-            background-color: var(--primary-color);
-            transform: translate(-50%, -50%) scale(0.8);
-            border-color: white;
-        }
-
-        #gesture-cursor.scrolling {
-            border-color: var(--secondary-color);
-            background-color: rgba(255, 217, 61, 0.3);
-        }
-
-        #gesture-cursor.hidden {
-            display: none !important;
-        }
-
-        /* Add data-content visual */
-        #gesture-cursor::after {
-            content: attr(data-content);
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 20px;
-        }
+        transition-duration: 0.01ms !important;
+    }
+}
