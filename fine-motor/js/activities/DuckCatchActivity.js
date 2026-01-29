@@ -11,6 +11,7 @@ class DuckCatchActivity extends BaseActivity {
         this.sceneryMode = true;
         this.brokenItems = [];
         this.waveOffset = 0;
+        this.basketGlow = 0; // 0.0 to 1.0 glow effect
     }
 
     start() {
@@ -106,6 +107,12 @@ class DuckCatchActivity extends BaseActivity {
         this.particles = this.particles.filter(p => p.life > 0);
         this.brokenItems = this.brokenItems.filter(s => now - s.timestamp < 1200);
 
+        // Fade out basket glow
+        if (this.basketGlow > 0) {
+            this.basketGlow -= 0.05;
+            if (this.basketGlow < 0) this.basketGlow = 0;
+        }
+
         this.draw();
     }
 
@@ -125,10 +132,10 @@ class DuckCatchActivity extends BaseActivity {
     handleCatch(item) {
         if (item.type === 'egg') {
             this.score += 10;
-            this.createSplash(item.x, this.basketPos.y, '#FFF');
+            this.basketGlow = 1.0; // Trigger glow for eggs
         } else {
             this.score = Math.max(0, this.score - 5);
-            this.createSplash(item.x, this.basketPos.y, '#795548');
+            this.createSplash(item.x, this.basketPos.y, '#795548'); // Keep splash for waste
         }
     }
 
@@ -321,9 +328,22 @@ class DuckCatchActivity extends BaseActivity {
         this.ctx.save();
         this.ctx.translate(this.basketPos.x, this.basketPos.y);
 
-        // Glow/Shadow
+        // Base Shadow
         this.ctx.shadowBlur = 15;
         this.ctx.shadowColor = 'rgba(0,0,0,0.3)';
+
+        // Catch Glow Effect
+        if (this.basketGlow > 0) {
+            this.ctx.save();
+            this.ctx.shadowBlur = 30 * this.basketGlow;
+            this.ctx.shadowColor = `rgba(255, 215, 0, ${this.basketGlow})`;
+            this.ctx.strokeStyle = `rgba(255, 255, 255, ${this.basketGlow})`;
+            this.ctx.lineWidth = 4;
+            this.ctx.beginPath();
+            this.ctx.roundRect(-this.basketWidth / 2 - 5, -5, this.basketWidth + 10, this.basketHeight + 10, 15);
+            this.ctx.stroke();
+            this.ctx.restore();
+        }
 
         // Basket Body
         const grad = this.ctx.createLinearGradient(0, 0, 0, this.basketHeight);
@@ -344,7 +364,7 @@ class DuckCatchActivity extends BaseActivity {
         }
 
         // Rim
-        this.ctx.fillStyle = '#4E342E';
+        this.ctx.fillStyle = this.basketGlow > 0.5 ? '#FFD700' : '#4E342E';
         this.ctx.beginPath();
         this.ctx.roundRect(-this.basketWidth / 2 - 5, -5, this.basketWidth + 10, 12, 6);
         this.ctx.fill();
