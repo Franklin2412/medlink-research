@@ -2,21 +2,23 @@ class MazeExplorerGame extends BaseActivity {
     constructor(detector, gameCanvas, callbacks = {}) {
         super(detector, gameCanvas);
         this.callbacks = callbacks;
-        this.gridSize = 15;
+        this.gridSize = 13; // Slightly larger cells for kids
         this.grid = [];
         this.cellSize = 0;
         this.startPos = { r: 0, c: 0 };
-        this.goalPos = { r: 14, c: 14 };
+        this.goalPos = { r: 12, c: 12 };
         this.playerPos = { x: 0, y: 0 };
         this.targetPos = { x: 0, y: 0 };
         this.isResetting = false;
+        this.particles = [];
+        this.handPos = { x: 0, y: 0 }; // Actual hand position for the pointer
 
         this.colors = {
-            wall: '#2D3436',
-            path: '#F5F6FA',
-            start: '#00B894',
-            goal: '#D63031',
-            player: '#0984E3'
+            wall: '#6AB04C',    // Vibrant Green
+            path: '#F9CA24',    // Sunny Yellow
+            player: '#EB4D4B',  // Pure Apple Red
+            goal: '#F1C40F',    // Golden Yellow
+            pointer: '#7ed6df'  // Sky Blue
         };
     }
 
@@ -27,7 +29,7 @@ class MazeExplorerGame extends BaseActivity {
     }
 
     generateMaze() {
-        // Initialize grid (all walls)
+        this.gridSize = 13;
         this.grid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(1));
         this.cellSize = this.gameCanvas.width / this.gridSize;
 
@@ -42,7 +44,6 @@ class MazeExplorerGame extends BaseActivity {
 
             if (neighbors.length > 0) {
                 const next = neighbors[Math.floor(Math.random() * neighbors.length)];
-                // Remove wall between current and next
                 this.grid[(current.r + next.r) / 2][(current.c + next.c) / 2] = 0;
                 this.grid[next.r][next.c] = 0;
                 stack.push(next);
@@ -51,7 +52,6 @@ class MazeExplorerGame extends BaseActivity {
             }
         }
 
-        // Ensure start and goal are clear
         this.grid[0][0] = 0;
         this.grid[this.gridSize - 1][this.gridSize - 1] = 0;
         this.startPos = { r: 0, c: 0 };
@@ -94,39 +94,58 @@ class MazeExplorerGame extends BaseActivity {
             const rawX = (1 - indexTip.x) * this.gameCanvas.width;
             const rawY = indexTip.y * this.gameCanvas.height;
 
-            // Smooth movement
-            const alpha = 0.2;
+            this.handPos = { x: rawX, y: rawY };
+
+            // Emit sparkles from hand pos
+            if (Math.random() > 0.6) this.createSparkle(rawX, rawY);
+
+            // Smooth movement for the runner character
+            const alpha = 0.15;
             this.targetPos.x = alpha * rawX + (1 - alpha) * this.targetPos.x;
             this.targetPos.y = alpha * rawY + (1 - alpha) * this.targetPos.y;
 
-            // Check Collision
+            // Simple collision check - prevent entering walls
             if (this.checkWallCollision(this.targetPos.x, this.targetPos.y)) {
                 this.handleCollision();
             } else {
                 this.playerPos = { ...this.targetPos };
             }
 
-            // Check Win
             if (this.checkGoalReached()) {
                 this.levelComplete();
             }
         }
+
+        // Update sparkles
+        this.particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= 0.02;
+        });
+        this.particles = this.particles.filter(p => p.life > 0);
+    }
+
+    createSparkle(x, y) {
+        this.particles.push({
+            x: x,
+            y: y,
+            vx: (Math.random() - 0.5) * 3,
+            vy: (Math.random() - 0.5) * 3,
+            life: 1.0,
+            size: 2 + Math.random() * 4
+        });
     }
 
     checkWallCollision(x, y) {
         const r = Math.floor(y / this.cellSize);
         const c = Math.floor(x / this.cellSize);
-
         if (r < 0 || r >= this.gridSize || c < 0 || c >= this.gridSize) return true;
         return this.grid[r][c] === 1;
     }
 
     handleCollision() {
         this.isResetting = true;
-        // Visual shake or flash could go here
-        setTimeout(() => {
-            this.resetPlayer();
-        }, 500);
+        setTimeout(() => this.resetPlayer(), 400);
     }
 
     checkGoalReached() {
@@ -145,34 +164,111 @@ class MazeExplorerGame extends BaseActivity {
     draw() {
         this.ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
 
-        // Draw Walls and Paths
+        // Draw Walls with Shadow
+        this.ctx.shadowBlur = 4;
+        this.ctx.shadowColor = 'rgba(0,0,0,0.2)';
+        this.ctx.shadowOffsetY = 4;
+
         for (let r = 0; r < this.gridSize; r++) {
             for (let c = 0; c < this.gridSize; c++) {
-                this.ctx.fillStyle = this.grid[r][c] === 1 ? this.colors.wall : this.colors.path;
-                this.ctx.fillRect(c * this.cellSize, r * this.cellSize, this.cellSize + 1, this.cellSize + 1);
+                if (this.grid[r][c] === 1) {
+                    this.ctx.fillStyle = this.colors.wall;
+                    this.ctx.fillRect(c * this.cellSize, r * this.cellSize, this.cellSize, this.cellSize);
+                } else {
+                    this.ctx.fillStyle = this.colors.path;
+                    this.ctx.fillRect(c * this.cellSize, r * this.cellSize, this.cellSize, this.cellSize);
+                }
             }
         }
+        this.ctx.shadowBlur = 0;
+        this.ctx.shadowOffsetY = 0;
 
-        // Draw Goal
-        const goalX = (this.goalPos.c + 0.5) * this.cellSize;
-        const goalY = (this.goalPos.r + 0.5) * this.cellSize;
-        const pulse = 1 + Math.sin(Date.now() * 0.01) * 0.1;
-        this.ctx.fillStyle = this.colors.goal;
+        // Draw Trophy Goal
+        this.drawTrophy((this.goalPos.c + 0.5) * this.cellSize, (this.goalPos.r + 0.5) * this.cellSize);
+
+        // Draw Hero Runner
+        this.drawHero(this.playerPos.x, this.playerPos.y);
+
+        // Draw Hand Pointer & Sparkles
+        this.particles.forEach(p => {
+            this.ctx.fillStyle = `rgba(126, 214, 223, ${p.life})`;
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            this.ctx.fill();
+        });
+
+        const pulse = 1 + Math.sin(Date.now() * 0.01) * 0.2;
+        this.ctx.fillStyle = this.colors.pointer;
         this.ctx.beginPath();
-        this.ctx.arc(goalX, goalY, (this.cellSize * 0.3) * pulse, 0, Math.PI * 2);
+        this.ctx.arc(this.handPos.x, this.handPos.y, 10 * pulse, 0, Math.PI * 2);
         this.ctx.fill();
+        this.ctx.strokeStyle = '#fff';
+        this.ctx.lineWidth = 2;
+        this.ctx.stroke();
+    }
 
-        // Draw Player
+    drawTrophy(x, y) {
+        this.ctx.save();
+        this.ctx.translate(x, y);
+        const scale = (this.cellSize * 0.7) / 40;
+        this.ctx.scale(scale, scale);
+
+        const pulse = 1 + Math.sin(Date.now() * 0.005) * 0.1;
+        this.ctx.scale(pulse, pulse);
+
+        this.ctx.fillStyle = this.colors.goal;
+        // Cup
+        this.ctx.beginPath();
+        this.ctx.moveTo(-15, -15);
+        this.ctx.lineTo(15, -15);
+        this.ctx.lineTo(10, 5);
+        this.ctx.lineTo(-10, 5);
+        this.ctx.closePath();
+        this.ctx.fill();
+        // Handles
+        this.ctx.lineWidth = 3;
+        this.ctx.strokeStyle = this.colors.goal;
+        this.ctx.beginPath(); this.ctx.arc(-15, -5, 8, 0, Math.PI * 2); this.ctx.stroke();
+        this.ctx.beginPath(); this.ctx.arc(15, -5, 8, 0, Math.PI * 2); this.ctx.stroke();
+        // Base
+        this.ctx.fillRect(-12, 5, 24, 5);
+        this.ctx.fillRect(-8, 10, 16, 5);
+
+        this.ctx.restore();
+    }
+
+    drawHero(x, y) {
+        this.ctx.save();
+        this.ctx.translate(x, y);
+        const size = this.cellSize * 0.4;
+
+        // Character Body
         this.ctx.fillStyle = this.colors.player;
         this.ctx.beginPath();
-        this.ctx.arc(this.playerPos.x, this.playerPos.y, this.cellSize * 0.25, 0, Math.PI * 2);
+        this.ctx.arc(0, 0, size, 0, Math.PI * 2);
         this.ctx.fill();
 
-        // Add a small glow to player
-        this.ctx.shadowBlur = 10;
-        this.ctx.shadowColor = this.colors.player;
+        // Eyes
+        this.ctx.fillStyle = '#fff';
+        this.ctx.beginPath();
+        this.ctx.arc(-size * 0.4, -size * 0.2, size * 0.25, 0, Math.PI * 2);
+        this.ctx.arc(size * 0.4, -size * 0.2, size * 0.25, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        this.ctx.fillStyle = '#000';
+        this.ctx.beginPath();
+        this.ctx.arc(-size * 0.4, -size * 0.2, size * 0.1, 0, Math.PI * 2);
+        this.ctx.arc(size * 0.4, -size * 0.2, size * 0.1, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Smile
+        this.ctx.strokeStyle = '#fff';
+        this.ctx.lineWidth = 2;
+        this.ctx.beginPath();
+        this.ctx.arc(0, size * 0.2, size * 0.4, 0.2, Math.PI - 0.2);
         this.ctx.stroke();
-        this.ctx.shadowBlur = 0;
+
+        this.ctx.restore();
     }
 
     getInfoHTML() {
@@ -182,8 +278,8 @@ class MazeExplorerGame extends BaseActivity {
                 <span class="stat-value">${Math.floor(this.score / 100)}</span>
             </div>
             <div class="stat">
-                <span class="stat-label">Time</span>
-                <span class="stat-value">${this.formatTime(this.time)}</span>
+                <span class="stat-label">Hand Signal</span>
+                <span class="stat-value">OK</span>
             </div>
         `;
     }
