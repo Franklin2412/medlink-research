@@ -13,11 +13,12 @@ class FeatherFlyerActivity extends BaseActivity {
         };
         this.obstacles = [];
         this.items = []; // New collectibles
-        this.scrollSpeed = 4;
+        this.scrollSpeed = 2.8; // Slower for toddlers
         this.spawnTimer = 0;
-        this.spawnRate = 120; // Increased distance (2s at 60fps)
+        this.spawnRate = 170; // Adjusted for slower speed
         this.isGameOver = false;
         this.leafWobble = 0;
+        this.lastFrameTime = 0;
 
         // Background elements (clouds)
         this.backgrounds = [];
@@ -62,8 +63,11 @@ class FeatherFlyerActivity extends BaseActivity {
         super.update();
 
         const now = performance.now();
-        const deltaTime = (now - this.lastFrameTime) / 16.67; // Normalized to 60fps
+        let deltaTime = (now - this.lastFrameTime) / 16.67;
         this.lastFrameTime = now;
+
+        // Cap deltaTime to prevent "teleporting" during stutters/pauses
+        deltaTime = Math.min(deltaTime, 2.0);
 
         this.leafWobble += 0.05 * deltaTime;
 
@@ -72,7 +76,9 @@ class FeatherFlyerActivity extends BaseActivity {
         if (hands && hands.length > 0) {
             const indexTip = hands[0].landmarks[8];
             const targetY = indexTip.y * this.gameCanvas.height;
-            const alpha = 0.15; // Smooth factor
+            // Time-corrected lerp: 1 - (1-alpha)^dt
+            const baseAlpha = 0.15;
+            const alpha = 1 - Math.pow(1 - baseAlpha, deltaTime);
             this.bird.y = alpha * targetY + (1 - alpha) * this.bird.y;
         }
 
