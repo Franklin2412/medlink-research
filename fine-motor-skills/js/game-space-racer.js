@@ -59,6 +59,7 @@ class SpaceRacerGame {
     }
 
     stop() {
+        console.log("[SpaceRacer] Stopping game loop");
         this.isRunning = false;
         this.canvas.removeEventListener('mousemove', this.handleInput);
     }

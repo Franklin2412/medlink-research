@@ -70,7 +70,8 @@ const App = {
     },
 
     loadGame(type) {
-        this.resizeCanvas();
+        console.log(`[App] Loading game: ${type}`);
+        // Original UI state changes
         this.ui.banner.classList.add('hidden');
         this.ui.grid.classList.add('hidden');
         this.ui.gameContainer.classList.remove('hidden');
@@ -80,30 +81,56 @@ const App = {
         this.ui.scoreVal.textContent = '0';
         this.ui.levelVal.textContent = '1';
 
-        // Initialize specific game
-        switch (type) {
-            case 'spaceracer':
-                this.ui.gameTitle.textContent = '🚀 Space Racer';
-                if (window.SpaceRacerGame) {
-                    this.currentGame = new window.SpaceRacerGame(this.ui.canvas, this.callbacks);
-                    this.currentGame.start();
-                }
-                break;
-            case 'airtracing':
-                this.ui.gameTitle.textContent = '✨ Air Tracing';
-                if (window.AirTracingGame) {
-                    this.currentGame = new window.AirTracingGame(this.ui.canvas, this.callbacks);
-                    this.currentGame.start();
-                }
-                break;
-            case 'pipeconnector':
-                this.ui.gameTitle.textContent = '🔧 Pipe Maze';
-                if (window.PipeConnectorGame) {
-                    this.currentGame = new window.PipeConnectorGame(this.ui.canvas, this.callbacks);
-                    this.currentGame.start();
-                }
-                break;
-        }
+        // Wait for layout to calculate dimensions
+        requestAnimationFrame(() => {
+            const canvas = this.ui.canvas; // Use cached canvas
+            const width = canvas.offsetWidth;
+            const height = canvas.offsetHeight;
+
+            console.log(`[App] Canvas dimensions: ${width}x${height}`);
+
+            if (width === 0 || height === 0) {
+                console.warn("[App] Canvas dimension is 0! Retrying layout check...");
+                // Fallback attempt
+                setTimeout(() => this.loadGame(type), 100);
+                return;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            // Use existing callbacks structure
+            const callbacks = this.callbacks;
+
+            if (this.currentGame) this.currentGame.stop();
+
+            // Initialize specific game
+            switch (type) {
+                case 'spaceracer': // Changed from 'space-racer' to match original
+                    this.ui.gameTitle.textContent = '🚀 Space Racer';
+                    if (window.SpaceRacerGame) {
+                        this.currentGame = new window.SpaceRacerGame(canvas, callbacks);
+                    }
+                    break;
+                case 'airtracing': // Changed from 'air-tracing' to match original
+                    this.ui.gameTitle.textContent = '✨ Air Tracing';
+                    if (window.AirTracingGame) {
+                        this.currentGame = new window.AirTracingGame(canvas, callbacks);
+                    }
+                    break;
+                case 'pipeconnector': // Changed from 'pipe-connector' to match original
+                    this.ui.gameTitle.textContent = '🔧 Pipe Maze';
+                    if (window.PipeConnectorGame) {
+                        this.currentGame = new window.PipeConnectorGame(canvas, callbacks);
+                    }
+                    break;
+            }
+
+            if (this.currentGame) {
+                console.log(`[App] Starting ${type}`);
+                this.currentGame.start();
+            }
+        });
     },
 
     // Callbacks to update UI from within games
