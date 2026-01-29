@@ -12,10 +12,12 @@ class FeatherFlyerActivity extends BaseActivity {
             emoji: '🐦'
         };
         this.obstacles = [];
+        this.items = []; // New collectibles
         this.scrollSpeed = 4;
         this.spawnTimer = 0;
-        this.spawnRate = 60; // Spawn every 60 frames (~2 seconds)
+        this.spawnRate = 120; // Increased distance (2s at 60fps)
         this.isGameOver = false;
+        this.leafWobble = 0;
 
         // Background elements (clouds)
         this.backgrounds = [];
@@ -34,17 +36,21 @@ class FeatherFlyerActivity extends BaseActivity {
         this.bird.y = this.gameCanvas.height / 2;
         this.bird.emoji = '🐦';
         this.obstacles = [];
+        this.items = [];
         this.isGameOver = false;
         this.score = 0;
+        this.leafWobble = 0;
 
         // Hide overlay
-        document.getElementById('ff-game-over').classList.add('hidden');
+        const overlay = document.getElementById('ff-game-over');
+        if (overlay) overlay.classList.add('hidden');
 
         // Setup restart button listener (if not already set)
         if (!this.restartListenerSet) {
-            document.getElementById('ff-restart-btn').addEventListener('click', () => {
-                this.start();
-            });
+            const restartBtn = document.getElementById('ff-restart-btn');
+            if (restartBtn) {
+                restartBtn.addEventListener('click', () => this.start());
+            }
             this.restartListenerSet = true;
         }
     }
@@ -53,17 +59,15 @@ class FeatherFlyerActivity extends BaseActivity {
         if (this.isGameOver) return;
 
         super.update();
+        this.leafWobble += 0.05;
 
-        // 1. Map bird Y to index finger
+        // 1. Map bird Y to index finger with EMA smoothing
         const hands = this.detector.getDetectedHands();
         if (hands && hands.length > 0) {
             const indexTip = hands[0].landmarks[8];
-            // Normalize and scale to canvas height (MediaPipe coords are 0-1)
             const targetY = indexTip.y * this.gameCanvas.height;
-
-            // Smoothing (Lerp)
-            const lerp = 0.3;
-            this.bird.y += (targetY - this.bird.y) * lerp;
+            const alpha = 0.15; // Stronger smoothing
+            this.bird.y = alpha * targetY + (1 - alpha) * this.bird.y;
         }
 
         // 2. Update Background
@@ -82,27 +86,56 @@ class FeatherFlyerActivity extends BaseActivity {
         this.obstacles.forEach((obs, index) => {
             obs.x -= this.scrollSpeed;
 
-            // Check Collision (Very forgiving for toddlers)
             if (this.checkCollision(obs)) {
                 this.handleCollision();
             }
 
-            // Score point
             if (!obs.passed && obs.x < this.bird.x) {
                 obs.passed = true;
                 this.score++;
                 this.updateUI();
             }
 
-            // Remove off-screen
-            if (obs.x < -100) {
+            if (obs.x < -200) {
                 this.obstacles.splice(index, 1);
             }
         });
+
+        // 4. Update Items (Collectibles)
+        this.items.forEach((item, index) => {
+            item.x -= this.scrollSpeed;
+
+            // Floating animation
+            item.yOffset = Math.sin(Date.now() * 0.005) * 10;
+
+            const dist = Math.hypot(item.x - this.bird.x, (item.y + item.yOffset) - this.bird.y);
+            if (dist < 40) {
+                this.score += 5;
+                this.items.splice(index, 1);
+                this.updateUI();
+                // Add sparkle particles (using base particle system if available)
+                if (this.createSplash) this.createSplash(item.x, item.y, '#FFD700');
+            }
+
+            if (item.x < -100) {
+                this.items.splice(index, 1);
+            }
+        });
+
+        // 5. Update Particles (inherited or local)
+        if (this.particles) {
+            this.particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.1;
+                p.life -= 0.02;
+            });
+            this.particles = this.particles.filter(p => p.life > 0);
+        }
     }
 
     spawnObstacle() {
-        const gapSize = 180;
+        const gapSize = 220; // Increased gap size
         const minGapY = 50;
         const maxGapY = this.gameCanvas.height - gapSize - 50;
         const gapY = Math.random() * (maxGapY - minGapY) + minGapY;
@@ -111,9 +144,19 @@ class FeatherFlyerActivity extends BaseActivity {
             x: this.gameCanvas.width,
             gapY: gapY,
             gapSize: gapSize,
-            width: 60,
+            width: 80,
             passed: false
         });
+
+        // Spawn item occasionally
+        if (Math.random() > 0.6) {
+            this.items.push({
+                x: this.gameCanvas.width + 100,
+                y: gapY + gapSize / 2,
+                emoji: ['🍎', '🍌', '🍒', '🥕', '🥦', '🍓'][Math.floor(Math.random() * 6)],
+                yOffset: 0
+            });
+        }
     }
 
     checkCollision(obs) {
@@ -142,7 +185,10 @@ class FeatherFlyerActivity extends BaseActivity {
         this.ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
 
         // Draw sky background
-        this.ctx.fillStyle = '#E1F5FE';
+        const skyGrad = this.ctx.createLinearGradient(0, 0, 0, this.gameCanvas.height);
+        skyGrad.addColorStop(0, '#B3E5FC');
+        skyGrad.addColorStop(1, '#E1F5FE');
+        this.ctx.fillStyle = skyGrad;
         this.ctx.fillRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
 
         // Draw clouds
@@ -152,29 +198,85 @@ class FeatherFlyerActivity extends BaseActivity {
             this.ctx.fillText('☁️', bg.x, bg.y);
         });
 
-        // Draw obstacles (Pillars/Trees)
-        this.ctx.fillStyle = '#81C784'; // Green trees/pillars
-        this.obstacles.forEach(obs => {
-            // Top pillar
-            this.ctx.fillRect(obs.x, 0, obs.width, obs.gapY);
-            // Bottom pillar
-            this.ctx.fillRect(obs.x, obs.gapY + obs.gapSize, obs.width, this.gameCanvas.height);
+        // Draw obstacles (Trees)
+        this.obstacles.forEach(obs => this.drawTree(obs));
 
-            // Pillar edges
-            this.ctx.strokeStyle = '#2E7D32';
-            this.ctx.lineWidth = 3;
-            this.ctx.strokeRect(obs.x, 0, obs.width, obs.gapY);
-            this.ctx.strokeRect(obs.x, obs.gapY + obs.gapSize, obs.width, this.gameCanvas.height);
+        // Draw Items
+        this.ctx.font = '35px Arial';
+        this.items.forEach(item => {
+            this.ctx.fillText(item.emoji, item.x, item.y + item.yOffset);
         });
 
         // Draw bird
         this.ctx.font = '50px Arial';
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
-        this.ctx.shadowBlur = 10;
-        this.ctx.shadowColor = 'rgba(0,0,0,0.2)';
+        this.ctx.save();
+        this.ctx.shadowBlur = 15;
+        this.ctx.shadowColor = 'rgba(0,0,0,0.3)';
         this.ctx.fillText(this.bird.emoji, this.bird.x, this.bird.y);
-        this.ctx.shadowBlur = 0;
+        this.ctx.restore();
+
+        // Draw Splash Particles
+        if (this.particles) {
+            this.particles.forEach(p => {
+                this.ctx.globalAlpha = p.life;
+                this.ctx.fillStyle = p.color;
+                this.ctx.beginPath();
+                this.ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                this.ctx.fill();
+            });
+            this.ctx.globalAlpha = 1.0;
+        }
+    }
+
+    drawTree(obs) {
+        this.ctx.save();
+
+        // 1. Trunk
+        this.ctx.fillStyle = '#795548';
+        // Top trunk
+        this.ctx.fillRect(obs.x + 20, 0, obs.width - 40, obs.gapY);
+        // Bottom trunk
+        this.ctx.fillRect(obs.x + 20, obs.gapY + obs.gapSize, obs.width - 40, this.gameCanvas.height);
+
+        // 2. Leaf Clusters (Animated)
+        const wobble = Math.sin(this.leafWobble) * 5;
+        this.ctx.fillStyle = '#4CAF50';
+
+        // Top Cluster
+        this.drawLeafCluster(obs.x + obs.width / 2 + wobble, obs.gapY - 10, obs.width + 20);
+        // Bottom Cluster
+        this.drawLeafCluster(obs.x + obs.width / 2 - wobble, obs.gapY + obs.gapSize + 10, obs.width + 20);
+
+        this.ctx.restore();
+    }
+
+    drawLeafCluster(x, y, width) {
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, width / 2, 0, Math.PI * 2);
+        this.ctx.arc(x - 20, y, width / 3, 0, Math.PI * 2);
+        this.ctx.arc(x + 20, y, width / 3, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Highlights
+        this.ctx.fillStyle = '#81C784';
+        this.ctx.beginPath();
+        this.ctx.arc(x - 10, y - 10, width / 5, 0, Math.PI * 2);
+        this.ctx.fill();
+    }
+
+    createSplash(x, y, color) {
+        if (!this.particles) this.particles = [];
+        for (let i = 0; i < 6; i++) {
+            this.particles.push({
+                x, y,
+                vx: (Math.random() - 0.5) * 6,
+                vy: (Math.random() - 0.5) * 6,
+                color,
+                life: 1.0
+            });
+        }
     }
 
     getInfoHTML() {
