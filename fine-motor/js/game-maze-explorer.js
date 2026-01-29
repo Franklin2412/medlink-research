@@ -2,7 +2,7 @@ class MazeExplorerGame extends BaseActivity {
     constructor(detector, gameCanvas, callbacks = {}) {
         super(detector, gameCanvas);
         this.callbacks = callbacks;
-        this.gridSize = 11;
+        this.gridSize = 11; // 11 is stable for the current maze algorithm
         this.grid = [];
         this.cellSize = 0;
         this.startPos = { r: 0, c: 0 };
@@ -17,7 +17,9 @@ class MazeExplorerGame extends BaseActivity {
         this.colors = {
             wall: '#6AB04C',    // Vibrant Green
             path: '#F9CA24',    // Sunny Yellow
-            pointer: '#7ed6df'  // Sky Blue
+            pointer: '#7ed6df', // Sky Blue
+            trophy: '#FFD700',  // Gold
+            trophyDark: '#B8860B' // Dark Gold
         };
     }
 
@@ -28,6 +30,7 @@ class MazeExplorerGame extends BaseActivity {
     }
 
     generateMaze() {
+        // Recursive Backtracker works best on odd grid sizes (2N + 1)
         this.gridSize = 11;
         this.grid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(1));
         this.cellSize = this.gameCanvas.width / this.gridSize;
@@ -102,12 +105,12 @@ class MazeExplorerGame extends BaseActivity {
             this.targetPos.x = alpha * rawX + (1 - alpha) * this.targetPos.x;
             this.targetPos.y = alpha * rawY + (1 - alpha) * this.targetPos.y;
 
-            // Determine orientation
-            if (Math.abs(this.targetPos.x - this.playerPos.x) > 0.5) {
+            // Flip detection
+            if (Math.abs(this.targetPos.x - this.playerPos.x) > 1) {
                 this.facingRight = (this.targetPos.x > this.playerPos.x);
             }
 
-            // Collision check
+            // Collision
             if (this.checkWallCollision(this.targetPos.x, this.targetPos.y)) {
                 this.handleCollision();
             } else {
@@ -139,7 +142,7 @@ class MazeExplorerGame extends BaseActivity {
     }
 
     checkWallCollision(x, y) {
-        const buffer = this.cellSize * 0.18; // Slightly more strict for narrower paths
+        const buffer = this.cellSize * 0.2;
         const pts = [
             { x: x - buffer, y: y - buffer },
             { x: x + buffer, y: y - buffer },
@@ -184,45 +187,21 @@ class MazeExplorerGame extends BaseActivity {
             }
         }
 
-        // --- Draw Trophy Goal ---
-        const goalX = (this.goalPos.c + 0.5) * this.cellSize;
-        const goalY = (this.goalPos.r + 0.5) * this.cellSize;
-
-        // 1. Draw a pulsing glow behind the trophy to ensure visibility
-        const pulse = 1 + Math.sin(Date.now() * 0.005) * 0.2;
-        this.ctx.save();
-        this.ctx.translate(goalX, goalY);
-        this.ctx.scale(pulse, pulse);
-
-        const grad = this.ctx.createRadialGradient(0, 0, 5, 0, 0, this.cellSize * 0.5);
-        grad.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
-        grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        this.ctx.fillStyle = grad;
-        this.ctx.beginPath();
-        this.ctx.arc(0, 0, this.cellSize * 0.5, 0, Math.PI * 2);
-        this.ctx.fill();
-
-        // 2. Render Trophy Emoji with robust font fallback
-        this.ctx.fillStyle = '#000'; // Fallback color
-        this.ctx.font = `${Math.floor(this.cellSize * 0.8)}px 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', Arial`;
-        this.ctx.textAlign = 'center';
-        this.ctx.textBaseline = 'middle';
-        this.ctx.fillText('🏆', 0, 0);
-        this.ctx.restore();
+        // --- Draw Vector Trophy (Fail-safe) ---
+        this.drawVectorTrophy((this.goalPos.c + 0.5) * this.cellSize, (this.goalPos.r + 0.5) * this.cellSize);
 
         // --- Draw Hero Runner ---
         this.ctx.save();
         this.ctx.translate(this.playerPos.x, this.playerPos.y);
 
-        // Emoji 🏃 usually faces LEFT in most sets. 
-        // If user says "running backward" while moving right, it means the default is face-right or face-left and my flip is opposite.
-        // Let's assume default is RIGHT for his system (as seen in screenshot) or LEFT and adjust.
-        // Based on "running backward" while facing right in screenshot, let's NOT flip when facingRight is true.
+        // Screenshot shows 🏃 faces RIGHT by default. So flip if moving LEFT (not facingRight).
         if (!this.facingRight) {
             this.ctx.scale(-1, 1);
         }
 
-        this.ctx.font = `${Math.floor(this.cellSize * 0.8)}px 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', Arial`;
+        this.ctx.font = `${Math.floor(this.cellSize * 0.85)}px Arial`;
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
         this.ctx.fillText('🏃', 0, 0);
         this.ctx.restore();
 
@@ -244,6 +223,59 @@ class MazeExplorerGame extends BaseActivity {
         this.ctx.stroke();
     }
 
+    drawVectorTrophy(x, y) {
+        this.ctx.save();
+        this.ctx.translate(x, y);
+        const scale = this.cellSize * 0.8 / 40;
+        this.ctx.scale(scale, scale);
+
+        // Pulsing background glow
+        const pulse = 1 + Math.sin(Date.now() * 0.005) * 0.1;
+        const grad = this.ctx.createRadialGradient(0, 0, 0, 0, 0, 30 * pulse);
+        grad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+        grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        this.ctx.fillStyle = grad;
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, 30 * pulse, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // DRAW TROPHY SHAPE
+        this.ctx.fillStyle = this.colors.trophy;
+        this.ctx.strokeStyle = this.colors.trophyDark;
+        this.ctx.lineWidth = 2;
+
+        // Cup body
+        this.ctx.beginPath();
+        this.ctx.moveTo(-12, -15);
+        this.ctx.lineTo(12, -15);
+        this.ctx.lineTo(8, 5);
+        this.ctx.lineTo(-8, 5);
+        this.ctx.closePath();
+        this.ctx.fill();
+        this.ctx.stroke();
+
+        // Handles
+        this.ctx.beginPath();
+        this.ctx.arc(-13, -7, 6, 0.5 * Math.PI, 1.5 * Math.PI);
+        this.ctx.stroke();
+        this.ctx.beginPath();
+        this.ctx.arc(13, -7, 6, 1.5 * Math.PI, 0.5 * Math.PI);
+        this.ctx.stroke();
+
+        // Stem
+        this.ctx.fillRect(-3, 5, 6, 10);
+        // Base
+        this.ctx.fillRect(-10, 12, 20, 4);
+
+        // Also draw the emoji on top just in case it works for some
+        this.ctx.font = "20px Arial";
+        this.ctx.textAlign = "center";
+        this.ctx.textBaseline = "middle";
+        this.ctx.fillText("🏆", 0, -3);
+
+        this.ctx.restore();
+    }
+
     getInfoHTML() {
         return `
             <div class="stat">
@@ -251,8 +283,8 @@ class MazeExplorerGame extends BaseActivity {
                 <span class="stat-value">${Math.floor(this.score / 100)}</span>
             </div>
             <div class="stat">
-                <span class="stat-label">Precision</span>
-                <span class="stat-value">Good</span>
+                <span class="stat-label">Grid</span>
+                <span class="stat-value">11 x 11</span>
             </div>
         `;
     }
