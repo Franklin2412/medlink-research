@@ -33,9 +33,11 @@ const App = {
     },
 
     bindEvents() {
-        this.ui.enableBtn.addEventListener('click', () => {
-            if (window.gestureEngine) window.gestureEngine.enable();
-        });
+        if (this.ui.enableBtn) {
+            this.ui.enableBtn.addEventListener('click', () => {
+                if (window.gestureEngine) window.gestureEngine.enable();
+            });
+        }
 
         window.loadGame = (type) => this.loadGame(type);
         window.closeGame = () => this.closeGame();
