@@ -5,12 +5,32 @@ class AirTracingGame extends BaseActivity {
         this.isRunning = false;
 
         this.shapes = {
+            // Basic Geometric
             'Square': [{ x: 0.3, y: 0.3 }, { x: 0.7, y: 0.3 }, { x: 0.7, y: 0.7 }, { x: 0.3, y: 0.7 }, { x: 0.3, y: 0.3 }],
             'Triangle': [{ x: 0.5, y: 0.2 }, { x: 0.8, y: 0.8 }, { x: 0.2, y: 0.8 }, { x: 0.5, y: 0.2 }],
             'Star': [
                 { x: 0.5, y: 0.1 }, { x: 0.6, y: 0.4 }, { x: 0.9, y: 0.4 }, { x: 0.7, y: 0.6 },
                 { x: 0.8, y: 0.9 }, { x: 0.5, y: 0.75 }, { x: 0.2, y: 0.9 }, { x: 0.3, y: 0.6 },
                 { x: 0.1, y: 0.4 }, { x: 0.4, y: 0.4 }, { x: 0.5, y: 0.1 }
+            ],
+            // Numbers
+            'Number 1': [{ x: 0.4, y: 0.2 }, { x: 0.5, y: 0.1 }, { x: 0.5, y: 0.9 }],
+            'Number 2': [{ x: 0.3, y: 0.3 }, { x: 0.5, y: 0.1 }, { x: 0.7, y: 0.3 }, { x: 0.3, y: 0.8 }, { x: 0.7, y: 0.8 }],
+            'Number 3': [{ x: 0.3, y: 0.2 }, { x: 0.7, y: 0.2 }, { x: 0.5, y: 0.5 }, { x: 0.7, y: 0.8 }, { x: 0.3, y: 0.8 }],
+            'Number 7': [{ x: 0.3, y: 0.2 }, { x: 0.7, y: 0.2 }, { x: 0.4, y: 0.9 }],
+            // Letters
+            'Letter A': [{ x: 0.2, y: 0.9 }, { x: 0.5, y: 0.1 }, { x: 0.8, y: 0.9 }, { x: 0.5, y: 0.5 }, { x: 0.2, y: 0.5 }], // Cross bar hack for simplicity
+            'Letter L': [{ x: 0.3, y: 0.1 }, { x: 0.3, y: 0.8 }, { x: 0.7, y: 0.8 }],
+            'Letter V': [{ x: 0.2, y: 0.2 }, { x: 0.5, y: 0.9 }, { x: 0.8, y: 0.2 }],
+            // Cartoon/Symbols
+            'Heart': [
+                { x: 0.5, y: 0.4 }, { x: 0.6, y: 0.2 }, { x: 0.8, y: 0.3 }, { x: 0.5, y: 0.9 },
+                { x: 0.2, y: 0.3 }, { x: 0.4, y: 0.2 }, { x: 0.5, y: 0.4 }
+            ],
+            'Diamond': [{ x: 0.5, y: 0.1 }, { x: 0.8, y: 0.5 }, { x: 0.5, y: 0.9 }, { x: 0.2, y: 0.5 }, { x: 0.5, y: 0.1 }],
+            'Cloud': [
+                { x: 0.2, y: 0.6 }, { x: 0.3, y: 0.4 }, { x: 0.5, y: 0.3 }, { x: 0.7, y: 0.4 },
+                { x: 0.8, y: 0.6 }, { x: 0.7, y: 0.8 }, { x: 0.3, y: 0.8 }, { x: 0.2, y: 0.6 }
             ]
         };
 
@@ -19,7 +39,7 @@ class AirTracingGame extends BaseActivity {
         this.userPath = [];
         this.nextPointIndex = 1;
         this.cursor = { x: canvas.width / 2, y: canvas.height / 2 };
-        this.tolerance = 70; // High tolerance for accessibility
+        this.tolerance = 85; // Increased even more for better toddler experience
 
         this.update = this.update.bind(this);
     }
@@ -27,7 +47,7 @@ class AirTracingGame extends BaseActivity {
     start() {
         super.start();
         this.isRunning = true;
-        this.loadShape('Square');
+        this.loadRandomShape(); // Start with a random shape
         if (this.callbacks.onScore) this.callbacks.onScore(0);
         if (this.callbacks.onLevel) this.callbacks.onLevel(1);
     }
@@ -36,6 +56,16 @@ class AirTracingGame extends BaseActivity {
         this.isRunning = false;
         super.stop();
         this.saveStats('airtracing', { shape: this.currentShapeName });
+    }
+
+    loadRandomShape() {
+        const keys = Object.keys(this.shapes);
+        let next;
+        do {
+            next = keys[Math.floor(Math.random() * keys.length)];
+        } while (next === this.currentShapeName && keys.length > 1);
+
+        this.loadShape(next);
     }
 
     loadShape(name) {
@@ -55,14 +85,14 @@ class AirTracingGame extends BaseActivity {
 
         super.update();
 
-        // 1. Hand Tracking (Direct)
+        // 1. Hand Tracking (Slower, smoother response)
         const hands = this.detector.getDetectedHands();
         if (hands && hands.length > 0) {
             const indexTip = hands[0].landmarks[8];
-            const targetX = (1 - indexTip.x) * this.gameCanvas.width; // Mirrored
+            const targetX = (1 - indexTip.x) * this.gameCanvas.width;
             const targetY = indexTip.y * this.gameCanvas.height;
 
-            const alpha = 0.2; // Smoothing
+            const alpha = 0.12; // Slower response for stability
             this.cursor.x = alpha * targetX + (1 - alpha) * this.cursor.x;
             this.cursor.y = alpha * targetY + (1 - alpha) * this.cursor.y;
         }
@@ -70,10 +100,10 @@ class AirTracingGame extends BaseActivity {
         this.ctx.fillStyle = "#0B0E14"; // Deep space black
         this.ctx.fillRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
 
-        // 1. Draw Target Path (Dotted Line)
-        this.ctx.strokeStyle = 'rgba(224, 224, 224, 0.5)';
-        this.ctx.lineWidth = 15;
-        this.ctx.setLineDash([10, 10]);
+        // 1. Draw Target Path (Charming Dotted Line)
+        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        this.ctx.lineWidth = 20;
+        this.ctx.setLineDash([15, 15]);
         this.ctx.lineCap = 'round';
         this.ctx.lineJoin = 'round';
 
@@ -104,9 +134,14 @@ class AirTracingGame extends BaseActivity {
             }
         }
 
-        // 3. Draw User Path (Gold)
-        this.ctx.strokeStyle = '#FFD93D';
-        this.ctx.lineWidth = 10;
+        // 3. Draw User Path (Charming Glowing Neon)
+        this.ctx.save();
+        this.ctx.shadowBlur = 15;
+        this.ctx.shadowColor = '#FF07A3'; // Pink Glow
+        this.ctx.strokeStyle = '#FF6B9D';
+        this.ctx.lineWidth = 12;
+        this.ctx.lineCap = 'round';
+        this.ctx.lineJoin = 'round';
         this.ctx.beginPath();
         if (this.userPath.length > 0) {
             this.ctx.moveTo(this.userPath[0].x, this.userPath[0].y);
@@ -116,27 +151,62 @@ class AirTracingGame extends BaseActivity {
             this.ctx.lineTo(this.cursor.x, this.cursor.y);
         }
         this.ctx.stroke();
+        this.ctx.restore();
 
-        // 4. Draw Guide Dot (Next Target)
+        // 4. Draw Guide Dot (Charming Pulsing Star)
         if (this.nextPointIndex < this.pathPoints.length) {
             const guide = this.pathPoints[this.nextPointIndex];
-            this.ctx.fillStyle = '#4ECDC4';
-            this.ctx.beginPath();
-            this.ctx.arc(guide.x, guide.y, 20, 0, Math.PI * 2);
-            this.ctx.fill();
-
             const pulse = (Date.now() % 1000) / 1000;
+            const size = 20 + Math.sin(pulse * Math.PI * 2) * 5;
+
+            // Draw a star shape
+            this.drawStar(guide.x, guide.y, 5, size, size / 2, '#4ECDC4');
+
+            // Outer Ring
             this.ctx.strokeStyle = `rgba(78, 205, 196, ${1 - pulse})`;
             this.ctx.lineWidth = 4;
             this.ctx.beginPath();
-            this.ctx.arc(guide.x, guide.y, 20 + pulse * 25, 0, Math.PI * 2);
+            this.ctx.arc(guide.x, guide.y, 25 + pulse * 30, 0, Math.PI * 2);
             this.ctx.stroke();
         }
 
-        // 5. Draw Cursor
-        this.ctx.fillStyle = '#FF6B9D';
+        // 5. Draw Cursor (Charming Sparkling Pencil)
+        this.ctx.fillStyle = '#FFD93D';
         this.ctx.beginPath();
-        this.ctx.arc(this.cursor.x, this.cursor.y, 12, 0, Math.PI * 2);
+        this.ctx.arc(this.cursor.x, this.cursor.y, 14, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Add sparkle
+        if (Math.random() > 0.7) {
+            this.ctx.fillStyle = '#FFF';
+            this.ctx.beginPath();
+            this.ctx.arc(this.cursor.x + (Math.random() - 0.5) * 30, this.cursor.y + (Math.random() - 0.5) * 30, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+    }
+
+    drawStar(cx, cy, spikes, outerRadius, innerRadius, color) {
+        let rot = Math.PI / 2 * 3;
+        let x = cx;
+        let y = cy;
+        let step = Math.PI / spikes;
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(cx, cy - outerRadius);
+        for (let i = 0; i < spikes; i++) {
+            x = cx + Math.cos(rot) * outerRadius;
+            y = cy + Math.sin(rot) * outerRadius;
+            this.ctx.lineTo(x, y);
+            rot += step;
+
+            x = cx + Math.cos(rot) * innerRadius;
+            y = cy + Math.sin(rot) * innerRadius;
+            this.ctx.lineTo(x, y);
+            rot += step;
+        }
+        this.ctx.lineTo(cx, cy - outerRadius);
+        this.ctx.closePath();
+        this.ctx.fillStyle = color;
         this.ctx.fill();
     }
 
@@ -144,16 +214,17 @@ class AirTracingGame extends BaseActivity {
         this.score += 100;
         if (this.callbacks.onScore) this.callbacks.onScore(this.score);
 
+        // Visual feedback
+        this.ctx.font = 'bold 40px Poppins';
+        this.ctx.fillStyle = '#FFE66D';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText("AMAZING!", this.gameCanvas.width / 2, this.gameCanvas.height / 2);
+
         setTimeout(() => {
-            if (this.currentShapeName === 'Square') this.loadShape('Triangle');
-            else if (this.currentShapeName === 'Triangle') this.loadShape('Star');
-            else {
-                if (this.callbacks.onGameOver) {
-                    this.callbacks.onGameOver("You traced all the shapes! Amazing!", "Master Artist");
-                }
-                this.stop();
+            if (this.isRunning) {
+                this.loadRandomShape();
             }
-        }, 1000);
+        }, 1200);
     }
 }
 
