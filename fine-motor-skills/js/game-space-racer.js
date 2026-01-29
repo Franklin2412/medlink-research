@@ -27,6 +27,7 @@ class SpaceRacerGame {
     }
 
     start() {
+        console.log("[SpaceRacer] Starting game loop");
         this.isRunning = true;
         this.score = 0;
         this.level = 1;
