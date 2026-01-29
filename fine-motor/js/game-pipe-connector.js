@@ -41,13 +41,22 @@ class PipeConnectorGame extends BaseActivity {
         if (lvl === 1) {
             this.currentLevelPoints = [{ x: 100, y: safeH / 2 }, { x: safeW - 100, y: safeH / 2 }];
         } else if (lvl === 2) {
-            this.currentLevelPoints = [{ x: 100, y: safeH / 4 }, { x: safeW / 2, y: safeH / 4 }, { x: safeW / 2, y: safeH * 0.75 }, { x: safeW - 100, y: safeH * 0.75 }];
+            this.currentLevelPoints = [
+                { x: 100, y: safeH / 4 },
+                { x: safeW / 2, y: safeH / 4 },
+                { x: safeW / 2, y: safeH * 0.75 },
+                { x: safeW - 100, y: safeH * 0.75 }
+            ];
         } else {
+            // Procedural Infinite Generation
             this.currentLevelPoints = [{ x: 100, y: safeH / 2 }];
-            for (let i = 0; i < 2; i++) {
+
+            // Complexity grows every 4 levels
+            const segments = Math.min(6, Math.floor(lvl / 4) + 2);
+            for (let i = 0; i < segments; i++) {
                 this.currentLevelPoints.push({
-                    x: (safeW / 3) * (i + 1),
-                    y: Math.random() * (safeH - 200) + 100
+                    x: (safeW / (segments + 1)) * (i + 1),
+                    y: 150 + Math.random() * (safeH - 300)
                 });
             }
             this.currentLevelPoints.push({ x: safeW - 100, y: safeH / 2 });
@@ -56,8 +65,8 @@ class PipeConnectorGame extends BaseActivity {
         this.startPoint = this.currentLevelPoints[0];
         this.endPoint = this.currentLevelPoints[this.currentLevelPoints.length - 1];
 
-        // Tolerant radius scaling
-        this.pathRadius = Math.max(35, 60 - (lvl * 3));
+        // Tolerant radius scaling, floor at 30px
+        this.pathRadius = Math.max(30, 60 - (Math.floor(lvl / 2) * 2));
         this.resetTrial();
     }
 
@@ -86,12 +95,14 @@ class PipeConnectorGame extends BaseActivity {
         this.ctx.fillStyle = "#0B0E14"; // Deep space black
         this.ctx.fillRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
 
-        // 1. Draw Pipe
+        // 1. Draw Pipe Layout (Charming Metallic Style)
+        this.ctx.save();
         this.ctx.lineCap = 'round';
         this.ctx.lineJoin = 'round';
-        this.ctx.lineWidth = this.pathRadius * 2;
-        this.ctx.strokeStyle = '#2D3436';
 
+        // Outer Glow/Border
+        this.ctx.lineWidth = this.pathRadius * 2 + 10;
+        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
         this.ctx.beginPath();
         this.ctx.moveTo(this.currentLevelPoints[0].x, this.currentLevelPoints[0].y);
         for (let i = 1; i < this.currentLevelPoints.length; i++) {
@@ -99,20 +110,47 @@ class PipeConnectorGame extends BaseActivity {
         }
         this.ctx.stroke();
 
-        // 2. Draw Start & End Zones
-        this.ctx.fillStyle = '#4ECDC4';
+        // Main Pipe Body (Gradient)
+        this.ctx.lineWidth = this.pathRadius * 2;
+        this.ctx.strokeStyle = '#2D3436';
         this.ctx.beginPath();
-        this.ctx.arc(this.startPoint.x, this.startPoint.y, this.pathRadius * 0.8, 0, Math.PI * 2);
+        this.ctx.moveTo(this.currentLevelPoints[0].x, this.currentLevelPoints[0].y);
+        for (let i = 1; i < this.currentLevelPoints.length; i++) {
+            this.ctx.lineTo(this.currentLevelPoints[i].x, this.currentLevelPoints[i].y);
+        }
+        this.ctx.stroke();
+        this.ctx.restore();
+
+        // 2. Draw Start & End Zones (Charming Pulsing Style)
+        const time = Date.now() / 1000;
+
+        // Start Zone
+        this.ctx.fillStyle = '#4ECDC4';
+        this.ctx.shadowBlur = 15;
+        this.ctx.shadowColor = '#4ECDC4';
+        this.ctx.beginPath();
+        this.ctx.arc(this.startPoint.x, this.startPoint.y, this.pathRadius * 0.85, 0, Math.PI * 2);
         this.ctx.fill();
+        this.ctx.shadowBlur = 0;
+
         this.ctx.fillStyle = '#fff';
-        this.ctx.font = 'bold 20px Poppins';
+        this.ctx.font = 'bold 18px Poppins';
         this.ctx.textAlign = 'center';
         this.ctx.fillText("START", this.startPoint.x, this.startPoint.y + 7);
 
+        // Goal Zone (Fast pulse if painting and near)
+        const dEnd = Math.hypot(this.cursor.x - this.endPoint.x, this.cursor.y - this.endPoint.y);
+        const nearGoal = this.isPainting && dEnd < this.pathRadius * 2;
+        const pulse = Math.sin(time * (nearGoal ? 10 : 3)) * 5;
+
         this.ctx.fillStyle = '#FF6B6B';
+        this.ctx.shadowBlur = 20 + pulse;
+        this.ctx.shadowColor = '#FF6B6B';
         this.ctx.beginPath();
-        this.ctx.arc(this.endPoint.x, this.endPoint.y, this.pathRadius * 0.8, 0, Math.PI * 2);
+        this.ctx.arc(this.endPoint.x, this.endPoint.y, (this.pathRadius * 0.85) + pulse, 0, Math.PI * 2);
         this.ctx.fill();
+        this.ctx.shadowBlur = 0;
+
         this.ctx.fillStyle = '#fff';
         this.ctx.fillText("GOAL", this.endPoint.x, this.endPoint.y + 7);
 
@@ -150,11 +188,22 @@ class PipeConnectorGame extends BaseActivity {
             this.ctx.stroke();
         }
 
-        // 5. Draw Cursor (Wand/Brush)
-        this.ctx.beginPath();
+        // 5. Draw Cursor (Beautiful Magical Brush)
+        this.ctx.save();
+        this.ctx.shadowBlur = 15;
+        this.ctx.shadowColor = this.isPainting ? '#FFE66D' : '#fff';
         this.ctx.fillStyle = this.isPainting ? '#FFE66D' : '#fff';
-        this.ctx.arc(this.cursor.x, this.cursor.y, 10, 0, Math.PI * 2);
+        this.ctx.beginPath();
+        this.ctx.arc(this.cursor.x, this.cursor.y, 14, 0, Math.PI * 2);
         this.ctx.fill();
+
+        if (this.isPainting && Math.random() > 0.5) {
+            this.ctx.fillStyle = `rgba(255, 230, 109, ${Math.random()})`;
+            this.ctx.beginPath();
+            this.ctx.arc(this.cursor.x + (Math.random() - 0.5) * 30, this.cursor.y + (Math.random() - 0.5) * 30, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.restore();
     }
 
     checkSafety(x, y) {
@@ -207,14 +256,8 @@ class PipeConnectorGame extends BaseActivity {
         this.level++;
         if (this.callbacks.onLevel) this.callbacks.onLevel(this.level);
 
-        if (this.level > 3) {
-            if (this.callbacks.onGameOver) {
-                this.callbacks.onGameOver("You navigated the maze! Steady hands!", "Maze Master");
-            }
-            this.stop();
-        } else {
-            this.loadLevel(this.level);
-        }
+        // Infinite progression
+        this.loadLevel(this.level);
     }
 }
 
