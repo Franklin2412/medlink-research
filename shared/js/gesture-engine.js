@@ -282,6 +282,9 @@ class GestureEngine {
         this.cursorElement.style.top = `${finalY}px`;
         this.lastX = finalX;
         this.lastY = finalY;
+
+        // Simulate mousemove for games to track the virtual cursor
+        this.simulateMouseEvent('mousemove', finalX, finalY);
     }
 
     detectGestures(landmarks, x, y) {

@@ -39,6 +39,15 @@ const App = {
             });
         }
 
+        // Hide magic wand when mouse/gesture enters the game area
+        const canvas = document.getElementById('game-canvas');
+        canvas.addEventListener('mouseenter', () => {
+            document.body.classList.add('wand-hidden-for-game');
+        });
+        canvas.addEventListener('mouseleave', () => {
+            document.body.classList.remove('wand-hidden-for-game');
+        });
+
         window.loadGame = (type) => this.loadGame(type);
         window.closeGame = () => this.closeGame();
         window.restartGame = () => {
