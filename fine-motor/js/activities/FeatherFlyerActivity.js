@@ -2,7 +2,7 @@
  * ACTIVITY 6: Feather Flyer
  * Flappy Bird style game where the bird follows the index finger vertically.
  */
-class FeatherFlyerActivity extends BaseActivity {
+class FeatherFlierActivity extends BaseActivity {
     constructor(detector, gameCanvas) {
         super(detector, gameCanvas);
         this.bird = {
@@ -199,4 +199,4 @@ class FeatherFlyerActivity extends BaseActivity {
 }
 
 // Export for global scope
-window.FeatherFlyerActivity = FeatherFlyerActivity;
+window.FeatherFlierActivity = FeatherFlierActivity;
