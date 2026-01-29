@@ -138,6 +138,12 @@ const App = {
             if (this.currentGame) {
                 console.log(`[App] Starting ${type}`);
                 this.currentGame.start();
+
+                // Automatically ensure camera is running for the game
+                if (window.gestureEngine && !window.gestureEngine.isEnabled) {
+                    console.log("[App] Auto-starting camera for gameplay");
+                    window.gestureEngine.enable();
+                }
             }
         });
     },

@@ -98,45 +98,39 @@ class SpaceRacerGame {
         });
         this.ctx.globalAlpha = 1.0;
 
-        // 2. Spawn Obstacles
-        if (now - this.lastObstacleTime > this.obstacleInterval) {
-            this.spawnObstacle();
-            this.lastObstacleTime = now;
-        }
+        // 2. Spawn Asteroids (Funny Obstacles)
+        this.spawnAsteroid(); // Call every frame, it has its own internal random check
 
-        // 3. Update & Draw Obstacles
-        this.obstacles.forEach((obs, index) => {
-            obs.y += this.speed * dt;
+        // 3. Update & Draw Asteroids
+        this.ctx.font = '30px serif';
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
 
-            // Draw Asteroid
-            this.ctx.fillStyle = "#8d99ae"; // Grey
-            this.ctx.beginPath();
-            this.ctx.arc(obs.x, obs.y, obs.size, 0, Math.PI * 2);
-            this.ctx.fill();
+        for (let i = this.asteroids.length - 1; i >= 0; i--) {
+            const a = this.asteroids[i];
+            a.y += this.speed * dt;
 
-            // Crater detail
-            this.ctx.fillStyle = "#6c757d";
-            this.ctx.beginPath();
-            this.ctx.arc(obs.x - 5, obs.y - 5, obs.size / 3, 0, Math.PI * 2);
-            this.ctx.fill();
+            // Draw Emoji
+            this.ctx.fillText(a.label, a.x, a.y);
 
-            // Collision Detection (Circle vs Rect approximation)
-            const dx = Math.abs(obs.x - this.player.x);
-            const dy = Math.abs(obs.y - this.player.y);
+            // Collision Check (Circle vs Rect approximation)
+            const dx = a.x - this.player.x;
+            const dy = a.y - this.player.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (dx < (obs.size + this.player.width / 2 - 10) &&
-                dy < (obs.size + this.player.height / 2 - 10)) {
+            if (distance < a.radius + 20) { // 20 is approx half player width/height
                 this.gameOver();
+                return;
             }
 
-            // Remove if off screen
-            if (obs.y > this.canvas.height + 50) {
-                this.obstacles.splice(index, 1);
-                this.score += 10;
+            // Cleanup
+            if (a.y > this.canvas.height + 50) {
+                this.asteroids.splice(i, 1);
+                this.score += 1; // Score per asteroid
                 this.callbacks.onScore(this.score);
                 this.checkLevel();
             }
-        });
+        }
 
         // 4. Draw Player (Rocket)
         this.drawRocket(this.player.x, this.player.y);
