@@ -40,6 +40,7 @@ class FeatherFlyerActivity extends BaseActivity {
         this.isGameOver = false;
         this.score = 0;
         this.leafWobble = 0;
+        this.lastFrameTime = performance.now();
 
         // Hide overlay
         const overlay = document.getElementById('ff-game-over');
@@ -59,32 +60,39 @@ class FeatherFlyerActivity extends BaseActivity {
         if (this.isGameOver) return;
 
         super.update();
-        this.leafWobble += 0.05;
+
+        const now = performance.now();
+        const deltaTime = (now - this.lastFrameTime) / 16.67; // Normalized to 60fps
+        this.lastFrameTime = now;
+
+        this.leafWobble += 0.05 * deltaTime;
 
         // 1. Map bird Y to index finger with EMA smoothing
         const hands = this.detector.getDetectedHands();
         if (hands && hands.length > 0) {
             const indexTip = hands[0].landmarks[8];
             const targetY = indexTip.y * this.gameCanvas.height;
-            const alpha = 0.15; // Stronger smoothing
+            const alpha = 0.15; // Smooth factor
             this.bird.y = alpha * targetY + (1 - alpha) * this.bird.y;
         }
 
+        const currentScroll = this.scrollSpeed * deltaTime;
+
         // 2. Update Background
         this.backgrounds.forEach(bg => {
-            bg.x -= bg.speed;
+            bg.x -= bg.speed * deltaTime;
             if (bg.x < -100) bg.x = this.gameCanvas.width + 50;
         });
 
         // 3. Update Obstacles
-        this.spawnTimer++;
+        this.spawnTimer += deltaTime;
         if (this.spawnTimer >= this.spawnRate) {
             this.spawnObstacle();
             this.spawnTimer = 0;
         }
 
         this.obstacles.forEach((obs, index) => {
-            obs.x -= this.scrollSpeed;
+            obs.x -= currentScroll;
 
             if (this.checkCollision(obs)) {
                 this.handleCollision();
@@ -103,17 +111,16 @@ class FeatherFlyerActivity extends BaseActivity {
 
         // 4. Update Items (Collectibles)
         this.items.forEach((item, index) => {
-            item.x -= this.scrollSpeed;
+            item.x -= currentScroll;
 
             // Floating animation
-            item.yOffset = Math.sin(Date.now() * 0.005) * 10;
+            item.yOffset = Math.sin(now * 0.005) * 10;
 
             const dist = Math.hypot(item.x - this.bird.x, (item.y + item.yOffset) - this.bird.y);
             if (dist < 40) {
                 this.score += 5;
                 this.items.splice(index, 1);
                 this.updateUI();
-                // Add sparkle particles (using base particle system if available)
                 if (this.createSplash) this.createSplash(item.x, item.y, '#FFD700');
             }
 
@@ -122,22 +129,22 @@ class FeatherFlyerActivity extends BaseActivity {
             }
         });
 
-        // 5. Update Particles (inherited or local)
+        // 5. Update Particles
         if (this.particles) {
             this.particles.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += 0.1;
-                p.life -= 0.02;
+                p.x += p.vx * deltaTime;
+                p.y += p.vy * deltaTime;
+                p.vy += 0.1 * deltaTime;
+                p.life -= 0.02 * deltaTime;
             });
             this.particles = this.particles.filter(p => p.life > 0);
         }
     }
 
     spawnObstacle() {
-        const gapSize = 220; // Increased gap size
-        const minGapY = 50;
-        const maxGapY = this.gameCanvas.height - gapSize - 50;
+        const gapSize = 220;
+        const minGapY = 60;
+        const maxGapY = this.gameCanvas.height - gapSize - 60;
         const gapY = Math.random() * (maxGapY - minGapY) + minGapY;
 
         this.obstacles.push({
@@ -148,14 +155,20 @@ class FeatherFlyerActivity extends BaseActivity {
             passed: false
         });
 
-        // Spawn item occasionally
-        if (Math.random() > 0.6) {
-            this.items.push({
-                x: this.gameCanvas.width + 100,
-                y: gapY + gapSize / 2,
-                emoji: ['🍎', '🍌', '🍒', '🥕', '🥦', '🍓'][Math.floor(Math.random() * 6)],
-                yOffset: 0
-            });
+        // Spawn items at fun, varied heights (not just centered)
+        if (Math.random() > 0.4) {
+            const itemCount = Math.floor(Math.random() * 2) + 1;
+            for (let i = 0; i < itemCount; i++) {
+                // Random Y between top and bottom padding, avoiding too close to edges
+                const itemY = 60 + Math.random() * (this.gameCanvas.height - 120);
+
+                this.items.push({
+                    x: this.gameCanvas.width + (100 * (i + 1)),
+                    y: itemY,
+                    emoji: ['🍎', '🍌', '🍒', '🥕', '🥦', '🍓', '🍑', '🍐'][Math.floor(Math.random() * 8)],
+                    yOffset: 0
+                });
+            }
         }
     }
 
