@@ -22,7 +22,10 @@ class GestureEngine {
         this.lastY = 0;
         this.lastGrabY = 0;
         this.isScrolling = false;
+        this.isScrolling = false;
         this.isClicking = false;
+        this.pinchDistance = 1.0; // Smoothed distance
+        this.lastClickTime = 0; // For debouncing
 
         this.waveDetector = {
             history: [],
@@ -244,6 +247,11 @@ class GestureEngine {
             const x = (1 - nx) * window.innerWidth;
             const y = ny * window.innerHeight;
 
+            // Smoothed Pinch Distance (EMA 0.4)
+            const thumbTip = landmarks[4];
+            const currentPinchDist = Math.hypot(thumbTip.x - indexTip.x, thumbTip.y - indexTip.y);
+            this.pinchDistance = (this.pinchDistance * 0.6) + (currentPinchDist * 0.4);
+
             if (isRestricted) {
                 // If restricted, only show wand when in the bottom bar area
                 if (y >= thresholdY) {
@@ -321,18 +329,19 @@ class GestureEngine {
         const avgDistance = distances.reduce((a, b) => a + b) / 4;
         const isFist = avgDistance < 0.14;
 
-        // Pinch Detection (Thumb tip to Index tip)
-        const thumbTip = landmarks[4];
-        const indexTip = landmarks[8];
-        const pinchDist = Math.hypot(thumbTip.x - indexTip.x, thumbTip.y - indexTip.y);
-        const isPinch = pinchDist < 0.055; // Threshold for pinch
-
         // 1. Interaction Logic (Pinch to Click)
-        const isCurrentlyClicking = isPinch;
-        if (isCurrentlyClicking && !this.isClicking) {
-            this.startClick(x, y);
-        } else if (!isCurrentlyClicking && this.isClicking) {
-            this.stopClick(x, y);
+        // Hysteresis: Tight threshold (0.05) to click, Loose (0.08) to release
+        const clickThreshold = 0.055;
+        const releaseThreshold = 0.085;
+
+        if (this.pinchDistance < clickThreshold) {
+            if (!this.isClicking && (Date.now() - this.lastClickTime > 250)) {
+                this.startClick(x, y);
+            }
+        } else if (this.pinchDistance > releaseThreshold) {
+            if (this.isClicking) {
+                this.stopClick(x, y);
+            }
         }
 
         // 2. Scrolling Logic (Fist to Scroll) - only if NOT restricted and NOT clicking and NOT explicitly disabled
@@ -362,6 +371,7 @@ class GestureEngine {
 
     stopClick(x, y) {
         this.isClicking = false;
+        this.lastClickTime = Date.now();
         this.cursorElement.classList.remove('grabbing');
         this.simulateMouseEvent('mouseup', x, y);
         this.simulateMouseEvent('click', x, y);

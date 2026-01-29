@@ -8,10 +8,12 @@ class BalloonPopActivity extends BaseActivity {
         this.balloons = [];
         this.particles = []; // Particle burst effect
         this.isPinching = false;
+        this.pinchDistance = 1.0; // Smoothed distance
         this.pointerPos = { x: 0, y: 0 };
         this.colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#FF9F43', '#A29BFE'];
-        this.sceneryMode = true; // Use scenery instead of camera
-        this.shakeTime = 0; // Screen shake effect
+        this.sceneryMode = true;
+        this.shakeTime = 0;
+        this.lastPopTime = 0; // For debouncing
     }
 
     start() {
@@ -64,18 +66,29 @@ class BalloonPopActivity extends BaseActivity {
             this.pointerPos.x = (1 - indexTip.x) * this.gameCanvas.width;
             this.pointerPos.y = indexTip.y * this.gameCanvas.height;
 
-            // Detect pinch gesture (distance between thumb and index)
-            const distance = Math.sqrt(
+            // Smoothing: Exponential Moving Average (alpha = 0.4)
+            const currentDist = Math.sqrt(
                 Math.pow(indexTip.x - thumbTip.x, 2) +
                 Math.pow(indexTip.y - thumbTip.y, 2)
             );
+            this.pinchDistance = (this.pinchDistance * 0.6) + (currentDist * 0.4);
 
-            // Small threshold for pinch
-            if (distance < 0.06) {
-                this.isPinching = true;
-                if (!wasPinching) {
-                    this.checkPop();
+            // Hysteresis Logic: 
+            // - Need to pinch tight (0.05) to trigger
+            // - Need to release wide (0.08) to stop
+            const pinchThreshold = 0.055;
+            const releaseThreshold = 0.085;
+
+            if (this.pinchDistance < pinchThreshold) {
+                if (!this.isPinching) {
+                    this.isPinching = true;
+                    // Debounce: prevent pop if we just popped very recently
+                    if (Date.now() - this.lastPopTime > 250) {
+                        this.checkPop();
+                    }
                 }
+            } else if (this.pinchDistance > releaseThreshold) {
+                this.isPinching = false;
             }
         }
 
@@ -127,6 +140,7 @@ class BalloonPopActivity extends BaseActivity {
         this.balloons.splice(index, 1);
         this.score++;
         this.shakeTime = 5;
+        this.lastPopTime = Date.now();
         this.playPopEffect();
     }
 
@@ -215,7 +229,9 @@ class BalloonPopActivity extends BaseActivity {
         // Pointer (Crosshair)
         const hands = this.detector.getDetectedHands();
         if (hands.length > 0) {
-            this.drawCrosshair(this.pointerPos.x, this.pointerPos.y, this.isPinching);
+            // Dynamic scale based on pinch proximity
+            const scale = Math.max(0.6, Math.min(1.2, this.pinchDistance * 8));
+            this.drawCrosshair(this.pointerPos.x, this.pointerPos.y, this.isPinching, scale);
         }
 
         this.ctx.restore();
@@ -251,14 +267,15 @@ class BalloonPopActivity extends BaseActivity {
         this.ctx.fill();
     }
 
-    drawCrosshair(x, y, isPinching) {
+    drawCrosshair(x, y, isPinching, scale = 1.0) {
         this.ctx.save();
         this.ctx.translate(x, y);
+        this.ctx.scale(scale, scale);
 
-        const size = isPinching ? 20 : 25;
+        const size = isPinching ? 18 : 25;
         const color = isPinching ? '#FF5252' : '#2196F3';
         this.ctx.strokeStyle = color;
-        this.ctx.lineWidth = 3;
+        this.ctx.lineWidth = 3 / scale; // Keep line weight consistent
 
         // Outer Circle
         this.ctx.beginPath();
