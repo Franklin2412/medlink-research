@@ -5,8 +5,8 @@ class PipeConnectorGame extends BaseActivity {
         this.isRunning = false;
 
         this.level = 1;
-        this.pathRadius = 45; // Increased width for tolerance (previously 30)
-        this.cursor = { x: 0, y: 0 };
+        this.pathRadius = 45; // Broad path for tolerance
+        this.cursor = { x: canvas.width / 2, y: canvas.height / 2 };
         this.isPainting = false;
         this.userTrail = [];
         this.startPoint = { x: 50, y: 50 };
@@ -15,7 +15,6 @@ class PipeConnectorGame extends BaseActivity {
         this.currentLevelPoints = [];
 
         this.update = this.update.bind(this);
-        this.handleInput = this.handleInput.bind(this);
     }
 
     start() {
@@ -24,16 +23,12 @@ class PipeConnectorGame extends BaseActivity {
         this.level = 1;
         this.loadLevel(1);
 
-        this.gameCanvas.addEventListener('mousemove', this.handleInput);
         if (this.callbacks.onScore) this.callbacks.onScore(0);
         if (this.callbacks.onLevel) this.callbacks.onLevel(1);
-
-        requestAnimationFrame(this.update);
     }
 
     stop() {
         this.isRunning = false;
-        this.gameCanvas.removeEventListener('mousemove', this.handleInput);
         super.stop();
         this.saveStats('pipeconnector', { level: this.level });
     }
@@ -49,7 +44,7 @@ class PipeConnectorGame extends BaseActivity {
             this.currentLevelPoints = [{ x: 100, y: safeH / 4 }, { x: safeW / 2, y: safeH / 4 }, { x: safeW / 2, y: safeH * 0.75 }, { x: safeW - 100, y: safeH * 0.75 }];
         } else {
             this.currentLevelPoints = [{ x: 100, y: safeH / 2 }];
-            for (let i = 0; i < 2; i++) { // Fewer segments for kid-friendly maze
+            for (let i = 0; i < 2; i++) {
                 this.currentLevelPoints.push({
                     x: (safeW / 3) * (i + 1),
                     y: Math.random() * (safeH - 200) + 100
@@ -71,15 +66,22 @@ class PipeConnectorGame extends BaseActivity {
         this.userTrail = [];
     }
 
-    handleInput(e) {
-        if (!this.isRunning) return;
-        const rect = this.gameCanvas.getBoundingClientRect();
-        this.cursor.x = e.clientX - rect.left;
-        this.cursor.y = e.clientY - rect.top;
-    }
-
     update() {
         if (!this.isRunning) return;
+
+        super.update();
+
+        // 1. Hand Tracking (Direct)
+        const hands = this.detector.getDetectedHands();
+        if (hands && hands.length > 0) {
+            const indexTip = hands[0].landmarks[8];
+            const targetX = (1 - indexTip.x) * this.gameCanvas.width; // Mirrored
+            const targetY = indexTip.y * this.gameCanvas.height;
+
+            const alpha = 0.2; // Smoothing
+            this.cursor.x = alpha * targetX + (1 - alpha) * this.cursor.x;
+            this.cursor.y = alpha * targetY + (1 - alpha) * this.cursor.y;
+        }
 
         this.ctx.fillStyle = "#0B0E14"; // Deep space black
         this.ctx.fillRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
@@ -124,7 +126,7 @@ class PipeConnectorGame extends BaseActivity {
         if (this.isPainting) {
             this.userTrail.push({ x: this.cursor.x, y: this.cursor.y });
 
-            // Check Safety (with a bit of extra padding for "liberal" check)
+            // Check Safety
             if (!this.checkSafety(this.cursor.x, this.cursor.y)) {
                 this.resetTrial();
             }
@@ -148,13 +150,11 @@ class PipeConnectorGame extends BaseActivity {
             this.ctx.stroke();
         }
 
-        // 5. Draw Cursor
+        // 5. Draw Cursor (Wand/Brush)
         this.ctx.beginPath();
         this.ctx.fillStyle = this.isPainting ? '#FFE66D' : '#fff';
         this.ctx.arc(this.cursor.x, this.cursor.y, 10, 0, Math.PI * 2);
         this.ctx.fill();
-
-        requestAnimationFrame(this.update);
     }
 
     checkSafety(x, y) {

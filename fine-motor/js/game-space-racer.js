@@ -19,7 +19,6 @@ class SpaceRacerGame extends BaseActivity {
 
         // Bind methods
         this.update = this.update.bind(this);
-        this.handleInput = this.handleInput.bind(this);
     }
 
     start() {
@@ -29,6 +28,8 @@ class SpaceRacerGame extends BaseActivity {
         this.score = 0;
         this.level = 1;
         this.asteroids = [];
+        this.spawnTimer = 0;
+        this.spawnRateLimit = 45; // Minimum frames between spawns
 
         // Setup Player Position (Bottom Center)
         this.player.x = this.gameCanvas.width / 2;
@@ -41,68 +42,59 @@ class SpaceRacerGame extends BaseActivity {
                 x: Math.random() * this.gameCanvas.width,
                 y: Math.random() * this.gameCanvas.height,
                 size: Math.random() * 2 + 1,
-                speed: Math.random() * 1 + 0.5
+                speed: Math.random() * 2 + 1
             });
         }
 
-        // Add Input Listener
-        this.gameCanvas.addEventListener('mousemove', this.handleInput);
-
-        // Game loop is handled by requestAnimationFrame in update() which we call once
         this.lastTime = Date.now();
-        requestAnimationFrame(this.update);
     }
 
     stop() {
         console.log("[SpaceRacer] Stopping game loop");
         this.isRunning = false;
-        this.gameCanvas.removeEventListener('mousemove', this.handleInput);
         super.stop();
         // Save stats to unified storage
         this.saveStats('spaceracer', { level: this.level });
     }
 
-    handleInput(e) {
-        if (!this.isRunning) return;
-        const rect = this.gameCanvas.getBoundingClientRect();
-        this.player.x = e.clientX - rect.left;
-
-        // Clamp to screen
-        this.player.x = Math.max(20, Math.min(this.gameCanvas.width - 20, this.player.x));
-    }
-
     spawnAsteroid() {
-        if (Math.random() < this.spawnRate) {
-            const types = [
-                { emoji: '🕷️', name: 'Spider' },
-                { emoji: '👻', name: 'Ghost' },
-                { emoji: '🦇', name: 'Bat' },
-                { emoji: '🧟', name: 'Zombie' },
-                { emoji: '💀', name: 'Skull' },
-                { emoji: '🕸️', name: 'Spider Web' }
-            ];
-            const type = types[Math.floor(Math.random() * types.length)];
+        const types = [
+            { emoji: '🕷️' }, { emoji: '👻' }, { emoji: '🦇' },
+            { emoji: '🧟' }, { emoji: '💀' }, { emoji: '🕸️' }
+        ];
+        const type = types[Math.floor(Math.random() * types.length)];
 
-            this.asteroids.push({
-                x: Math.random() * (this.gameCanvas.width - 40) + 20,
-                y: -50,
-                radius: 12, // Reduced hitbox for tolerance (previously 20)
-                label: type.emoji
-            });
-        }
+        this.asteroids.push({
+            x: Math.random() * (this.gameCanvas.width - 60) + 30,
+            y: -50,
+            label: type.emoji
+        });
     }
 
     update() {
         if (!this.isRunning) return;
 
+        super.update(); // Updates timer and UI
+
         const now = Date.now();
-        const dt = (now - this.lastTime) / 16; // Normalized delta time
+        const dt = (now - this.lastTime) / 33.3; // Normalized to 30fps
         this.lastTime = now;
+
+        // 1. Hand Tracking (Direct)
+        const hands = this.detector.getDetectedHands();
+        if (hands && hands.length > 0) {
+            const indexTip = hands[0].landmarks[8];
+            const targetX = (1 - indexTip.x) * this.gameCanvas.width; // Mirrored
+            const alpha = 0.2; // Smoothing
+            this.player.x = alpha * targetX + (1 - alpha) * this.player.x;
+        }
+        // Clamp to screen
+        this.player.x = Math.max(40, Math.min(this.gameCanvas.width - 40, this.player.x));
 
         this.ctx.fillStyle = "#0B0E14"; // Deep space black
         this.ctx.fillRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
 
-        // 1. Draw Background (Stars)
+        // 2. Draw Background (Stars)
         this.ctx.fillStyle = "#FFFFFF";
         this.stars.forEach(star => {
             star.y += star.speed * dt;
@@ -115,26 +107,31 @@ class SpaceRacerGame extends BaseActivity {
             this.ctx.fill();
         });
 
-        // 2. Spawn Asteroids
-        this.spawnAsteroid();
+        // 3. Spawn Asteroids (Paced: One every ~2.5 seconds)
+        this.spawnTimer++;
+        if (this.spawnTimer > 80) {
+            this.spawnAsteroid();
+            this.spawnTimer = 0;
+        }
 
-        // 3. Update & Draw Asteroids
+        // 4. Update & Draw Asteroids
         this.ctx.font = '40px serif';
         this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
 
         for (let i = this.asteroids.length - 1; i >= 0; i--) {
             const a = this.asteroids[i];
-            a.y += this.speed * dt;
+            a.y += (this.speed + (this.level * 0.2)) * dt;
 
             // Draw Emoji
             this.ctx.fillText(a.label, a.x, a.y);
 
-            // Collision Check (Tolerant: very small effective radius)
+            // Collision Check (Forgiving circle)
             const dx = a.x - this.player.x;
             const dy = a.y - this.player.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
+            const distance = Math.hypot(dx, dy);
 
-            if (distance < 25) { // Very forgiving collision (previously 40)
+            if (distance < 35) {
                 this.gameOver();
                 return;
             }
@@ -148,10 +145,8 @@ class SpaceRacerGame extends BaseActivity {
             }
         }
 
-        // 4. Draw Player (Rocket)
+        // 5. Draw Player (Rocket)
         this.drawRocket(this.player.x, this.player.y);
-
-        requestAnimationFrame(this.update);
     }
 
     drawRocket(x, y) {

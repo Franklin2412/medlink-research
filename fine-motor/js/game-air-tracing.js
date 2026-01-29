@@ -18,26 +18,22 @@ class AirTracingGame extends BaseActivity {
         this.pathPoints = [];
         this.userPath = [];
         this.nextPointIndex = 1;
-        this.cursor = { x: 0, y: 0 };
-        this.tolerance = 70; // Increased tolerance (previously 40) for better accessibility
+        this.cursor = { x: canvas.width / 2, y: canvas.height / 2 };
+        this.tolerance = 70; // High tolerance for accessibility
 
         this.update = this.update.bind(this);
-        this.handleInput = this.handleInput.bind(this);
     }
 
     start() {
         super.start();
         this.isRunning = true;
         this.loadShape('Square');
-        this.gameCanvas.addEventListener('mousemove', this.handleInput);
         if (this.callbacks.onScore) this.callbacks.onScore(0);
         if (this.callbacks.onLevel) this.callbacks.onLevel(1);
-        requestAnimationFrame(this.update);
     }
 
     stop() {
         this.isRunning = false;
-        this.gameCanvas.removeEventListener('mousemove', this.handleInput);
         super.stop();
         this.saveStats('airtracing', { shape: this.currentShapeName });
     }
@@ -54,15 +50,22 @@ class AirTracingGame extends BaseActivity {
         this.userPath.push(this.pathPoints[0]);
     }
 
-    handleInput(e) {
-        if (!this.isRunning) return;
-        const rect = this.gameCanvas.getBoundingClientRect();
-        this.cursor.x = e.clientX - rect.left;
-        this.cursor.y = e.clientY - rect.top;
-    }
-
     update() {
         if (!this.isRunning) return;
+
+        super.update();
+
+        // 1. Hand Tracking (Direct)
+        const hands = this.detector.getDetectedHands();
+        if (hands && hands.length > 0) {
+            const indexTip = hands[0].landmarks[8];
+            const targetX = (1 - indexTip.x) * this.gameCanvas.width; // Mirrored
+            const targetY = indexTip.y * this.gameCanvas.height;
+
+            const alpha = 0.2; // Smoothing
+            this.cursor.x = alpha * targetX + (1 - alpha) * this.cursor.x;
+            this.cursor.y = alpha * targetY + (1 - alpha) * this.cursor.y;
+        }
 
         this.ctx.fillStyle = "#0B0E14"; // Deep space black
         this.ctx.fillRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
@@ -89,7 +92,7 @@ class AirTracingGame extends BaseActivity {
             const target = this.pathPoints[this.nextPointIndex];
             const dx = this.cursor.x - target.x;
             const dy = this.cursor.y - target.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
+            const dist = Math.hypot(dx, dy);
 
             if (dist < this.tolerance) {
                 this.userPath.push(target);
@@ -135,8 +138,6 @@ class AirTracingGame extends BaseActivity {
         this.ctx.beginPath();
         this.ctx.arc(this.cursor.x, this.cursor.y, 12, 0, Math.PI * 2);
         this.ctx.fill();
-
-        requestAnimationFrame(this.update);
     }
 
     triggerWin() {
