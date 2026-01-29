@@ -29,9 +29,10 @@
     filter: drop-shadow(0 0 15px var(--cursor-accent));
 }
 
-#gesture-cursor.restricted {
+#gesture-cursor.restricted,
+#gesture-cursor.hidden-in-game {
     display: none !important;
-    /* Default to hidden in restricted mode until below threshold */
+    /* Hidden in restricted mode or when in playable area */
 }
 
 body.wand-restricted-active #gesture-cursor.restricted {

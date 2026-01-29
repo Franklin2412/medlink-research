@@ -283,8 +283,32 @@ class GestureEngine {
         this.lastX = finalX;
         this.lastY = finalY;
 
+        // Update visibility based on target element
+        this.updateVisibility(finalX, finalY);
+
         // Simulate mousemove for games to track the virtual cursor
         this.simulateMouseEvent('mousemove', finalX, finalY);
+    }
+
+    updateVisibility(x, y) {
+        if (!this.cursorElement) return;
+
+        // Find the element at the current cursor position
+        const element = document.elementFromPoint(x, y);
+        if (!element) return;
+
+        // Define areas where the wand should be hidden
+        // It should be hidden if it's over a game area/canvas/video 
+        // BUT shown if it's specifically over a button, link, or part of the sidebar
+
+        const isInteractive = element.closest('button, a, .side-controls, .modal-content, .gesture-toggle-btn');
+        const isPlayArea = element.closest('.game-area, .video-section, canvas, video');
+
+        if (isPlayArea && !isInteractive) {
+            this.cursorElement.classList.add('hidden-in-game');
+        } else {
+            this.cursorElement.classList.remove('hidden-in-game');
+        }
     }
 
     detectGestures(landmarks, x, y) {
