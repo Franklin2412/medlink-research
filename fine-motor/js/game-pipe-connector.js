@@ -81,7 +81,8 @@ class PipeConnectorGame extends BaseActivity {
     update() {
         if (!this.isRunning) return;
 
-        this.ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+        this.ctx.fillStyle = "#0B0E14"; // Deep space black
+        this.ctx.fillRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
 
         // 1. Draw Pipe
         this.ctx.lineCap = 'round';

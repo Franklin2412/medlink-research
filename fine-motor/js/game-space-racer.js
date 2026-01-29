@@ -99,7 +99,8 @@ class SpaceRacerGame extends BaseActivity {
         const dt = (now - this.lastTime) / 16; // Normalized delta time
         this.lastTime = now;
 
-        this.ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+        this.ctx.fillStyle = "#0B0E14"; // Deep space black
+        this.ctx.fillRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
 
         // 1. Draw Background (Stars)
         this.ctx.fillStyle = "#FFFFFF";

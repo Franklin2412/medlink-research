@@ -83,6 +83,16 @@ function setupEventListeners() {
             if (currentActivity) currentActivity.start();
         });
     }
+
+    // Modal Close
+    const closeStatsX = document.getElementById('close-stats-modal');
+    if (closeStatsX) {
+        closeStatsX.addEventListener('click', () => closeStatsModal());
+    }
+    const closeStatsBtn = document.getElementById('close-stats-btn');
+    if (closeStatsBtn) {
+        closeStatsBtn.addEventListener('click', () => closeStatsModal());
+    }
 }
 
 function showScreen(screenName) {

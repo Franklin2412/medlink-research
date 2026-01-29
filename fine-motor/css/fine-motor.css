@@ -308,8 +308,7 @@ body.full-screen-game .main-canvas {
     align-items: center;
     justify-content: center;
     min-height: 400px;
-    transform: scaleX(-1);
-    /* Mirror effect */
+    /* Do NOT mirror the parent container, as it flips the coordinate space for games */
 }
 
 .video-section.full-width {
@@ -324,6 +323,13 @@ body.full-screen-game .main-canvas {
     width: 100%;
     height: 100%;
     object-fit: contain;
+}
+
+/* Mirror the video and hand skeleton for a natural feel, 
+   but keep the game canvas unmirrored for correct tracking mapping */
+.video-section video,
+[id*="hand-canvas"] {
+    transform: scaleX(-1);
 }
 
 [id*="hand-canvas"] {
@@ -585,8 +591,6 @@ body.full-screen-game .main-canvas {
     z-index: 1000;
     backdrop-filter: blur(4px);
     animation: fadeIn var(--transition-normal);
-    transform: scaleX(-1);
-    /* Negate the parent's mirror effect */
 }
 
 .overlay-content {
@@ -621,8 +625,6 @@ body.full-screen-game .main-canvas {
     flex-direction: column;
     gap: 10px;
     z-index: 10;
-    transform: scaleX(-1);
-    /* Negate the mirror effect on the HUD */
 }
 
 .hud-item {
