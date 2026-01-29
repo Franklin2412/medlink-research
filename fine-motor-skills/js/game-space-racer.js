@@ -16,7 +16,7 @@ class SpaceRacerGame {
         this.level = 1;
         this.speed = 3;
         this.player = { x: canvas.width / 2, y: 0, width: 40, height: 60 };
-        this.obstacles = [];
+        this.asteroids = [];
         this.stars = [];
         this.lastObstacleTime = 0;
         this.obstacleInterval = 1500; // ms
@@ -32,13 +32,16 @@ class SpaceRacerGame {
         this.score = 0;
         this.level = 1;
         this.speed = 2; // Slower constant speed for kids
-        this.obstacles = [];
+        this.asteroids = [];
         this.callbacks.onScore(0);
         this.callbacks.onLevel(1);
 
         // Setup Player Position (Bottom Center)
         this.player.x = this.canvas.width / 2;
         this.player.y = this.canvas.height - 100;
+
+        // Ensure spawnRate is set
+        this.spawnRate = 0.02;
 
         // Initialize Stars
         this.stars = [];
@@ -74,6 +77,27 @@ class SpaceRacerGame {
         this.player.x = Math.max(20, Math.min(this.canvas.width - 20, this.player.x));
     }
 
+    spawnAsteroid() {
+        if (Math.random() < this.spawnRate) {
+            const types = [
+                { emoji: '🥦', name: 'Space Broccoli' },
+                { emoji: '🥕', name: 'Cosmic Carrot' },
+                { emoji: '🍩', name: 'Galactic Donut' },
+                { emoji: '👾', name: 'Alien Slime' },
+                { emoji: '💩', name: 'Space Poop' },
+                { emoji: '🍕', name: 'Meteor Pizza' }
+            ];
+            const type = types[Math.floor(Math.random() * types.length)];
+
+            this.asteroids.push({
+                x: Math.random() * (this.canvas.width - 40) + 20,
+                y: -50,
+                radius: 20,
+                label: type.emoji
+            });
+        }
+    }
+
     update() {
         if (!this.isRunning) return;
 
@@ -99,10 +123,10 @@ class SpaceRacerGame {
         this.ctx.globalAlpha = 1.0;
 
         // 2. Spawn Asteroids (Funny Obstacles)
-        this.spawnAsteroid(); // Call every frame, it has its own internal random check
+        this.spawnAsteroid();
 
         // 3. Update & Draw Asteroids
-        this.ctx.font = '30px serif';
+        this.ctx.font = '40px serif';
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
 
@@ -113,12 +137,12 @@ class SpaceRacerGame {
             // Draw Emoji
             this.ctx.fillText(a.label, a.x, a.y);
 
-            // Collision Check (Circle vs Rect approximation)
+            // Collision Check (Simple distance check)
             const dx = a.x - this.player.x;
             const dy = a.y - this.player.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < a.radius + 20) { // 20 is approx half player width/height
+            if (distance < 40) { // Emoji size approximation
                 this.gameOver();
                 return;
             }
@@ -126,7 +150,7 @@ class SpaceRacerGame {
             // Cleanup
             if (a.y > this.canvas.height + 50) {
                 this.asteroids.splice(i, 1);
-                this.score += 1; // Score per asteroid
+                this.score += 1;
                 this.callbacks.onScore(this.score);
                 this.checkLevel();
             }
@@ -179,26 +203,17 @@ class SpaceRacerGame {
         this.ctx.restore();
     }
 
-    spawnObstacle() {
-        const size = Math.random() * 20 + 20; // 20-40px
-        const x = Math.random() * (this.canvas.width - size * 2) + size;
-        this.obstacles.push({ x, y: -50, size });
-    }
-
     checkLevel() {
-        if (this.score > 0 && this.score % 100 === 0) {
+        if (this.score > 0 && this.score % 20 === 0) {
             this.level++;
-            // Keep speed constant for kids
-            // this.speed += 0.5; 
-            // Only increase spawn rate slightly
-            this.obstacleInterval = Math.max(800, this.obstacleInterval - 50);
+            this.spawnRate = Math.min(0.05, this.spawnRate + 0.005);
             this.callbacks.onLevel(this.level);
         }
     }
 
     gameOver() {
         this.isRunning = false;
-        this.callbacks.onGameOver(`You dodged asteroids and scored ${this.score}!`, "Mission Complete");
+        this.callbacks.onGameOver(`You dodged cosmic snacks and scored ${this.score}!`, "Mission Complete");
     }
 }
 
