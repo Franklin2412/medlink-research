@@ -2,16 +2,17 @@ class MazeExplorerGame extends BaseActivity {
     constructor(detector, gameCanvas, callbacks = {}) {
         super(detector, gameCanvas);
         this.callbacks = callbacks;
-        this.gridSize = 9; // Smaller grid = MUCH wider paths for kids
+        this.gridSize = 11; // 11 is a good middle ground for path width
         this.grid = [];
         this.cellSize = 0;
         this.startPos = { r: 0, c: 0 };
-        this.goalPos = { r: 8, c: 8 };
+        this.goalPos = { r: 10, c: 10 };
         this.playerPos = { x: 0, y: 0 };
         this.targetPos = { x: 0, y: 0 };
         this.isResetting = false;
         this.particles = [];
         this.handPos = { x: 0, y: 0 };
+        this.facingRight = true;
 
         this.colors = {
             wall: '#6AB04C',    // Vibrant Green
@@ -27,7 +28,7 @@ class MazeExplorerGame extends BaseActivity {
     }
 
     generateMaze() {
-        this.gridSize = 9; // Keeping it consistent
+        this.gridSize = 11;
         this.grid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(1));
         this.cellSize = this.gameCanvas.width / this.gridSize;
 
@@ -80,6 +81,7 @@ class MazeExplorerGame extends BaseActivity {
         };
         this.targetPos = { ...this.playerPos };
         this.isResetting = false;
+        this.facingRight = true;
     }
 
     update() {
@@ -100,7 +102,12 @@ class MazeExplorerGame extends BaseActivity {
             this.targetPos.x = alpha * rawX + (1 - alpha) * this.targetPos.x;
             this.targetPos.y = alpha * rawY + (1 - alpha) * this.targetPos.y;
 
-            // Collision check with buffer
+            // Determine orientation
+            if (Math.abs(this.targetPos.x - this.playerPos.x) > 1) {
+                this.facingRight = (this.targetPos.x > this.playerPos.x);
+            }
+
+            // Collision check
             if (this.checkWallCollision(this.targetPos.x, this.targetPos.y)) {
                 this.handleCollision();
             } else {
@@ -132,7 +139,6 @@ class MazeExplorerGame extends BaseActivity {
     }
 
     checkWallCollision(x, y) {
-        // Buffer: check slightly larger area than just the center point
         const buffer = this.cellSize * 0.15;
         const pts = [
             { x: x - buffer, y: y - buffer },
@@ -157,7 +163,7 @@ class MazeExplorerGame extends BaseActivity {
     checkGoalReached() {
         const dist = Math.hypot(this.playerPos.x - (this.goalPos.c + 0.5) * this.cellSize,
             this.playerPos.y - (this.goalPos.r + 0.5) * this.cellSize);
-        return dist < this.cellSize * 0.6; // More forgiving hit zone
+        return dist < this.cellSize * 0.6;
     }
 
     levelComplete() {
@@ -179,16 +185,25 @@ class MazeExplorerGame extends BaseActivity {
         }
 
         // Draw Trophy Goal Emoji
+        const goalX = (this.goalPos.c + 0.5) * this.cellSize;
+        const goalY = (this.goalPos.r + 0.5) * this.cellSize;
         this.ctx.font = `${Math.floor(this.cellSize * 0.8)}px Arial`;
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
-        const goalX = (this.goalPos.c + 0.5) * this.cellSize;
-        const goalY = (this.goalPos.r + 0.5) * this.cellSize;
         this.ctx.fillText('🏆', goalX, goalY);
 
         // Draw Hero Runner Emoji
+        this.ctx.save();
+        this.ctx.translate(this.playerPos.x, this.playerPos.y);
+
+        // Emoji 🏃 usually faces left. If facingRight is true, we need to flip it.
+        if (this.facingRight) {
+            this.ctx.scale(-1, 1);
+        }
+
         this.ctx.font = `${Math.floor(this.cellSize * 0.7)}px Arial`;
-        this.ctx.fillText('🏃', this.playerPos.x, this.playerPos.y);
+        this.ctx.fillText('🏃', 0, 0);
+        this.ctx.restore();
 
         // Draw Hand Pointer & Sparkles
         this.particles.forEach(p => {
