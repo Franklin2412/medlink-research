@@ -601,3 +601,43 @@ body.full-screen-game .main-canvas {
 .text-accent {
     color: var(--accent-color);
 }
+
+/* --- Fine Motor Gesture Lab Unified Styles --- */
+
+.category-title {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 8px;
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-lg);
+    font-weight: 700;
+}
+
+.game-hud {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10;
+    transform: scaleX(-1);
+    /* Negate the mirror effect on the HUD */
+}
+
+.hud-item {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 15px;
+    border-radius: var(--radius-full);
+    font-weight: bold;
+    color: var(--text-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--primary-color);
+    font-family: 'Poppins', sans-serif;
+    min-width: 120px;
+    text-align: center;
+}
+
+.hidden {
+    display: none !important;
+}

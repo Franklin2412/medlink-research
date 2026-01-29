@@ -227,6 +227,9 @@ function startTrajectory(type) {
     else if (type === 'airtracing') currentActivity = new AirTracingGame(tc.game, callbacks);
     else if (type === 'pipeconnector') currentActivity = new PipeConnectorGame(tc.game, callbacks);
 
+    // Update detector for trajectory games
+    currentActivity.detector = currentDetector;
+
     currentActivity.start();
 }
 
