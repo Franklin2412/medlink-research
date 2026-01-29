@@ -28,21 +28,40 @@ class CatchStarsActivity extends BaseActivity {
         });
     }
 
+    draw() {
+        // Draw sky background
+        this.ctx.fillStyle = '#E1F5FE';
+        this.ctx.fillRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+
+        // Draw some simple clouds
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        this.ctx.beginPath();
+        this.ctx.arc(100, 100, 30, 0, Math.PI * 2);
+        this.ctx.arc(130, 90, 35, 0, Math.PI * 2);
+        this.ctx.arc(160, 100, 30, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        this.stars.forEach(star => {
+            this.drawStar(star.x, star.y, star.radius);
+        });
+    }
+
+    // Mirror X coordinate for direct hand tracking
+    processX(x) {
+        return (1 - x) * this.gameCanvas.width;
+    }
+
     update() {
         super.update();
-
-        // Get hand positions
         const hands = this.detector.getDetectedHands();
 
-        // Update stars
         this.stars.forEach(star => {
             if (star.caught) return;
             star.y += star.speed;
 
-            // Check collision with hands
             hands.forEach(hand => {
-                const index = hand.landmarks[8]; // Use index tip for more precision
-                const x = index.x * this.gameCanvas.width;
+                const index = hand.landmarks[8];
+                const x = this.processX(index.x); // Mirrored for natural feel
                 const y = index.y * this.gameCanvas.height;
 
                 const distance = Math.hypot(star.x - x, star.y - y);

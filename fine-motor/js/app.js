@@ -93,6 +93,14 @@ function setupEventListeners() {
     if (closeStatsBtn) {
         closeStatsBtn.addEventListener('click', () => closeStatsModal());
     }
+
+    // Export Stats
+    const exportBtn = document.getElementById('export-stats-btn');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', () => {
+            if (window.StorageManager) window.StorageManager.downloadData('fine-motor-stats.json');
+        });
+    }
 }
 
 function showScreen(screenName) {

@@ -52,7 +52,7 @@ class DuckCatchActivity extends BaseActivity {
         if (hands.length > 0) {
             const hand = hands[0];
             const indexTip = hand.landmarks[8];
-            this.targetBasketX = indexTip.x * this.gameCanvas.width;
+            this.targetBasketX = (1 - indexTip.x) * this.gameCanvas.width; // Mirrored
         }
 
         // Smoothly interpolate basket position

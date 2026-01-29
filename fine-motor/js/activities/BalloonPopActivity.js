@@ -60,8 +60,8 @@ class BalloonPopActivity extends BaseActivity {
             const indexTip = hand.landmarks[8];
             const thumbTip = hand.landmarks[4];
 
-            // Update pointer position (at index finger tip)
-            this.pointerPos.x = indexTip.x * this.gameCanvas.width;
+            // Update pointer position (at index finger tip) - Mirrored for natural feel
+            this.pointerPos.x = (1 - indexTip.x) * this.gameCanvas.width;
             this.pointerPos.y = indexTip.y * this.gameCanvas.height;
 
             // Detect pinch gesture (distance between thumb and index)
