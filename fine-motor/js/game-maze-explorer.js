@@ -2,7 +2,7 @@ class MazeExplorerGame extends BaseActivity {
     constructor(detector, gameCanvas, callbacks = {}) {
         super(detector, gameCanvas);
         this.callbacks = callbacks;
-        this.gridSize = 11; // 11 is a good middle ground for path width
+        this.gridSize = 11;
         this.grid = [];
         this.cellSize = 0;
         this.startPos = { r: 0, c: 0 };
@@ -103,7 +103,7 @@ class MazeExplorerGame extends BaseActivity {
             this.targetPos.y = alpha * rawY + (1 - alpha) * this.targetPos.y;
 
             // Determine orientation
-            if (Math.abs(this.targetPos.x - this.playerPos.x) > 1) {
+            if (Math.abs(this.targetPos.x - this.playerPos.x) > 0.5) {
                 this.facingRight = (this.targetPos.x > this.playerPos.x);
             }
 
@@ -139,7 +139,7 @@ class MazeExplorerGame extends BaseActivity {
     }
 
     checkWallCollision(x, y) {
-        const buffer = this.cellSize * 0.15;
+        const buffer = this.cellSize * 0.18; // Slightly more strict for narrower paths
         const pts = [
             { x: x - buffer, y: y - buffer },
             { x: x + buffer, y: y - buffer },
@@ -184,28 +184,49 @@ class MazeExplorerGame extends BaseActivity {
             }
         }
 
-        // Draw Trophy Goal Emoji
+        // --- Draw Trophy Goal ---
         const goalX = (this.goalPos.c + 0.5) * this.cellSize;
         const goalY = (this.goalPos.r + 0.5) * this.cellSize;
-        this.ctx.font = `${Math.floor(this.cellSize * 0.8)}px Arial`;
+
+        // 1. Draw a pulsing glow behind the trophy to ensure visibility
+        const pulse = 1 + Math.sin(Date.now() * 0.005) * 0.2;
+        this.ctx.save();
+        this.ctx.translate(goalX, goalY);
+        this.ctx.scale(pulse, pulse);
+
+        const grad = this.ctx.createRadialGradient(0, 0, 5, 0, 0, this.cellSize * 0.5);
+        grad.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+        grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        this.ctx.fillStyle = grad;
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, this.cellSize * 0.5, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // 2. Render Trophy Emoji with robust font fallback
+        this.ctx.fillStyle = '#000'; // Fallback color
+        this.ctx.font = `${Math.floor(this.cellSize * 0.8)}px 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', Arial`;
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
-        this.ctx.fillText('🏆', goalX, goalY);
+        this.ctx.fillText('🏆', 0, 0);
+        this.ctx.restore();
 
-        // Draw Hero Runner Emoji
+        // --- Draw Hero Runner ---
         this.ctx.save();
         this.ctx.translate(this.playerPos.x, this.playerPos.y);
 
-        // Emoji 🏃 usually faces left. If facingRight is true, we need to flip it.
-        if (this.facingRight) {
+        // Emoji 🏃 usually faces LEFT in most sets. 
+        // If user says "running backward" while moving right, it means the default is face-right or face-left and my flip is opposite.
+        // Let's assume default is RIGHT for his system (as seen in screenshot) or LEFT and adjust.
+        // Based on "running backward" while facing right in screenshot, let's NOT flip when facingRight is true.
+        if (!this.facingRight) {
             this.ctx.scale(-1, 1);
         }
 
-        this.ctx.font = `${Math.floor(this.cellSize * 0.7)}px Arial`;
+        this.ctx.font = `${Math.floor(this.cellSize * 0.8)}px 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', Arial`;
         this.ctx.fillText('🏃', 0, 0);
         this.ctx.restore();
 
-        // Draw Hand Pointer & Sparkles
+        // --- Draw Hand Pointer & Sparkles ---
         this.particles.forEach(p => {
             this.ctx.fillStyle = `rgba(126, 214, 223, ${p.life})`;
             this.ctx.beginPath();
@@ -213,10 +234,10 @@ class MazeExplorerGame extends BaseActivity {
             this.ctx.fill();
         });
 
-        const pulse = 1 + Math.sin(Date.now() * 0.01) * 0.2;
+        const pointerPulse = 1 + Math.sin(Date.now() * 0.01) * 0.2;
         this.ctx.fillStyle = this.colors.pointer;
         this.ctx.beginPath();
-        this.ctx.arc(this.handPos.x, this.handPos.y, 8 * pulse, 0, Math.PI * 2);
+        this.ctx.arc(this.handPos.x, this.handPos.y, 8 * pointerPulse, 0, Math.PI * 2);
         this.ctx.fill();
         this.ctx.strokeStyle = '#fff';
         this.ctx.lineWidth = 2;
