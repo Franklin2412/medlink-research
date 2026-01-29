@@ -80,12 +80,12 @@ class SpaceRacerGame {
     spawnAsteroid() {
         if (Math.random() < this.spawnRate) {
             const types = [
-                { emoji: '🥦', name: 'Space Broccoli' },
-                { emoji: '🥕', name: 'Cosmic Carrot' },
-                { emoji: '🍩', name: 'Galactic Donut' },
-                { emoji: '👾', name: 'Alien Slime' },
-                { emoji: '💩', name: 'Space Poop' },
-                { emoji: '🍕', name: 'Meteor Pizza' }
+                { emoji: '🕷️', name: 'Spider' },
+                { emoji: '👻', name: 'Ghost' },
+                { emoji: '🦇', name: 'Bat' },
+                { emoji: '🧟', name: 'Zombie' },
+                { emoji: '💀', name: 'Skull' },
+                { emoji: '🕸️', name: 'Spider Web' }
             ];
             const type = types[Math.floor(Math.random() * types.length)];
 
