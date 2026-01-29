@@ -91,6 +91,8 @@ body.wand-hidden-for-game #gesture-cursor {
     width: 100%;
     height: 100%;
     display: block;
+    touch-action: none;
+    /* Prevent default touch/scroll behaviors */
 }
 
 #game-overlay {
@@ -164,4 +166,12 @@ body.dark-mode .welcome-banner {
     background: linear-gradient(135deg, var(--dark-surface) 0%, #1A2634 100%);
     border-color: var(--primary-color);
     box-shadow: none;
+}
+
+/* Prevent layout shift during gameplay */
+body.no-gesture-scroll {
+    overflow: hidden !important;
+    position: fixed;
+    width: 100%;
+    height: 100%;
 }

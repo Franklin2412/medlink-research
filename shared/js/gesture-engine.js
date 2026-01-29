@@ -311,8 +311,10 @@ class GestureEngine {
             this.stopClick(x, y);
         }
 
-        // 2. Scrolling Logic (Fist to Scroll) - only if NOT restricted and NOT clicking
-        const isCurrentlyScrolling = isFist && !isCurrentlyClicking && !document.body.classList.contains('wand-restricted');
+        // 2. Scrolling Logic (Fist to Scroll) - only if NOT restricted and NOT clicking and NOT explicitly disabled
+        const isCurrentlyScrolling = isFist && !isCurrentlyClicking &&
+            !document.body.classList.contains('wand-restricted') &&
+            !document.body.classList.contains('no-gesture-scroll');
         if (isCurrentlyScrolling) {
             if (!this.isScrolling) {
                 this.startScroll(this.lastY);

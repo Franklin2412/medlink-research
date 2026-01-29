@@ -85,6 +85,7 @@ const App = {
         this.ui.grid.classList.add('hidden');
         this.ui.gameContainer.classList.remove('hidden');
         this.ui.overlay.classList.add('hidden');
+        document.body.classList.add('no-gesture-scroll');
 
         // Reset Score
         this.ui.scoreVal.textContent = '0';
@@ -169,6 +170,7 @@ const App = {
         this.ui.banner.classList.remove('hidden');
         this.ui.grid.classList.remove('hidden');
         this.ui.gameContainer.classList.add('hidden');
+        document.body.classList.remove('no-gesture-scroll');
     }
 };
 
