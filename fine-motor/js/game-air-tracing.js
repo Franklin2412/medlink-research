@@ -39,7 +39,8 @@ class AirTracingGame extends BaseActivity {
         this.userPath = [];
         this.nextPointIndex = 1;
         this.cursor = { x: canvas.width / 2, y: canvas.height / 2 };
-        this.tolerance = 85; // Increased even more for better toddler experience
+        this.tolerance = 85;
+        this.lockTolerance = 30; // Require closer hit for destination
 
         this.update = this.update.bind(this);
     }
@@ -100,10 +101,10 @@ class AirTracingGame extends BaseActivity {
         this.ctx.fillStyle = "#0B0E14"; // Deep space black
         this.ctx.fillRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
 
-        // 1. Draw Target Path (Charming Dotted Line)
-        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-        this.ctx.lineWidth = 20;
-        this.ctx.setLineDash([15, 15]);
+        // 1. Draw Target Path (Charming Neon Purple)
+        this.ctx.strokeStyle = 'rgba(187, 134, 252, 0.3)';
+        this.ctx.lineWidth = 18;
+        this.ctx.setLineDash([15, 12]);
         this.ctx.lineCap = 'round';
         this.ctx.lineJoin = 'round';
 
@@ -118,13 +119,16 @@ class AirTracingGame extends BaseActivity {
         this.ctx.setLineDash([]);
 
         // 2. Logic: Check progress
+        let isNear = false;
         if (this.nextPointIndex < this.pathPoints.length) {
             const target = this.pathPoints[this.nextPointIndex];
             const dx = this.cursor.x - target.x;
             const dy = this.cursor.y - target.y;
             const dist = Math.hypot(dx, dy);
 
-            if (dist < this.tolerance) {
+            isNear = dist < this.tolerance;
+
+            if (dist < this.lockTolerance) {
                 this.userPath.push(target);
                 this.nextPointIndex++;
 
@@ -156,8 +160,9 @@ class AirTracingGame extends BaseActivity {
         // 4. Draw Guide Dot (Charming Pulsing Star)
         if (this.nextPointIndex < this.pathPoints.length) {
             const guide = this.pathPoints[this.nextPointIndex];
-            const pulse = (Date.now() % 1000) / 1000;
-            const size = 20 + Math.sin(pulse * Math.PI * 2) * 5;
+            const pulseRate = isNear ? 500 : 1200;
+            const pulse = (Date.now() % pulseRate) / pulseRate;
+            const size = 20 + Math.sin(pulse * Math.PI * 2) * 6;
 
             // Draw a star shape
             this.drawStar(guide.x, guide.y, 5, size, size / 2, '#4ECDC4');
@@ -170,19 +175,33 @@ class AirTracingGame extends BaseActivity {
             this.ctx.stroke();
         }
 
-        // 5. Draw Cursor (Charming Sparkling Pencil)
-        this.ctx.fillStyle = '#FFD93D';
+        // 5. Draw Cursor (Beautiful Magical Orb)
+        this.ctx.save();
+        const gradient = this.ctx.createRadialGradient(this.cursor.x, this.cursor.y, 2, this.cursor.x, this.cursor.y, 22);
+        gradient.addColorStop(0, '#FFF');
+        gradient.addColorStop(0.3, '#FFE66D');
+        gradient.addColorStop(1, 'rgba(255, 230, 109, 0)');
+
+        this.ctx.fillStyle = gradient;
         this.ctx.beginPath();
-        this.ctx.arc(this.cursor.x, this.cursor.y, 14, 0, Math.PI * 2);
+        this.ctx.arc(this.cursor.x, this.cursor.y, 22, 0, Math.PI * 2);
         this.ctx.fill();
 
-        // Add sparkle
-        if (Math.random() > 0.7) {
-            this.ctx.fillStyle = '#FFF';
+        this.ctx.fillStyle = '#FFD93D';
+        this.ctx.beginPath();
+        this.ctx.arc(this.cursor.x, this.cursor.y, 10, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Sparkles
+        if (Math.random() > 0.6) {
+            const sx = this.cursor.x + (Math.random() - 0.5) * 45;
+            const sy = this.cursor.y + (Math.random() - 0.5) * 45;
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${Math.random()})`;
             this.ctx.beginPath();
-            this.ctx.arc(this.cursor.x + (Math.random() - 0.5) * 30, this.cursor.y + (Math.random() - 0.5) * 30, 3, 0, Math.PI * 2);
+            this.ctx.arc(sx, sy, 2 + Math.random() * 2, 0, Math.PI * 2);
             this.ctx.fill();
         }
+        this.ctx.restore();
     }
 
     drawStar(cx, cy, spikes, outerRadius, innerRadius, color) {
