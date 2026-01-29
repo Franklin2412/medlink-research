@@ -166,7 +166,10 @@ function startSelectedActivity() {
         'feather-flyer': startFeatherFlyer,
         'spaceracer': () => startTrajectory('spaceracer'),
         'airtracing': () => startTrajectory('airtracing'),
-        'pipeconnector': () => startTrajectory('pipeconnector')
+        'pipeconnector': () => startTrajectory('pipeconnector'),
+        'maze-explorer': () => startTrajectory('maze-explorer'),
+        'character-trace': () => startTrajectory('character-trace'),
+        'pinch-drop': () => startTrajectory('pinch-drop')
     };
 
     if (activityMap[selectedActivity]) {
@@ -244,9 +247,12 @@ function startTrajectory(type) {
     if (type === 'spaceracer') currentActivity = new SpaceRacerGame(tc.game, callbacks);
     else if (type === 'airtracing') currentActivity = new AirTracingGame(tc.game, callbacks);
     else if (type === 'pipeconnector') currentActivity = new PipeConnectorGame(tc.game, callbacks);
+    else if (type === 'maze-explorer') currentActivity = new MazeExplorerGame(currentDetector, tc.game, callbacks);
+    else if (type === 'character-trace') currentActivity = new CharacterTraceGame(currentDetector, tc.game, callbacks);
+    else if (type === 'pinch-drop') currentActivity = new PinchDropGame(currentDetector, tc.game, callbacks);
 
-    // Update detector for trajectory games
-    currentActivity.detector = currentDetector;
+    // Update detector for legacy trajectory games (new ones pass it via constructor)
+    if (!currentActivity.detector) currentActivity.detector = currentDetector;
 
     currentActivity.start();
 }
