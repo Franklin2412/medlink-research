@@ -290,6 +290,7 @@ function stopActivity() {
         if (currentActivity.stop) currentActivity.stop();
         currentActivity = null;
     }
+    stopCamera(); // Stop camera and tracks when returning to menu
     const exitBtn = document.getElementById('universal-exit-btn');
     if (exitBtn) exitBtn.classList.add('hidden');
     document.body.classList.remove('no-gesture-scroll');
