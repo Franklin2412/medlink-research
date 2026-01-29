@@ -17,7 +17,7 @@
     <!-- Styles -->
     <link rel="stylesheet" href="../shared/css/common.css">
     <link rel="stylesheet" href="../shared/css/gesture-style.css">
-    <link rel="stylesheet" href="css/handy-helper.css">
+    <link rel="stylesheet" href="css/handy-helper.css"> <!-- Will rename CSS later if needed -->
 </head>
 
 <body class="full-screen-game">
@@ -30,19 +30,14 @@
                 <section id="welcome-screen" class="screen active">
                     <div class="container">
                         <div class="welcome-card">
-                            <div class="welcome-icon">👋</div>
-                            <h2>HandyHelper</h2>
-                            <div class="activity-grid">
-                                <div class="activity-card" data-activity="which-hand">
-                                    <div class="activity-icon">🖐️</div>
-                                    <h4>Which Hand?</h4>
-                                    <button class="btn btn-primary start-activity-btn">Start</button>
-                                </div>
-                                <div class="activity-card" data-activity="hand-tracker">
-                                    <div class="activity-icon">📍</div>
-                                    <h4>Hand Tracker</h4>
-                                    <button class="btn btn-primary start-activity-btn">Start</button>
-                                </div>
+                            <div class="welcome-icon">🚀</div>
+                            <h2>Fine Motor Gesture Lab</h2>
+                            <p class="text-center mb-lg">Practice hand coordination and precision control through play.
+                            </p>
+
+                            <!-- Category: Interactive Fun -->
+                            <h3 class="category-title">🎈 Interactive Fun</h3>
+                            <div class="activity-grid mb-xl">
                                 <div class="activity-card" data-activity="catch-stars">
                                     <div class="activity-icon">⭐</div>
                                     <h4>Catch Stars</h4>
@@ -61,6 +56,31 @@
                                 <div class="activity-card" data-activity="feather-flyer">
                                     <div class="activity-icon">🐦</div>
                                     <h4>Feather Flyer</h4>
+                                    <button class="btn btn-primary start-activity-btn">Start</button>
+                                </div>
+                            </div>
+
+                            <!-- Category: Precision Training -->
+                            <h3 class="category-title">🎯 Precision Training</h3>
+                            <div class="activity-grid">
+                                <div class="activity-card" data-activity="spaceracer">
+                                    <div class="activity-icon">🕷️</div>
+                                    <h4>Space Racer</h4>
+                                    <button class="btn btn-primary start-activity-btn">Start</button>
+                                </div>
+                                <div class="activity-card" data-activity="airtracing">
+                                    <div class="activity-icon">✨</div>
+                                    <h4>Air Tracing</h4>
+                                    <button class="btn btn-primary start-activity-btn">Start</button>
+                                </div>
+                                <div class="activity-card" data-activity="pipeconnector">
+                                    <div class="activity-icon">🔧</div>
+                                    <h4>Pipe Maze</h4>
+                                    <button class="btn btn-primary start-activity-btn">Start</button>
+                                </div>
+                                <div class="activity-card" data-activity="which-hand">
+                                    <div class="activity-icon">🖐️</div>
+                                    <h4>Which Hand?</h4>
                                     <button class="btn btn-primary start-activity-btn">Start</button>
                                 </div>
                             </div>
@@ -184,6 +204,33 @@
                         </div>
                     </div>
                 </section>
+
+                <!-- Activity Screen: Trajectory Games (Space Racer, Air Tracing, Pipe Maze) -->
+                <section id="trajectory-screen" class="screen activity-screen">
+                    <div class="container-fluid">
+                        <div class="game-area">
+                            <div class="video-section full-width">
+                                <video id="tj-video" autoplay playsinline></video>
+                                <canvas id="tj-hand-canvas"></canvas>
+                                <canvas id="tj-game-canvas"></canvas>
+                            </div>
+                            <!-- HUD for Trajectory Games -->
+                            <div class="game-hud">
+                                <div class="hud-item">Score: <span id="tj-score">0</span></div>
+                                <div class="hud-item">Level: <span id="tj-level">1</span></div>
+                            </div>
+                            <!-- Simple Game Over for Trajectory -->
+                            <div id="tj-game-over" class="game-overlay hidden">
+                                <div class="overlay-content">
+                                    <h2 id="tj-over-title" class="text-accent">Mission Complete!</h2>
+                                    <p id="tj-over-msg">Well done!</p>
+                                    <button class="btn btn-primary btn-large mt-md" id="tj-restart-btn">Try
+                                        Again</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </main>
         </div>
 
@@ -236,6 +283,12 @@
     <script src="js/activities/BalloonPopActivity.js"></script>
     <script src="js/activities/DuckCatchActivity.js"></script>
     <script src="js/activities/FeatherFlierActivity.js"></script>
+
+    <!-- Trajectory Games -->
+    <script src="js/game-space-racer.js"></script>
+    <script src="js/game-air-tracing.js"></script>
+    <script src="js/game-pipe-connector.js"></script>
+
     <script src="js/app.js"></script>
 </body>
 

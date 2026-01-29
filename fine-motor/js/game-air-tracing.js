@@ -1,13 +1,6 @@
-/**
- * Game: Air Tracing
- * Objective: Trace the shape displayed on screen.
- * Mechanics: Path following, tolerance checking, point-to-point progression.
- */
-
-class AirTracingGame {
+class AirTracingGame extends BaseActivity {
     constructor(canvas, callbacks) {
-        this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
+        super({ videoElement: {} }, canvas);
         this.callbacks = callbacks;
         this.isRunning = false;
 
@@ -22,46 +15,48 @@ class AirTracingGame {
         };
 
         this.currentShapeName = 'Square';
-        this.pathPoints = []; // Scaled points
-        this.userPath = []; // Where user has traced
+        this.pathPoints = [];
+        this.userPath = [];
         this.nextPointIndex = 1;
         this.cursor = { x: 0, y: 0 };
-        this.tolerance = 40;
+        this.tolerance = 70; // Increased tolerance (previously 40) for better accessibility
 
         this.update = this.update.bind(this);
         this.handleInput = this.handleInput.bind(this);
     }
 
     start() {
+        super.start();
         this.isRunning = true;
         this.loadShape('Square');
-        this.canvas.addEventListener('mousemove', this.handleInput);
-        this.callbacks.onScore(0);
-        this.callbacks.onLevel(1);
+        this.gameCanvas.addEventListener('mousemove', this.handleInput);
+        if (this.callbacks.onScore) this.callbacks.onScore(0);
+        if (this.callbacks.onLevel) this.callbacks.onLevel(1);
         requestAnimationFrame(this.update);
     }
 
     stop() {
         this.isRunning = false;
-        this.canvas.removeEventListener('mousemove', this.handleInput);
+        this.gameCanvas.removeEventListener('mousemove', this.handleInput);
+        super.stop();
+        this.saveStats('airtracing', { shape: this.currentShapeName });
     }
 
     loadShape(name) {
         this.currentShapeName = name;
         const normalized = this.shapes[name];
         this.pathPoints = normalized.map(p => ({
-            x: p.x * this.canvas.width,
-            y: p.y * this.canvas.height
+            x: p.x * this.gameCanvas.width,
+            y: p.y * this.gameCanvas.height
         }));
         this.userPath = [];
         this.nextPointIndex = 1;
-        // Start user path at the first point
         this.userPath.push(this.pathPoints[0]);
     }
 
     handleInput(e) {
         if (!this.isRunning) return;
-        const rect = this.canvas.getBoundingClientRect();
+        const rect = this.gameCanvas.getBoundingClientRect();
         this.cursor.x = e.clientX - rect.left;
         this.cursor.y = e.clientY - rect.top;
     }
@@ -69,11 +64,11 @@ class AirTracingGame {
     update() {
         if (!this.isRunning) return;
 
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
 
         // 1. Draw Target Path (Dotted Line)
-        this.ctx.strokeStyle = '#E0E0E0';
-        this.ctx.lineWidth = 10;
+        this.ctx.strokeStyle = 'rgba(224, 224, 224, 0.5)';
+        this.ctx.lineWidth = 15;
         this.ctx.setLineDash([10, 10]);
         this.ctx.lineCap = 'round';
         this.ctx.lineJoin = 'round';
@@ -96,11 +91,9 @@ class AirTracingGame {
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist < this.tolerance) {
-                // Point Reached!
                 this.userPath.push(target);
                 this.nextPointIndex++;
 
-                // Check Win
                 if (this.nextPointIndex >= this.pathPoints.length) {
                     this.triggerWin();
                 }
@@ -109,17 +102,13 @@ class AirTracingGame {
 
         // 3. Draw User Path (Gold)
         this.ctx.strokeStyle = '#FFD93D';
-        this.ctx.lineWidth = 8;
+        this.ctx.lineWidth = 10;
         this.ctx.beginPath();
         if (this.userPath.length > 0) {
             this.ctx.moveTo(this.userPath[0].x, this.userPath[0].y);
             for (let i = 1; i < this.userPath.length; i++) {
                 this.ctx.lineTo(this.userPath[i].x, this.userPath[i].y);
             }
-            // Draw line to current cursor if valid
-            const lastFixed = this.userPath[this.userPath.length - 1];
-            // Only draw to cursor if close to expected path segment? 
-            // For kids, just draw to cursor to visually connect
             this.ctx.lineTo(this.cursor.x, this.cursor.y);
         }
         this.ctx.stroke();
@@ -129,34 +118,39 @@ class AirTracingGame {
             const guide = this.pathPoints[this.nextPointIndex];
             this.ctx.fillStyle = '#4ECDC4';
             this.ctx.beginPath();
-            this.ctx.arc(guide.x, guide.y, 15, 0, Math.PI * 2);
+            this.ctx.arc(guide.x, guide.y, 20, 0, Math.PI * 2);
             this.ctx.fill();
 
-            // Pulse ring
             const pulse = (Date.now() % 1000) / 1000;
             this.ctx.strokeStyle = `rgba(78, 205, 196, ${1 - pulse})`;
-            this.ctx.lineWidth = 2;
+            this.ctx.lineWidth = 4;
             this.ctx.beginPath();
-            this.ctx.arc(guide.x, guide.y, 15 + pulse * 20, 0, Math.PI * 2);
+            this.ctx.arc(guide.x, guide.y, 20 + pulse * 25, 0, Math.PI * 2);
             this.ctx.stroke();
         }
 
         // 5. Draw Cursor
         this.ctx.fillStyle = '#FF6B9D';
         this.ctx.beginPath();
-        this.ctx.arc(this.cursor.x, this.cursor.y, 10, 0, Math.PI * 2);
+        this.ctx.arc(this.cursor.x, this.cursor.y, 12, 0, Math.PI * 2);
         this.ctx.fill();
 
         requestAnimationFrame(this.update);
     }
 
     triggerWin() {
-        this.callbacks.onScore(100);
-        // Confetti / Particles here?
+        this.score += 100;
+        if (this.callbacks.onScore) this.callbacks.onScore(this.score);
+
         setTimeout(() => {
             if (this.currentShapeName === 'Square') this.loadShape('Triangle');
             else if (this.currentShapeName === 'Triangle') this.loadShape('Star');
-            else this.callbacks.onGameOver("You traced all the shapes! Amazing!", "Master Artist");
+            else {
+                if (this.callbacks.onGameOver) {
+                    this.callbacks.onGameOver("You traced all the shapes! Amazing!", "Master Artist");
+                }
+                this.stop();
+            }
         }, 1000);
     }
 }
