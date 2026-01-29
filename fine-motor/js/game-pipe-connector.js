@@ -14,6 +14,14 @@ class PipeConnectorGame extends BaseActivity {
 
         this.currentLevelPoints = [];
 
+        this.isShowingMotivation = false;
+        this.motivationMessage = "";
+        this.motivationMessages = [
+            "Fantastic!", "Keep it up!", "You're a Star!", "Amazing!",
+            "Great job!", "Marvelous!", "Well done!", "Superb!",
+            "Excellent!", "Brilliant!"
+        ];
+
         this.update = this.update.bind(this);
     }
 
@@ -82,7 +90,7 @@ class PipeConnectorGame extends BaseActivity {
 
         // 1. Hand Tracking (Direct)
         const hands = this.detector.getDetectedHands();
-        if (hands && hands.length > 0) {
+        if (hands && hands.length > 0 && !this.isShowingMotivation) {
             const indexTip = hands[0].landmarks[8];
             const targetX = (1 - indexTip.x) * this.gameCanvas.width; // Mirrored
             const targetY = indexTip.y * this.gameCanvas.height;
@@ -188,22 +196,42 @@ class PipeConnectorGame extends BaseActivity {
             this.ctx.stroke();
         }
 
-        // 5. Draw Cursor (Beautiful Magical Brush)
-        this.ctx.save();
-        this.ctx.shadowBlur = 15;
-        this.ctx.shadowColor = this.isPainting ? '#FFE66D' : '#fff';
-        this.ctx.fillStyle = this.isPainting ? '#FFE66D' : '#fff';
-        this.ctx.beginPath();
-        this.ctx.arc(this.cursor.x, this.cursor.y, 14, 0, Math.PI * 2);
-        this.ctx.fill();
-
-        if (this.isPainting && Math.random() > 0.5) {
-            this.ctx.fillStyle = `rgba(255, 230, 109, ${Math.random()})`;
+        if (!this.isShowingMotivation) {
+            this.ctx.save();
+            this.ctx.shadowBlur = 15;
+            this.ctx.shadowColor = this.isPainting ? '#FFE66D' : '#fff';
+            this.ctx.fillStyle = this.isPainting ? '#FFE66D' : '#fff';
             this.ctx.beginPath();
-            this.ctx.arc(this.cursor.x + (Math.random() - 0.5) * 30, this.cursor.y + (Math.random() - 0.5) * 30, 3, 0, Math.PI * 2);
+            this.ctx.arc(this.cursor.x, this.cursor.y, 14, 0, Math.PI * 2);
             this.ctx.fill();
+
+            if (this.isPainting && Math.random() > 0.5) {
+                this.ctx.fillStyle = `rgba(255, 230, 109, ${Math.random()})`;
+                this.ctx.beginPath();
+                this.ctx.arc(this.cursor.x + (Math.random() - 0.5) * 30, this.cursor.y + (Math.random() - 0.5) * 30, 3, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+            this.ctx.restore();
         }
-        this.ctx.restore();
+
+        // 6. Draw Motivation Overlay
+        if (this.isShowingMotivation) {
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            this.ctx.fillRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+
+            this.ctx.save();
+            this.ctx.shadowBlur = 20;
+            this.ctx.shadowColor = '#FFE66D';
+            this.ctx.font = 'bold 60px Poppins';
+            this.ctx.fillStyle = '#FFE66D';
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText(this.motivationMessage, this.gameCanvas.width / 2, this.gameCanvas.height / 2);
+
+            this.ctx.font = '24px Poppins';
+            this.ctx.fillStyle = '#fff';
+            this.ctx.fillText("Let's try another maze!", this.gameCanvas.width / 2, this.gameCanvas.height / 2 + 50);
+            this.ctx.restore();
+        }
     }
 
     checkSafety(x, y) {
@@ -256,8 +284,16 @@ class PipeConnectorGame extends BaseActivity {
         this.level++;
         if (this.callbacks.onLevel) this.callbacks.onLevel(this.level);
 
-        // Infinite progression
-        this.loadLevel(this.level);
+        // Visual feedback & Motivation
+        this.isShowingMotivation = true;
+        this.motivationMessage = this.motivationMessages[Math.floor(Math.random() * this.motivationMessages.length)];
+
+        setTimeout(() => {
+            if (this.isRunning) {
+                this.isShowingMotivation = false;
+                this.loadLevel(this.level);
+            }
+        }, 2500); // 2.5 second pause for motivation
     }
 }
 
