@@ -198,8 +198,9 @@ class GestureEngine {
             onFrame: async () => {
                 await this.hands.send({ image: this.videoElement });
             },
-            width: 640,
-            height: 480
+            width: window.innerWidth < 768 ? 480 : 640,
+            height: window.innerWidth < 768 ? 360 : 480,
+            facingMode: "user"
         });
         this.camera.start();
     }

@@ -267,6 +267,10 @@ function getTransferRefs(prefix) {
     };
 }
 
+// Standard game resolution (Logical)
+const LOGICAL_WIDTH = 800;
+const LOGICAL_HEIGHT = 600;
+
 function transferCamera(newVideo, newHandCanvas, newGameCanvas) {
     if (!newVideo || !newHandCanvas || !newGameCanvas) return;
 
@@ -278,11 +282,29 @@ function transferCamera(newVideo, newHandCanvas, newGameCanvas) {
     currentDetector.canvasElement = newHandCanvas;
     currentDetector.canvasCtx = newHandCanvas.getContext('2d');
 
-    // Standard game resolution
-    newHandCanvas.width = 800;
-    newHandCanvas.height = 600;
-    newGameCanvas.width = 800;
-    newGameCanvas.height = 600;
+    // Dynamic scaling
+    updateCanvasSize(newHandCanvas, newGameCanvas);
+
+    // Listen for resize
+    window.onresize = () => updateCanvasSize(newHandCanvas, newGameCanvas);
+}
+
+function updateCanvasSize(handCanvas, gameCanvas) {
+    if (!handCanvas || !gameCanvas) return;
+
+    const container = handCanvas.parentElement;
+    if (!container) return;
+
+    const { width, height } = container.getBoundingClientRect();
+    
+    // Maintain aspect ratio or fill? Most games here seem to want to fill or contain.
+    // Let's use the container's physical size for the canvas physical dimensions
+    handCanvas.width = LOGICAL_WIDTH;
+    handCanvas.height = LOGICAL_HEIGHT;
+    gameCanvas.width = LOGICAL_WIDTH;
+    gameCanvas.height = LOGICAL_HEIGHT;
+
+    // The CSS handles the actual display size (object-fit: contain/cover)
 }
 
 function stopActivity() {

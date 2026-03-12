@@ -170,6 +170,50 @@ body.full-screen-game {
     z-index: 10;
 }
 
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .app-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr var(--bottom-bar-height);
+        height: 100vh;
+    }
+
+    .side-controls {
+        height: var(--bottom-bar-height);
+        border-left: none;
+        border-top: 2px solid var(--border-color);
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        padding: var(--space-xs);
+        gap: var(--space-xs);
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+    }
+
+    .side-controls h2,
+    .side-controls h3 {
+        display: none;
+    }
+
+    .side-controls .btn {
+        width: auto;
+        padding: var(--space-sm);
+        font-size: var(--font-size-sm);
+        flex: 1;
+        min-width: 80px;
+    }
+
+    .camera-dock {
+        width: 80px;
+        height: 60px;
+        min-width: 80px;
+        margin-top: 0;
+        position: relative;
+    }
+}
+
 
 
 /* ===== RESET & BASE STYLES ===== */

@@ -143,6 +143,29 @@
     width: 100%;
 }
 
+@media (max-width: 768px) {
+    .welcome-card {
+        padding: var(--space-lg);
+    }
+
+    .welcome-icon {
+        font-size: 3rem;
+    }
+
+    .activity-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: var(--space-sm);
+    }
+
+    .activity-card {
+        padding: var(--space-md);
+    }
+
+    .activity-icon {
+        font-size: 2rem;
+    }
+}
+
 /* ===== CAMERA SETUP ===== */
 .setup-card {
     max-width: 800px;
@@ -297,6 +320,13 @@ body.full-screen-game .main-canvas {
     .game-area {
         flex-direction: column;
         height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-area {
+        height: calc(100vh - var(--bottom-bar-height));
+        margin-bottom: 0;
     }
 }
 
