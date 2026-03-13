@@ -174,18 +174,19 @@ body.full-screen-game {
 @media (max-width: 768px) {
     .app-layout {
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr var(--bottom-bar-height);
+        grid-template-rows: 1fr auto; /* Let height be determined by content or smaller fixed height */
         height: 100vh;
     }
 
     .side-controls {
-        height: var(--bottom-bar-height);
+        height: auto; /* Allow it to be more compact */
+        min-height: 80px; 
         border-left: none;
         border-top: 2px solid var(--border-color);
         flex-direction: row;
         align-items: center;
         justify-content: flex-start;
-        padding: var(--space-sm);
+        padding: var(--space-xs) var(--space-sm);
         gap: var(--space-sm);
         overflow-x: auto;
         overflow-y: hidden;
@@ -200,7 +201,7 @@ body.full-screen-game {
 
     .side-controls .btn {
         width: auto;
-        padding: var(--space-sm) var(--space-lg);
+        padding: var(--space-xs) var(--space-lg); /* Halved from var(--space-sm) */
         font-size: var(--font-size-sm);
         flex: 0 0 auto;
     }
