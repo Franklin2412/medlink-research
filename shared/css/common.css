@@ -184,12 +184,13 @@ body.full-screen-game {
         border-top: 2px solid var(--border-color);
         flex-direction: row;
         align-items: center;
-        justify-content: space-around;
-        padding: var(--space-xs);
-        gap: var(--space-xs);
+        justify-content: flex-start;
+        padding: var(--space-sm);
+        gap: var(--space-sm);
         overflow-x: auto;
         overflow-y: hidden;
         white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
     }
 
     .side-controls h2,
@@ -199,10 +200,9 @@ body.full-screen-game {
 
     .side-controls .btn {
         width: auto;
-        padding: var(--space-sm);
+        padding: var(--space-sm) var(--space-lg);
         font-size: var(--font-size-sm);
-        flex: 1;
-        min-width: 80px;
+        flex: 0 0 auto;
     }
 
     .camera-dock {
